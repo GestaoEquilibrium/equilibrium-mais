@@ -1,0 +1,6 @@
+﻿_backup_frontend_*/
+_extrai_tmp/
+*.zip
+.DS_Store
+Thumbs.db
+desktop.ini

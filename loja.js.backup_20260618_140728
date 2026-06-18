@@ -244,7 +244,6 @@
     state.method = m;
     document.getElementById("mCard")?.classList.toggle("sel", m === "card");
     document.getElementById("mPix")?.classList.toggle("sel", m === "pix");
-    document.getElementById("mDeb")?.classList.toggle("sel", m === "debito");
     renderPayArea();
   }
   function renderPay() {
@@ -266,13 +265,13 @@
   function renderPayArea() {
     const a = document.getElementById("payArea");
     if (!a) return;
-    const box = (txt) => `<div style="margin-top:14px;padding:14px 16px;background:var(--mist);border-radius:12px;font-size:13.5px;color:var(--ink);line-height:1.5">${txt}</div>`;
     if (state.method === "card") {
-      a.innerHTML = box('💳 <b>Cartão de crédito</b> — você será levado ao ambiente seguro do <b>Mercado Pago</b> para cadastrar o cartão. A cobrança é <b>recorrente automática</b> todo mês.');
-    } else if (state.method === "debito") {
-      a.innerHTML = box('🏦 <b>Cartão de débito</b> — você será levado ao ambiente seguro do <b>Mercado Pago</b> para pagar à vista. As próximas mensalidades chegam por fatura.');
+      a.innerHTML =
+        `<div class="field" style="margin-top:14px"><label>Número do cartão</label><input placeholder="0000 0000 0000 0000" disabled></div>` +
+        `<div class="f2"><div class="field"><label>Validade</label><input placeholder="MM/AA" disabled></div>` +
+        `<div class="field"><label>CVV</label><input placeholder="000" disabled></div></div>`;
     } else {
-      a.innerHTML = box('📱 <b>PIX</b> — você será levado ao ambiente seguro do <b>Mercado Pago</b> para pagar à vista, com confirmação na hora. As próximas mensalidades chegam por fatura.');
+      a.innerHTML = `<div style="text-align:center"><div class="qr"></div><div style="font-size:13px;color:var(--muted)">Escaneie para pagar (demonstração)</div></div>`;
     }
   }
 
@@ -292,14 +291,7 @@
     renderPay(); go("pay");
   }
 
-  /* ---------- CHECKOUT: criar_adesao → criar-checkout → Mercado Pago ---------- */
-  // mapeia o meio da UI para o que a Edge Function espera
-  function meioPagamento() {
-    if (state.method === "card") return "credito";
-    if (state.method === "debito") return "debito";
-    return "pix";
-  }
-
+  /* ---------- CHECKOUT: criar_adesao ---------- */
   async function confirmAd() {
     const btn = document.querySelector('#pay .btn-a');
     const titular = {
@@ -310,35 +302,31 @@
       data_nascimento: document.getElementById("t_nasc")?.value || null,
     };
     if (!titular.nome || !titular.cpf) { alert("Nome e CPF do titular são obrigatórios."); return; }
-    if (!titular.email) { alert("Informe um e-mail — ele é necessário para o pagamento e para criar seu acesso."); return; }
     const dependentes = state.deps.filter((d) => d.nome && d.nome.trim())
       .map((d) => ({ nome: d.nome.trim(), cpf: d.cpf || null, papel: d.par || "Filho(a)" }));
-    const meio = meioPagamento();
 
-    if (btn) { btn.disabled = true; btn.textContent = "Gerando pagamento..."; }
+    if (btn) { btn.disabled = true; btn.textContent = "Processando..."; }
     try {
-      // 1. cria a adesão (pendente) — gera conta, cartões e 1ª fatura
-      const { data: ad, error: e1 } = await sb.rpc("criar_adesao", {
+      const { data, error } = await sb.rpc("criar_adesao", {
         p_plano_slug: state.plan, p_titular: titular, p_dependentes: dependentes,
         p_ciclo: state.bill === "ano" ? "anual" : "mensal",
-        p_forma_pagamento: meio === "pix" ? "pix" : "cartao", p_cartao_final: null,
+        p_forma_pagamento: state.method === "pix" ? "pix" : "cartao", p_cartao_final: null,
       });
-      if (e1) throw e1;
-      state.ultimaAdesao = ad;
-
-      // 2. cria o checkout no Mercado Pago e pega o link
-      const { data: chk, error: e2 } = await sb.functions.invoke("criar-checkout", {
-        body: { adesao_id: ad.adesao_id, meio },
-      });
-      if (e2) throw e2;
-      if (!chk?.ok || !chk?.link) throw new Error(chk?.erro || "Não foi possível gerar o pagamento.");
-
-      // 3. redireciona pro Mercado Pago (ao voltar, cai na tela de contrato)
-      window.location.href = chk.link;
+      if (error) throw error;
+      state.ultimaAdesao = data;
+      const titularCard = (data.cartoes || []).find((c) => c.papel === "Titular") || data.cartoes?.[0];
+      const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+      set("c_nome", (titular.nome || "Titular").toUpperCase());
+      set("c_plan", data.plano);
+      set("c_num", titularCard ? titularCard.numero : data.numero_conta + "-01");
+      const tot = data.ciclo === "anual" ? money(data.valor_fatura) + " à vista" : money(data.valor_fatura) + "/mês";
+      set("doneMsg", `Plano ${data.plano} · ${tot} · ${dependentes.length} dependente(s). Conta ${data.numero_conta}. (Adesão registrada — pagamento em modo demonstração.)`);
+      go("done");
     } catch (e) {
       console.error("Erro checkout:", e);
-      alert("Não foi possível iniciar o pagamento: " + (e.message || e));
-      if (btn) { btn.disabled = false; btn.textContent = "Ir para o pagamento →"; }
+      alert("Não foi possível concluir a adesão: " + (e.message || e));
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = "Confirmar adesão (simulação) →"; }
     }
   }
 

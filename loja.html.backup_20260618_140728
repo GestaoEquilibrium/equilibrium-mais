@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cartão Mais Equilibrium — Loja (Protótipo)</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon-multi.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-multi-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-multi.png">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--azul:#1860A8;--marinho:#15406E;--aqua:#54C0CC;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#e2ebf3;--mist:#F1F7FC;--ok:#1E8449;--okbg:#E9F6EE;--risk:#C0392B;--riskbg:#FBE9EA}
@@ -262,11 +265,10 @@ table.svc td.c{color:var(--azul);font-weight:600}
       </div>
       <div id="billNote" style="font-size:13px;color:var(--muted);margin-bottom:18px"></div>
       <h3>Método</h3>
-      <div class="method sel" id="mCard" onclick="setMethod('card')"><span class="ic">💳</span><div><b>Cartão de crédito</b><div style="font-size:12px;color:var(--muted)">Assinatura recorrente automática</div></div></div>
+      <div class="method sel" id="mCard" onclick="setMethod('card')"><span class="ic">💳</span><div><b>Cartão de crédito</b><div style="font-size:12px;color:var(--muted)">Cobrança recorrente automática</div></div></div>
       <div class="method" id="mPix" onclick="setMethod('pix')"><span class="ic">📱</span><div><b>PIX</b><div style="font-size:12px;color:var(--muted)">À vista, com confirmação na hora</div></div></div>
-      <div class="method" id="mDeb" onclick="setMethod('debito')"><span class="ic">🏦</span><div><b>Cartão de débito</b><div style="font-size:12px;color:var(--muted)">Pagamento à vista no débito</div></div></div>
       <div id="payArea"></div>
-      <div class="demo">🔒 Pagamento processado com segurança pelo <b>Mercado Pago</b>. Após o pagamento, você lerá e aceitará o contrato e receberá seu acesso.</div>
+      <div class="demo">⚠️ Ambiente de demonstração — nenhuma cobrança real será feita. O checkout de verdade será conectado no CORTEX.</div>
     </div>
     <div class="summary">
       <h3 style="font-family:'Quicksand';color:var(--azul);margin-bottom:12px">Resumo do pedido</h3>
@@ -274,7 +276,7 @@ table.svc td.c{color:var(--azul);font-weight:600}
       <div class="li"><span>Titular</span><span id="p_tit" style="color:var(--muted)">—</span></div>
       <div class="li"><span>Ciclo</span><span id="p_ciclo" style="color:var(--muted)">Mensal</span></div>
       <div class="tot"><span id="p_totlab">Total</span><span id="p_tot">R$ 0</span></div>
-      <button class="btn btn-a" style="width:100%;margin-top:18px" onclick="confirmAd()">Ir para o pagamento →</button>
+      <button class="btn btn-a" style="width:100%;margin-top:18px" onclick="confirmAd()">Confirmar adesão (simulação) →</button>
       <button class="btn btn-g" style="width:100%;margin-top:10px" onclick="go('adesao')">Voltar</button>
     </div>
   </div>

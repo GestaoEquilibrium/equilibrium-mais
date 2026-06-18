@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recepção — Mais Equilibrium</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#1860A8;--azul-d:#15406E;--azul-l:#3E86D6;--aqua:#54C0CC;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;
+  --ink:#16293c;--muted:#6b7f90;--muted2:#92a4b3;--line:#e4edf5;--mist:#F1F7FC;--bg:#eef4fa;
+  --ok:#1E8449;--okbg:#E7F6ED;--risk:#C0392B;--riskbg:#FBEAEB;--warn:#B7791F;--warnbg:#FCF3E2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{font-family:'Quicksand',sans-serif}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#cddbe8;border-radius:6px}
+
+/* ===== TOPO ===== */
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+.top .in{max-width:1180px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .nm{font-family:'Quicksand';font-weight:700;color:var(--azul-d);font-size:18px}
+.brand .nm span{color:var(--azul)}
+.badge-rc{font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--aqua);color:#0a4a52;padding:5px 11px;border-radius:20px;font-weight:700}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.top .dia{font-size:13px;color:var(--muted);text-transform:capitalize}
+.userchip{display:flex;align-items:center;gap:9px;font-size:13.5px}
+.userchip .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--azul-d),var(--azul));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:13px;overflow:hidden}
+.userchip .av img{width:100%;height:100%;object-fit:cover}
+.userchip .nm{font-weight:600}.userchip .rl{font-size:11px;color:var(--muted)}
+.btn-out{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Quicksand';transition:.15s}
+.btn-out:hover{background:var(--riskbg);color:var(--risk);border-color:var(--risk)}
+
+/* ===== ABAS ===== */
+.tabs{background:#fff;border-bottom:1px solid var(--line)}
+.tabs .in{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;gap:6px}
+.tabs button{border:none;background:none;padding:15px 18px;font-family:'Quicksand';font-weight:600;font-size:14.5px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:.15s;display:flex;align-items:center;gap:8px}
+.tabs button .ic{font-size:16px}
+.tabs button:hover{color:var(--azul)}
+.tabs button.on{color:var(--azul);border-bottom-color:var(--azul)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:30px 24px 80px}
+.page{display:none;animation:fade .3s ease}.page.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== EXECUTAR (passos) ===== */
+.steps{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:30px}
+.step{display:flex;align-items:center;gap:9px;font-family:'Quicksand';font-weight:600;font-size:13.5px;color:var(--muted2)}
+.step .c{width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;transition:.2s}
+.step.on{color:var(--azul)}.step.on .c{background:var(--azul);border-color:var(--azul);color:#fff}
+.step.done{color:var(--ok)}.step.done .c{background:var(--ok);border-color:var(--ok);color:#fff}
+.steps .sep{width:40px;height:2px;background:var(--line);border-radius:2px}
+
+.scr{display:none}.scr.on{display:block;animation:fade .3s ease}
+.center{text-align:center}
+.h-title{font-size:25px;color:var(--azul-d)}
+.h-sub{color:var(--muted);font-size:14.5px;margin-top:6px}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;margin-top:24px;box-shadow:0 10px 30px rgba(21,64,110,.05)}
+.panel.narrow{max-width:640px;margin-left:auto;margin-right:auto}
+
+/* busca grande */
+.bigsearch{display:flex;gap:10px}
+.bigsearch input{flex:1;border:2px solid var(--line);border-radius:14px;padding:16px 18px;font-size:16px;font-family:'Inter';transition:.15s}
+.bigsearch input:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(24,96,168,.1)}
+.bigsearch button{background:var(--azul);color:#fff;border:none;border-radius:14px;padding:0 26px;font-family:'Quicksand';font-weight:700;font-size:15px;cursor:pointer;transition:.15s}
+.bigsearch button:hover{background:var(--azul-d)}
+.hintln{text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
+.results{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.member{display:flex;align-items:center;gap:14px;padding:15px;border:2px solid var(--line);border-radius:14px;cursor:pointer;transition:.15s}
+.member:hover{border-color:var(--aqua);background:var(--mist);transform:translateY(-1px)}
+.member.blocked{opacity:.65}
+.member .av{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:16px;flex-shrink:0}
+.member .inf{flex:1;min-width:0}.member .inf b{font-size:15.5px}.member .inf span{display:block;font-size:13px;color:var(--muted);margin-top:1px}
+.member .pill{font-size:11px;padding:4px 11px;border-radius:12px;font-weight:700;white-space:nowrap}
+.pill.ind{background:#E1F5EE;color:#0F6E56}.pill.fam{background:#E6F1FB;color:#185FA5}.pill.gran{background:#FBF1DA;color:var(--ambar-d)}
+.statusline{font-size:12px;margin-top:4px;display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.statusline .d{width:8px;height:8px;border-radius:50%}
+.statusline.ok{color:var(--ok)}.statusline.ok .d{background:var(--ok)}
+.statusline.bad{color:var(--risk)}.statusline.bad .d{background:var(--risk)}
+
+/* selecionado */
+.selbar{display:flex;align-items:center;gap:14px;background:var(--mist);border-radius:14px;padding:14px 16px;margin-bottom:24px}
+.selbar .av{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:16px;flex-shrink:0}
+.selbar .inf{flex:1}.selbar .inf b{font-size:15.5px}.selbar .inf span{display:block;font-size:13px;color:var(--muted)}
+.selbar .chg{font-size:13px;color:var(--azul);background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer;font-weight:600;font-family:'Quicksand'}
+
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px;font-weight:600;font-family:'Quicksand'}
+.field select,.field input{width:100%;border:2px solid var(--line);border-radius:12px;padding:13px;font-size:15px;font-family:'Inter';background:#fff}
+.field select:focus,.field input:focus{outline:none;border-color:var(--azul)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{font-family:'Quicksand';font-weight:700;border:none;border-radius:14px;padding:15px;font-size:15px;cursor:pointer;width:100%;transition:.15s}
+.btn-p{background:var(--azul);color:#fff;margin-top:6px}.btn-p:hover{background:var(--azul-d)}.btn-p:disabled{opacity:.5;cursor:not-allowed}
+.btn-ok{background:var(--ok);color:#fff;margin-top:6px}.btn-ok:hover{filter:brightness(.95)}.btn-ok:disabled{opacity:.6;cursor:not-allowed}
+.btn-g{background:#fff;color:var(--muted);border:1.5px solid var(--line);margin-top:12px}.btn-g:hover{background:var(--mist)}
+
+/* confirmação */
+.confcard{background:var(--mist);border-radius:16px;padding:22px}
+.confrow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.confrow:last-child{border-bottom:none}
+.confrow span{color:var(--muted)}.confrow b{color:var(--ink);text-align:right}
+.ecobox{text-align:center;background:var(--okbg);border-radius:16px;padding:22px;margin-top:16px}
+.ecobox .l{font-size:12px;color:var(--ok);font-family:'Quicksand';font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ecobox .v{font-family:'Quicksand';font-weight:700;font-size:38px;color:var(--ok);line-height:1.1;margin-top:4px}
+.ecobox .pay{font-size:14px;color:var(--ink);margin-top:6px}.ecobox .pay b{font-family:'Quicksand'}
+
+/* sucesso */
+.success{text-align:center;padding:10px 0}
+.checkbig{width:80px;height:80px;border-radius:50%;background:var(--okbg);color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 16px}
+.proto{font-family:'Quicksand';font-weight:700;font-size:20px;color:var(--azul-d);background:var(--mist);display:inline-block;padding:8px 18px;border-radius:12px;margin-top:6px;letter-spacing:.04em}
+
+/* alerta cartão bloqueado */
+.alerta{background:var(--riskbg);border:1px solid var(--risk);color:var(--risk);border-radius:14px;padding:16px;font-size:14px;margin-top:18px;display:flex;gap:12px;align-items:flex-start}
+.alerta .ic{font-size:20px}
+
+/* ===== tabelas Pacientes / Guias ===== */
+.toolbar{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;flex:1;min-width:240px}
+.search:focus-within{border-color:var(--azul);box-shadow:0 0 0 3px rgba(24,96,168,.1)}
+.search input{border:none;outline:none;font-size:14px;width:100%;background:none}
+.tbl-wrap{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{background:#fff;color:var(--muted);font-family:'Quicksand';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:14px 16px;border-bottom:2px solid var(--line)}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--line);font-size:13.5px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.clickable{cursor:pointer;transition:.12s}tbody tr.clickable:hover{background:var(--mist)}
+.who{display:flex;align-items:center;gap:11px}
+.who .a{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Quicksand';font-weight:700;flex-shrink:0}
+.who small{display:block;color:var(--muted);font-size:12px}
+.proto-cell{font-family:'Quicksand';font-weight:600;color:var(--azul)}
+.btn-mini{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:600;color:var(--azul);cursor:pointer;font-family:'Quicksand';transition:.15s}
+.btn-mini:hover{background:var(--mist);border-color:var(--azul)}
+.empty{text-align:center;color:var(--muted);font-size:14px;padding:40px}
+.loading{text-align:center;color:var(--muted);font-size:14px;padding:50px}
+.loading .cvs{width:40px;height:40px;margin:0 auto 12px;animation:spin 2s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.daycard{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.dayhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.dayhead h3{font-size:15px;color:var(--azul-d)}
+.daynums{display:flex;gap:12px}
+.daynums .s{flex:1;background:var(--mist);border-radius:12px;padding:14px;text-align:center}
+.daynums .s .n{font-family:'Quicksand';font-weight:700;font-size:22px;color:var(--azul-d)}
+.daynums .s .l{font-size:11px;color:var(--muted);margin-top:2px}
+
+.note{background:var(--mist);border-radius:12px;padding:13px 15px;font-size:13px;color:var(--muted);margin-top:16px}
+
+@media(max-width:720px){.f2{grid-template-columns:1fr}.top .dia,.userchip .nm,.userchip .rl{display:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="blade"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
+<g id="cv-al"><use href="#blade" fill="#1860A8"/><use href="#blade" fill="#F0B43C" transform="rotate(90)"/><use href="#blade" fill="#1860A8" transform="rotate(180)"/><use href="#blade" fill="#F0B43C" transform="rotate(270)"/></g>
+</defs></svg>
+
+<div class="top"><div class="in">
+  <div class="brand">
+    <svg width="32" height="32" viewBox="-55 -55 110 110"><use href="#cv-al"/></svg>
+    <div class="nm">Mais <span>Equilibrium</span></div>
+    <span class="badge-rc">Recepção</span>
+  </div>
+  <div class="right">
+    <div class="dia" id="hoje">—</div>
+    <div class="userchip"><div class="av" id="uAv">—</div><div><div class="nm" id="uNome">—</div><div class="rl" id="uRole">—</div></div></div>
+    <button class="btn-out" onclick="sair()">Sair</button>
+  </div>
+</div></div>
+
+<div class="tabs"><div class="in">
+  <button class="on" data-tab="exec"><span class="ic">⚡</span> Executar</button>
+  <button data-tab="pac"><span class="ic">👥</span> Pacientes</button>
+  <button data-tab="guias"><span class="ic">📄</span> Guias</button>
+</div></div>
+
+<div class="wrap">
+
+  <!-- ===================== ABA EXECUTAR ===================== -->
+  <div class="page on" id="page-exec">
+    <div class="steps">
+      <div class="step on" id="st1"><span class="c">1</span> Buscar cartão</div>
+      <div class="sep"></div>
+      <div class="step" id="st2"><span class="c">2</span> Atendimento</div>
+      <div class="sep"></div>
+      <div class="step" id="st3"><span class="c">3</span> Confirmar</div>
+    </div>
+
+    <!-- passo 1: buscar -->
+    <div class="scr on" id="e1">
+      <div class="center"><div class="h-title">Quem vai ser atendido?</div>
+        <div class="h-sub">Busque pelo nome do paciente, número do cartão ou CPF.</div></div>
+      <div class="panel narrow">
+        <div class="bigsearch">
+          <input id="q" placeholder="Nome, número do cartão ou CPF" onkeydown="if(event.key==='Enter')buscar()" autofocus>
+          <button onclick="buscar()">Buscar</button>
+        </div>
+        <div class="hintln">Ex.: Pedro · MEQ 8814 7253-03 · 333.333.778-00</div>
+        <div class="results" id="results"></div>
+      </div>
+    </div>
+
+    <!-- passo 2: atendimento -->
+    <div class="scr" id="e2">
+      <div class="center"><div class="h-title">Dados do atendimento</div>
+        <div class="h-sub">Especialidade, profissional e horário.</div></div>
+      <div class="panel narrow">
+        <div class="selbar">
+          <div class="av" id="sbAv">—</div>
+          <div class="inf"><b id="sbNome">—</b><span id="sbInfo">—</span></div>
+          <button class="chg" onclick="goStep(1)">trocar</button>
+        </div>
+        <div class="field"><label>Especialidade / serviço</label>
+          <select id="serv" onchange="checkReady()"><option value="">Selecione…</option></select>
+        </div>
+        <div class="field"><label>Profissional</label>
+          <select id="prof" onchange="checkReady()"><option value="">Selecione…</option></select>
+        </div>
+        <div class="f2">
+          <div class="field"><label>Data</label><input type="date" id="data"></div>
+          <div class="field"><label>Hora</label><input type="time" id="hora"></div>
+        </div>
+        <div class="field" style="margin-bottom:6px"><label>Observação (opcional)</label><input id="obs" placeholder="Ex.: sessão de retorno"></div>
+        <button class="btn btn-p" id="toConf" disabled onclick="goConfirm()">Continuar →</button>
+        <button class="btn btn-g" onclick="goStep(1)">Voltar</button>
+      </div>
+    </div>
+
+    <!-- passo 3: confirmar -->
+    <div class="scr" id="e3">
+      <div class="center"><div class="h-title">Confirmar execução</div>
+        <div class="h-sub">Confira antes de executar a guia.</div></div>
+      <div class="panel narrow">
+        <div class="confcard">
+          <div class="confrow"><span>Paciente</span><b id="cfNome">—</b></div>
+          <div class="confrow"><span>Cartão</span><b id="cfNum">—</b></div>
+          <div class="confrow"><span>Especialidade</span><b id="cfServ">—</b></div>
+          <div class="confrow"><span>Profissional</span><b id="cfProf">—</b></div>
+          <div class="confrow"><span>Data e hora</span><b id="cfData">—</b></div>
+        </div>
+        <div class="ecobox">
+          <div class="l">Economia do paciente</div>
+          <div class="v" id="cfEco">—</div>
+          <div class="pay">Valor com cartão: <b id="cfPay">—</b> <span style="color:var(--muted)">(particular <span id="cfPart">—</span>)</span></div>
+        </div>
+        <button class="btn btn-ok" id="btnExec" onclick="executar()">✓ Executar e gerar guia</button>
+        <button class="btn btn-g" onclick="goStep(2)">Voltar</button>
+      </div>
+    </div>
+
+    <!-- sucesso -->
+    <div class="scr" id="e4">
+      <div class="panel narrow">
+        <div class="success">
+          <div class="checkbig">✓</div>
+          <div class="h-title" style="font-size:22px">Atendimento executado!</div>
+          <div class="h-sub" id="okMsg">—</div>
+          <div class="proto" id="okProto">—</div>
+          <div style="margin-top:22px;display:flex;gap:10px">
+            <button class="btn btn-p" style="margin:0" onclick="abrirGuiaUso(ULTIMO_USO)">📄 Ver guia</button>
+            <button class="btn btn-g" style="margin:0" onclick="novoAtendimento()">Novo atendimento</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- resumo do dia -->
+    <div class="daycard" style="max-width:640px;margin-left:auto;margin-right:auto">
+      <div class="dayhead"><h3>📋 Hoje na recepção</h3><span style="font-size:12px;color:var(--muted)" id="dDate"></span></div>
+      <div class="daynums">
+        <div class="s"><div class="n" id="dCount">0</div><div class="l">Execuções</div></div>
+        <div class="s"><div class="n" id="dEco">R$ 0</div><div class="l">Economia gerada</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ABA PACIENTES ===================== -->
+  <div class="page" id="page-pac">
+    <div class="center" style="margin-bottom:20px"><div class="h-title">Pacientes</div>
+      <div class="h-sub">Consulte cartões e o histórico de atendimentos.</div></div>
+    <div class="toolbar"><div class="search">🔍 <input id="qPac" placeholder="Buscar paciente, cartão ou CPF…" oninput="filtrarPac()"></div></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Paciente</th><th>Cartão</th><th>Plano</th><th>Status</th><th></th></tr></thead>
+      <tbody id="pacBody"><tr><td colspan="5" class="loading"><svg class="cvs" viewBox="-55 -55 110 110"><use href="#cv-al"/></svg>Carregando…</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- ===================== ABA GUIAS ===================== -->
+  <div class="page" id="page-guias">
+    <div class="center" style="margin-bottom:20px"><div class="h-title">Guias</div>
+      <div class="h-sub">Reimprima a guia de uma execução ou gere a guia geral do dia.</div></div>
+    <div class="toolbar">
+      <div class="search">🔍 <input id="qGuia" placeholder="Buscar por protocolo, paciente ou cartão…" oninput="filtrarGuias()"></div>
+      <button class="btn-mini" style="padding:11px 16px" onclick="abrirGuiaGeralHoje()">📑 Guia geral de hoje</button>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Protocolo</th><th>Paciente</th><th>Especialidade</th><th>Data</th><th>Valor</th><th></th></tr></thead>
+      <tbody id="guiaBody"><tr><td colspan="6" class="loading"><svg class="cvs" viewBox="-55 -55 110 110"><use href="#cv-al"/></svg>Carregando…</td></tr></tbody>
+    </table></div>
+    <div class="note">💡 A <b>guia geral de hoje</b> reúne todas as execuções do dia numa só folha — útil quando várias pessoas do mesmo pacote foram atendidas, listando cada paciente, especialidade e valor.</div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../shared/config.js"></script>
+<script src="../shared/foto_crop.js"></script>
+<script src="recepcao.js"></script>
+</body>
+</html>

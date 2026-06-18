@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Entrar — Mais Equilibrium</title>
-<link rel="icon" type="image/svg+xml" href="../assets/favicon-multi.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-multi-32.png">
-<link rel="apple-touch-icon" href="../assets/apple-touch-multi.png">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--azul:#1860A8;--marinho:#15406E;--aqua:#54C0CC;--ambar:#F0B43C;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#e2ebf3;--mist:#F1F7FC;--risk:#C0392B;--riskbg:#FBE9EA}
@@ -73,11 +70,18 @@ function showMsg(t, tipo){ const m=$("msg"); m.textContent=t; m.className="msg "
 document.addEventListener("keydown",(e)=>{ if(e.key==="Enter") entrar(); });
 
 async function rotaPorPapel(userId){
+  // dica de destino vinda do atalho (?area=paciente|recepcao|gestao) — o perfil real sempre manda
+  const area = new URLSearchParams(location.search).get("area");
   // 1. é equipe?
   const { data: eq } = await sb.from("equipe").select("papel,ativo").eq("auth_user_id", userId).maybeSingle();
   if (eq && eq.ativo){
-    if (eq.papel === "gestor" || eq.papel === "financeiro") return "gestao.html";
+    // recepção pode acessar tanto a recepção quanto (se gestor) a gestão
     if (eq.papel === "recepcao") return "recepcao.html";
+    if (eq.papel === "gestor" || eq.papel === "financeiro"){
+      // um gestor que entrou pelo atalho da recepção vai pra recepção; senão, gestão
+      if (area === "recepcao") return "recepcao.html";
+      return "gestao.html";
+    }
   }
   // 2. é cliente (titular)?
   const { data: as } = await sb.from("assinantes").select("id").eq("auth_user_id", userId).maybeSingle();

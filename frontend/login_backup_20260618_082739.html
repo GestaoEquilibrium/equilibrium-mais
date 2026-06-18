@@ -70,18 +70,11 @@ function showMsg(t, tipo){ const m=$("msg"); m.textContent=t; m.className="msg "
 document.addEventListener("keydown",(e)=>{ if(e.key==="Enter") entrar(); });
 
 async function rotaPorPapel(userId){
-  // dica de destino vinda do atalho (?area=paciente|recepcao|gestao) — o perfil real sempre manda
-  const area = new URLSearchParams(location.search).get("area");
   // 1. é equipe?
   const { data: eq } = await sb.from("equipe").select("papel,ativo").eq("auth_user_id", userId).maybeSingle();
   if (eq && eq.ativo){
-    // recepção pode acessar tanto a recepção quanto (se gestor) a gestão
+    if (eq.papel === "gestor" || eq.papel === "financeiro") return "gestao.html";
     if (eq.papel === "recepcao") return "recepcao.html";
-    if (eq.papel === "gestor" || eq.papel === "financeiro"){
-      // um gestor que entrou pelo atalho da recepção vai pra recepção; senão, gestão
-      if (area === "recepcao") return "recepcao.html";
-      return "gestao.html";
-    }
   }
   // 2. é cliente (titular)?
   const { data: as } = await sb.from("assinantes").select("id").eq("auth_user_id", userId).maybeSingle();

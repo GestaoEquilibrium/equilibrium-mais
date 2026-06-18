@@ -69,6 +69,19 @@ tbody tr:hover{background:var(--mist)}
 .stt.pend{color:var(--ambar-d)}.stt.pend .d{background:var(--ambar)}
 .stt.canc{color:var(--risk)}.stt.canc .d{background:var(--risk)}
 .split{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* agrupamento de cartões por família */
+.arrow{display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;color:var(--azul);transition:transform .2s;font-size:11px;margin-right:4px;border-radius:5px}
+.arrow.open{transform:rotate(90deg)}
+.arrow.none{opacity:0;pointer-events:none}
+.conta-row{cursor:pointer}
+.conta-row:hover{background:var(--mist)}
+.conta-row td:first-child b{vertical-align:middle}
+.resumo{display:inline-block;margin-left:8px;font-size:11px;color:var(--azul);background:#E6F1FB;padding:2px 9px;border-radius:11px;font-weight:600;vertical-align:middle}
+.dep-row{background:#fafcff}
+.dep-row.hidden{display:none}
+.dep-row td{font-size:13px;color:var(--ink)}
+.dep-row td:first-child{padding-left:46px;color:var(--muted);position:relative}
+.dep-row td:first-child::before{content:"";position:absolute;left:26px;top:-6px;height:24px;width:12px;border-left:2px solid #cdddec;border-bottom:2px solid #cdddec;border-bottom-left-radius:6px}
 .stat{background:var(--mist);border-radius:12px;padding:16px}
 .stat .l{font-size:12px;color:var(--muted)}
 .stat .v{font-family:'Quicksand';font-weight:700;font-size:22px;color:var(--marinho);margin-top:4px}
@@ -220,20 +233,61 @@ function renderFin(){
   <tbody>${rows||'<tr><td colspan="7" class="empty">Nenhuma fatura em aberto. 🎉</td></tr>'}</tbody></table></div>`;
 }
 
+function agruparContas(lista){
+  const map = {};
+  lista.forEach(c=>{
+    const k = c.numero_conta;
+    if(!map[k]) map[k] = { conta:k, titular:null, deps:[], plano_slug:c.plano_slug, plano_nome:c.plano_nome, adesao_status:c.adesao_status };
+    if(c.is_titular || c.papel==='Titular') map[k].titular = c; else map[k].deps.push(c);
+  });
+  // mantém ordem de aparição das contas
+  const ordem = []; const vistos = {};
+  lista.forEach(c=>{ if(!vistos[c.numero_conta]){vistos[c.numero_conta]=1;ordem.push(c.numero_conta);} });
+  return ordem.map(k=>map[k]);
+}
+function linhaStatus(cartStatus, adStatus){
+  const ok = cartStatus==='ativo' && adStatus==='ativo';
+  return `<span class="stt ${cartStatus==='bloqueado'?'pend':ok?'ok':'pend'}"><span class="d"></span>${cartStatus==='bloqueado'?'Bloqueado':cap(adStatus)}</span>`;
+}
 function renderCart(){
-  const rows = D.cart.map(c=>`
-    <tr>
-      <td><b>${c.numero}</b></td><td>${c.titular_cartao}</td><td>${c.papel}</td>
-      <td>${c.conta_titular}</td>
-      <td><span class="pill ${planClass(c.plano_slug)}">${c.plano_nome}</span></td>
-      <td><span class="stt ${c.cartao_status==='ativo'&&c.adesao_status==='ativo'?'ok':'pend'}"><span class="d"></span>${c.cartao_status==='bloqueado'?'Bloqueado':cap(c.adesao_status)}</span></td>
-    </tr>`).join("");
+  const grupos = agruparContas(D.cart);
+  const html = grupos.map((g,i)=>{
+    const t = g.titular || g.deps[0];
+    const nDep = g.deps.length;
+    const total = (g.titular?1:0) + nDep;
+    const temDep = nDep>0;
+    const resumo = temDep ? `<span class="resumo">+${nDep} dependente${nDep>1?'s':''} · ${total} cartões</span>` : '';
+    const cab = `
+      <tr class="conta-row" ${temDep?`onclick="toggleConta(${i})"`:''}>
+        <td><span class="arrow ${temDep?'':'none'}" id="arr-${i}">▶</span><b>${t?t.numero:g.conta}</b></td>
+        <td>${t?t.titular_cartao:'—'}${resumo}</td>
+        <td>Titular</td>
+        <td>${t?t.conta_titular:'—'}</td>
+        <td><span class="pill ${planClass(g.plano_slug)}">${g.plano_nome}</span></td>
+        <td>${t?linhaStatus(t.cartao_status,t.adesao_status):''}</td>
+      </tr>`;
+    const filhos = g.deps.map(d=>`
+      <tr class="dep-row dep-of-${i} hidden">
+        <td>${d.numero}</td>
+        <td>${d.titular_cartao}</td>
+        <td>${d.papel}</td>
+        <td></td>
+        <td><span class="pill ${planClass(d.plano_slug)}">${d.plano_nome}</span></td>
+        <td>${linhaStatus(d.cartao_status,d.adesao_status)}</td>
+      </tr>`).join("");
+    return cab + filhos;
+  }).join("");
   return `
-  <div class="phead"><div><h1>Cartões</h1><p>${D.cart.length} cartão(ões) emitido(s)</p></div></div>
+  <div class="phead"><div><h1>Cartões</h1><p>${grupos.length} conta(s) · ${D.cart.length} cartão(ões) emitido(s)</p></div></div>
   <div class="toolbar"><div class="search">🔍 <input id="buscaCart" placeholder="Buscar por nome ou nº do cartão..." oninput="filtrarCart()"></div></div>
-  <table><thead><tr><th>Nº do cartão</th><th>Titular do cartão</th><th>Papel</th><th>Conta (titular)</th><th>Plano</th><th>Status</th></tr></thead>
-  <tbody id="cartBody">${rows||'<tr><td colspan="6" class="empty">Nenhum cartão emitido ainda.</td></tr>'}</tbody></table>
-  <div class="card"><div class="csub" style="margin:0">Cada conta gera 1 cartão para o titular + 1 por dependente. A cor segue o plano; o acento identifica a pessoa.</div></div>`;
+  <table><thead><tr><th>Nº do cartão</th><th>Titular / membro</th><th>Papel</th><th>Conta (titular)</th><th>Plano</th><th>Status</th></tr></thead>
+  <tbody id="cartBody">${html||'<tr><td colspan="6" class="empty">Nenhum cartão emitido ainda.</td></tr>'}</tbody></table>
+  <div class="card"><div class="csub" style="margin:0">Clique na seta ▶ ao lado do titular para ver os dependentes. Cada conta gera 1 cartão para o titular + 1 por dependente.</div></div>`;
+}
+function toggleConta(i){
+  const arr = document.getElementById("arr-"+i);
+  if(arr) arr.classList.toggle("open");
+  document.querySelectorAll(".dep-of-"+i).forEach(r=>r.classList.toggle("hidden"));
 }
 
 function renderUso(){
@@ -267,8 +321,19 @@ function filtrarAssin(){
 function filtrarCart(){
   const q=(document.getElementById("buscaCart").value||"").toLowerCase();
   const body=document.getElementById("cartBody");
+  if(!q){ body.innerHTML = renderCartBodyAgrupado(); return; }
   const f=D.cart.filter(c=>(c.titular_cartao||"").toLowerCase().includes(q)||(c.numero||"").toLowerCase().includes(q));
-  body.innerHTML=f.map(c=>`<tr><td><b>${c.numero}</b></td><td>${c.titular_cartao}</td><td>${c.papel}</td><td>${c.conta_titular}</td><td><span class="pill ${planClass(c.plano_slug)}">${c.plano_nome}</span></td><td><span class="stt ${c.cartao_status==='ativo'&&c.adesao_status==='ativo'?'ok':'pend'}"><span class="d"></span>${c.cartao_status==='bloqueado'?'Bloqueado':cap(c.adesao_status)}</span></td></tr>`).join("")||'<tr><td colspan="6" class="empty">Nada encontrado.</td></tr>';
+  body.innerHTML=f.map(c=>`<tr><td><b>${c.numero}</b></td><td>${c.titular_cartao}</td><td>${c.papel}</td><td>${c.conta_titular}</td><td><span class="pill ${planClass(c.plano_slug)}">${c.plano_nome}</span></td><td>${linhaStatus(c.cartao_status,c.adesao_status)}</td></tr>`).join("")||'<tr><td colspan="6" class="empty">Nada encontrado.</td></tr>';
+}
+function renderCartBodyAgrupado(){
+  const grupos = agruparContas(D.cart);
+  return grupos.map((g,i)=>{
+    const t=g.titular||g.deps[0]; const nDep=g.deps.length; const total=(g.titular?1:0)+nDep; const temDep=nDep>0;
+    const resumo=temDep?`<span class="resumo">+${nDep} dependente${nDep>1?'s':''} · ${total} cartões</span>`:'';
+    const cab=`<tr class="conta-row" ${temDep?`onclick="toggleConta(${i})"`:''}><td><span class="arrow ${temDep?'':'none'}" id="arr-${i}">▶</span><b>${t?t.numero:g.conta}</b></td><td>${t?t.titular_cartao:'—'}${resumo}</td><td>Titular</td><td>${t?t.conta_titular:'—'}</td><td><span class="pill ${planClass(g.plano_slug)}">${g.plano_nome}</span></td><td>${t?linhaStatus(t.cartao_status,t.adesao_status):''}</td></tr>`;
+    const filhos=g.deps.map(d=>`<tr class="dep-row dep-of-${i} hidden"><td>${d.numero}</td><td>${d.titular_cartao}</td><td>${d.papel}</td><td></td><td><span class="pill ${planClass(d.plano_slug)}">${d.plano_nome}</span></td><td>${linhaStatus(d.cartao_status,d.adesao_status)}</td></tr>`).join("");
+    return cab+filhos;
+  }).join("");
 }
 
 const RENDER = { geral:renderGeral, assin:renderAssin, fin:renderFin, cart:renderCart, uso:renderUso };

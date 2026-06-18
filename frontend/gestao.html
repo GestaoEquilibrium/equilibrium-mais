@@ -90,7 +90,7 @@ tbody tr:hover{background:var(--mist)}
     <svg width="32" height="32" viewBox="-55 -55 110 110"><use href="#catavento"/></svg>
     <b>Mais <span>Equilibrium</span></b><span class="badge-adm">GESTÃO</span>
   </div>
-  <div class="user"><span id="uNome">—</span><div class="avatar" id="uAv">—</div><button class="logout" onclick="sair()">Sair</button></div>
+  <div class="user"><a class="logout" id="cfgLink" href="config.html" style="display:none;text-decoration:none">⚙️ Equipe</a><span id="uNome">—</span><div class="avatar" id="uAv">—</div><button class="logout" onclick="sair()">Sair</button></div>
 </div></div>
 
 <div class="tabs"><div class="wrap" id="tabbar">
@@ -283,6 +283,7 @@ function mostrar(p){
   if (!eq) return;
   document.getElementById("uNome").textContent = eq.nome + " · " + cap(eq.papel);
   document.getElementById("uAv").textContent = iniciais(eq.nome);
+  if (eq.papel === "gestor"){ const cl=document.getElementById("cfgLink"); if(cl) cl.style.display="inline-block"; }
   await carregar();
   mostrar("geral");
   document.querySelectorAll("#tabbar button").forEach(b=>b.onclick=()=>{ mostrar(b.dataset.p); window.scrollTo({top:0,behavior:"smooth"}); });

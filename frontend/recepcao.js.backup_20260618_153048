@@ -52,8 +52,8 @@ async function carregarUsosHoje(){
 }
 function atualizarResumoDia(){
   const eco=D.usosHoje.reduce((s,u)=>s+Number(u.economia||0),0);
-  const c=document.getElementById("dCount"); if(c)c.textContent=D.usosHoje.length;
-  const e=document.getElementById("dEco"); if(e)e.textContent=money(eco);
+  document.getElementById("dCount").textContent=D.usosHoje.length;
+  document.getElementById("dEco").textContent=money(eco);
 }
 
 /* ================= ABAS ================= */
@@ -108,44 +108,11 @@ function selecionar(c,ativo){
   }
   sel=c;
   const cor=c.cor_acento||"#1860A8";
-  const card=document.getElementById("bigCard");
-  card.style.background=`linear-gradient(135deg, ${escurece(cor)}, ${cor})`;
-  document.getElementById("bcNome").textContent=c.paciente;
-  document.getElementById("bcNum").textContent=c.numero;
-  document.getElementById("bcAv").textContent=ini(c.paciente);
-  document.getElementById("bcPlano").textContent=c.plano_nome+" · "+c.papel;
-  renderServChips();
-  document.getElementById("serv").value="";
-  document.getElementById("prof").value="";
-  checkReady();
+  document.getElementById("sbAv").textContent=ini(c.paciente);
+  document.getElementById("sbAv").style.background=cor;
+  document.getElementById("sbNome").textContent=c.paciente;
+  document.getElementById("sbInfo").textContent=`${c.numero} · ${c.papel} · ${c.plano_nome}`;
   goStep(2);
-}
-
-function escurece(hex){
-  const h=(hex||"#1860A8").replace("#","");
-  const r=Math.max(0,parseInt(h.slice(0,2),16)-40);
-  const g=Math.max(0,parseInt(h.slice(2,4),16)-40);
-  const b=Math.max(0,parseInt(h.slice(4,6),16)-40);
-  return `rgb(${r},${g},${b})`;
-}
-
-const ICON_SERV={psico:"🧠",psiq:"👨‍⚕️",rqe:"👨‍⚕️",neuro:"🧠",aba:"🧩",psicoped:"📚",psicomot:"🤸",fono:"🗣️",to:"✋",music:"🎵"};
-function renderServChips(){
-  const box=document.getElementById("servChips");
-  if(!box)return;
-  box.innerHTML="";
-  D.servicos.forEach(s=>{
-    const chip=document.createElement("div");
-    chip.className="servchip"; chip.dataset.slug=s.slug;
-    chip.innerHTML=`<span class="ic">${ICON_SERV[s.slug]||"•"}</span>${s.nome}`;
-    chip.onclick=()=>escolherServ(s.slug);
-    box.appendChild(chip);
-  });
-}
-function escolherServ(slug){
-  document.getElementById("serv").value=slug;
-  document.querySelectorAll("#servChips .servchip").forEach(c=>c.classList.toggle("sel",c.dataset.slug===slug));
-  checkReady();
 }
 function checkReady(){
   document.getElementById("toConf").disabled=!(document.getElementById("serv").value&&document.getElementById("prof").value);
@@ -198,7 +165,6 @@ function novoAtendimento(){
   document.getElementById("serv").value="";
   document.getElementById("prof").value="";
   document.getElementById("obs").value="";
-  document.querySelectorAll("#servChips .servchip").forEach(c=>c.classList.remove("sel"));
   document.getElementById("toConf").disabled=true;
   resetDataHora();
   goStep(1);
@@ -299,7 +265,7 @@ function resetDataHora(){
   }else document.getElementById("uAv").textContent=ini(eq.nome);
   const now=new Date();
   document.getElementById("hoje").textContent=now.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
-  const dd=document.getElementById("dDate"); if(dd)dd.textContent=now.toLocaleDateString("pt-BR");
+  document.getElementById("dDate").textContent=now.toLocaleDateString("pt-BR");
   resetDataHora();
   document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>trocarAba(b.dataset.tab));
   await carregar();

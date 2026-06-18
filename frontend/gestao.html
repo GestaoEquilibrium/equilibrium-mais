@@ -48,7 +48,11 @@ h1,h2,h3,h4{font-family:'Quicksand',sans-serif}
 .topbar .right{margin-left:auto;display:flex;align-items:center;gap:14px}
 .hamb{display:none;border:none;background:none;font-size:22px;cursor:pointer;color:var(--azul)}
 .userchip{display:flex;align-items:center;gap:10px;font-size:13.5px}
-.userchip .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--azul-d),var(--azul));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:14px}
+.userchip .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--azul-d),var(--azul));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:14px;cursor:pointer;position:relative;overflow:visible;flex-shrink:0}
+.userchip .av img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.userchip .av .badge-foto{position:absolute;right:-3px;bottom:-3px;width:17px;height:17px;border-radius:50%;background:var(--coral);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;font-family:'Inter'}
+.userchip .av:hover .cam{opacity:1}
+.userchip .av .cam{position:absolute;inset:0;border-radius:50%;background:rgba(21,64,110,.55);display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0;transition:.15s}
 .userchip .nm{font-weight:600}.userchip .rl{font-size:11.5px;color:var(--muted)}
 .btn-out{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Quicksand';transition:.15s}
 .btn-out:hover{background:var(--riskbg);color:var(--risk);border-color:var(--risk)}
@@ -289,6 +293,7 @@ tbody tr.clickable:hover{background:var(--mist)}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../shared/config.js"></script>
+<script src="../shared/foto_crop.js"></script>
 <script>
 const sb = window.maisClient;
 const money = (n)=>"R$ "+Math.round(Number(n||0)).toLocaleString("pt-BR");
@@ -306,7 +311,7 @@ async function guard(){
   if(!data.session){location.href="login.html";return null;}
   const uid=data.session.user.id;
   tokenEq=data.session.access_token; meuId=uid;
-  const {data:eq}=await sb.from("equipe").select("nome,papel,ativo").eq("auth_user_id",uid).maybeSingle();
+  const {data:eq}=await sb.from("equipe").select("nome,papel,ativo,foto_path").eq("auth_user_id",uid).maybeSingle();
   if(!eq||!eq.ativo||!(eq.papel==="gestor"||eq.papel==="financeiro")){
     alert("Acesso restrito à equipe de gestão.");await sb.auth.signOut();location.href="login.html";return null;
   }
@@ -639,12 +644,33 @@ function plantarCv(hostId,n,op){
   for(let i=0;i<n;i++){const p=pos[i%pos.length];const s=document.createElementNS(NS,"svg");s.setAttribute("viewBox","-55 -55 110 110");s.setAttribute("width",p[2]);s.setAttribute("height",p[2]);s.classList.add("cv");s.style.left=p[0]+"%";s.style.top=p[1]+"%";s.style.setProperty("--sp",p[3]+"s");s.style.opacity=op;if(i%2)s.style.animationDirection="reverse";const u=document.createElementNS(NS,"use");u.setAttribute("href","#cv-white");s.appendChild(u);host.appendChild(s);}
 }
 
+/* ---- foto de identificação ---- */
+let EU = null; // dados do membro logado
+async function renderAvatar(){
+  const av=document.getElementById("uAv");
+  if(EU.foto_path){
+    const url=await CortexFoto.urlAssinada(EU.foto_path);
+    if(url){ av.innerHTML=`<img src="${url}" alt="foto"><div class="cam">📷</div>`; return; }
+  }
+  // sem foto: iniciais + badge de alerta
+  av.innerHTML=`${ini(EU.nome)}<span class="badge-foto">!</span><div class="cam">📷</div>`;
+}
+function abrirCropFoto(){
+  CortexFoto.abrir({
+    bucketFolder:"equipe", tabela:"equipe", coluna:"foto_path",
+    chaveColuna:"auth_user_id", chaveValor:EU.uid,
+    onPronto:(url)=>{ EU.foto_path=`equipe/${EU.uid}.png`; renderAvatar(); }
+  });
+}
+
 /* ================= BOOT ================= */
 (async()=>{
   const eq=await guard();if(!eq)return;
+  EU=eq;
   document.getElementById("uNome").textContent=eq.nome;
   document.getElementById("uRole").textContent=labelPapel[eq.papel]||cap(eq.papel);
-  document.getElementById("uAv").textContent=ini(eq.nome);
+  await renderAvatar();
+  document.getElementById("uAv").onclick=abrirCropFoto;
   // só gestor vê Equipe
   if(eq.papel!=="gestor"){const b=document.querySelector('[data-sec="equipe"]');if(b)b.style.display="none";const g=b?.previousElementSibling;if(g&&g.classList.contains("grp"))g.style.display="none";}
   plantarCv("sbCv",6,.5);
@@ -653,6 +679,8 @@ function plantarCv(hostId,n,op){
   const venc=D.fat.filter(f=>f.vencida).length;const bg=document.getElementById("bgFin");if(venc>0&&bg){bg.style.display="inline-block";bg.textContent=venc;}
   document.querySelectorAll("#sbNav button").forEach(b=>b.onclick=()=>mostrar(b.dataset.sec));
   mostrar("geral");
+  // pop-up após login: se não tem foto, pede (só some quando enviar)
+  if(!eq.foto_path){ setTimeout(abrirCropFoto, 600); }
 })();
 </script>
 </body>

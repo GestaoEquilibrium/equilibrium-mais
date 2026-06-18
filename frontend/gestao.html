@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Gestão — Mais Equilibrium</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#1860A8;--marinho:#15406E;--aqua:#54C0CC;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#e2ebf3;--mist:#F1F7FC;--ok:#1E8449;--okbg:#E9F6EE;--risk:#C0392B;--riskbg:#FBE9EA}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#eef3f8;line-height:1.5}
+h1,h2,h3{font-family:'Quicksand',sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.nav .wrap{display:flex;align-items:center;gap:12px;height:62px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand b{font-family:'Quicksand';font-weight:700;color:var(--marinho);font-size:18px}
+.brand b span{color:var(--azul)}
+.badge-adm{font-size:11px;background:var(--marinho);color:#fff;padding:4px 10px;border-radius:20px;font-weight:600}
+.user{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:14px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--marinho);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700}
+.logout{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Quicksand'}
+.logout:hover{background:var(--mist);color:var(--risk)}
+.tabs{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:62px;z-index:49}
+.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+.tabs button{border:none;background:none;padding:15px 16px;font-family:'Quicksand';font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tabs button:hover{color:var(--azul)}
+.tabs button.on{color:var(--azul);border-bottom-color:var(--azul)}
+.page{display:none;padding:26px 0 60px;animation:f .25s ease}
+.page.on{display:block}
+@keyframes f{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.phead{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.phead h1{font-size:23px;color:var(--marinho)}
+.phead p{color:var(--muted);font-size:14px;margin-top:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.kpi .l{font-size:12.5px;color:var(--muted)}
+.kpi .v{font-family:'Quicksand';font-weight:700;font-size:27px;color:var(--marinho);margin-top:6px;line-height:1}
+.kpi .t{font-size:12px;margin-top:7px;font-weight:600}
+.kpi .t.up{color:var(--ok)}.kpi .t.down{color:var(--risk)}.kpi .t.muted{color:var(--muted)}
+.kpi .ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;float:right}
+.ic.b{background:#E6F1FB}.ic.g{background:var(--okbg)}.ic.a{background:#FBF1DA}.ic.r{background:var(--riskbg)}.ic.p{background:#EEEDFE}
+.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;margin-top:18px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px}
+.card.first{margin-top:0}
+.card h3{font-size:16px;color:var(--azul);font-weight:700}
+.card .csub{font-size:12.5px;color:var(--muted);margin-bottom:14px;margin-top:2px}
+.mix{display:flex;flex-direction:column;gap:13px}
+.mix .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.mix .top b{color:var(--ink)}.mix .top span{color:var(--muted)}
+.mix .track{height:9px;background:var(--mist);border-radius:6px;overflow:hidden}
+.mix .track i{display:block;height:100%;border-radius:6px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 13px;font-size:14px;color:var(--muted);min-width:240px}
+.search input{border:none;outline:none;font-family:'Inter';font-size:14px;width:100%}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+thead th{background:var(--marinho);color:#fff;font-family:'Quicksand';font-weight:600;font-size:13px;text-align:left;padding:12px 15px}
+tbody td{padding:12px 15px;border-bottom:1px solid var(--line);font-size:13.5px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--mist)}
+.who{display:flex;align-items:center;gap:10px}
+.who .a{width:31px;height:31px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Quicksand';font-weight:700}
+.who small{display:block;color:var(--muted);font-size:12px}
+.pill{font-size:12px;padding:4px 11px;border-radius:20px;font-weight:600}
+.pill.ind{background:#E1F5EE;color:#0F6E56}.pill.fam{background:#E6F1FB;color:#185FA5}.pill.gran{background:#FBF1DA;color:var(--ambar-d)}
+.stt{font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.stt .d{width:8px;height:8px;border-radius:50%}
+.stt.ok{color:var(--ok)}.stt.ok .d{background:var(--ok)}
+.stt.pend{color:var(--ambar-d)}.stt.pend .d{background:var(--ambar)}
+.stt.canc{color:var(--risk)}.stt.canc .d{background:var(--risk)}
+.split{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stat{background:var(--mist);border-radius:12px;padding:16px}
+.stat .l{font-size:12px;color:var(--muted)}
+.stat .v{font-family:'Quicksand';font-weight:700;font-size:22px;color:var(--marinho);margin-top:4px}
+.empty{text-align:center;color:var(--muted);font-size:14px;padding:30px}
+.loading{text-align:center;color:var(--muted);font-size:14px;padding:40px}
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:28px 0}
+@media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="blade"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
+<g id="catavento"><use href="#blade" fill="#1860A8"/><use href="#blade" fill="#54C0CC" transform="rotate(90)"/><use href="#blade" fill="#F0B43C" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></g>
+</defs></svg>
+
+<div class="nav"><div class="wrap">
+  <div class="brand">
+    <svg width="32" height="32" viewBox="-55 -55 110 110"><use href="#catavento"/></svg>
+    <b>Mais <span>Equilibrium</span></b><span class="badge-adm">GESTÃO</span>
+  </div>
+  <div class="user"><span id="uNome">—</span><div class="avatar" id="uAv">—</div><button class="logout" onclick="sair()">Sair</button></div>
+</div></div>
+
+<div class="tabs"><div class="wrap" id="tabbar">
+  <button class="on" data-p="geral">📊 Visão geral</button>
+  <button data-p="assin">👥 Assinantes</button>
+  <button data-p="fin">💰 Financeiro</button>
+  <button data-p="cart">💳 Cartões</button>
+  <button data-p="uso">🩺 Uso &amp; Benefícios</button>
+</div></div>
+
+<div class="wrap" id="conteudo">
+  <div class="loading" style="padding:80px">Carregando painel…</div>
+</div>
+
+<div class="foot">Painel de Gestão — Mais Equilibrium · Grupo Equilibrium Med Center</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../shared/config.js"></script>
+<script>
+const sb = window.maisClient;
+const money = (n) => "R$ " + Math.round(Number(n||0)).toLocaleString("pt-BR");
+const iniciais = (nome) => (nome||"?").split(" ").filter(Boolean).slice(0,2).map(s=>s[0]).join("").toUpperCase();
+const planClass = (slug) => slug==="ind"?"ind":slug==="gran"?"gran":"fam";
+const stClass = (s) => s==="ativo"?"ok":s==="cancelado"?"canc":"pend";
+const D = {}; // cache de dados
+
+/* ---------- guarda de acesso ---------- */
+async function guard(){
+  const { data } = await sb.auth.getSession();
+  if (!data.session){ window.location.href = "login.html"; return null; }
+  const uid = data.session.user.id;
+  const { data: eq } = await sb.from("equipe").select("nome,papel,ativo").eq("auth_user_id", uid).maybeSingle();
+  if (!eq || !eq.ativo || !(eq.papel==="gestor" || eq.papel==="financeiro")){
+    alert("Acesso restrito à equipe de gestão.");
+    await sb.auth.signOut();
+    window.location.href = "login.html";
+    return null;
+  }
+  return eq;
+}
+
+async function sair(){ await sb.auth.signOut(); window.location.href = "login.html"; }
+
+/* ---------- carrega tudo das views ---------- */
+async function carregar(){
+  const [k, mix, assin, cart, uso, fat] = await Promise.all([
+    sb.from("vw_kpis_gestao").select("*").maybeSingle(),
+    sb.from("vw_mix_planos").select("*"),
+    sb.from("vw_assinantes_lista").select("*").order("data_adesao",{ascending:false}),
+    sb.from("vw_cartoes_lista").select("*").order("numero_conta"),
+    sb.from("vw_servicos_uso").select("*"),
+    sb.from("vw_faturas_abertas").select("*"),
+  ]);
+  D.kpis = k.data || {}; D.mix = mix.data || []; D.assin = assin.data || [];
+  D.cart = cart.data || []; D.uso = uso.data || []; D.fat = fat.data || [];
+  const erro = k.error || mix.error || assin.error || cart.error || uso.error || fat.error;
+  if (erro) console.error("Erro ao carregar views:", erro);
+}
+
+/* ---------- renderização por aba ---------- */
+function renderGeral(){
+  const k = D.kpis;
+  const mixHtml = D.mix.map(m=>`
+    <div><div class="top"><b>${m.plano}</b><span>${m.ativos} · ${m.pct||0}%</span></div>
+    <div class="track"><i style="width:${m.pct||0}%;background:${m.cor_hex}"></i></div></div>`).join("");
+  return `
+  <div class="phead"><div><h1>Visão geral</h1><p>Resumo do programa Mais Equilibrium</p></div></div>
+  <div class="kpis">
+    <div class="kpi"><div class="ic b">👥</div><div class="l">Assinantes ativos</div><div class="v">${k.assinantes_ativos||0}</div><div class="t muted">contas ativas</div></div>
+    <div class="kpi"><div class="ic g">💰</div><div class="l">Receita recorrente (MRR)</div><div class="v">${money(k.mrr)}</div><div class="t up">mensal</div></div>
+    <div class="kpi"><div class="ic a">💳</div><div class="l">Cartões ativos</div><div class="v">${k.cartoes_ativos||0}</div><div class="t muted">titulares + dependentes</div></div>
+    <div class="kpi"><div class="ic r">⚠️</div><div class="l">Pendentes / inadimplentes</div><div class="v">${k.inadimplentes||0}</div><div class="t down">contas</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card first"><h3>Economia gerada para a base</h3><div class="csub">Prova de valor do programa</div>
+      <div class="split">
+        <div class="stat"><div class="l">Economia total</div><div class="v" style="color:var(--ok)">${money(k.economia_gerada_total)}</div></div>
+        <div class="stat"><div class="l">Atendimentos</div><div class="v">${k.total_atendimentos||0}</div></div>
+        <div class="stat"><div class="l">Cancelados</div><div class="v" style="color:var(--risk)">${k.cancelados||0}</div></div>
+      </div>
+    </div>
+    <div class="card first"><h3>Mix de planos</h3><div class="csub">Base ativa</div>
+      <div class="mix">${mixHtml||'<div class="empty">Sem dados</div>'}</div>
+    </div>
+  </div>`;
+}
+
+function renderAssin(){
+  const rows = D.assin.map(a=>`
+    <tr>
+      <td><div class="who"><div class="a" style="background:${a.plano_cor}">${iniciais(a.assinante)}</div>
+        <div>${a.assinante}<small>${a.cpf||""}</small></div></div></td>
+      <td><span class="pill ${planClass(a.plano_slug)}">${a.plano_nome}</span></td>
+      <td>${a.dependentes}</td>
+      <td>${a.numero_conta}</td>
+      <td>${a.proxima_cobranca||"—"}</td>
+      <td>${money(a.economia_total)}</td>
+      <td><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></td>
+    </tr>`).join("");
+  return `
+  <div class="phead"><div><h1>Assinantes</h1><p>${D.assin.length} conta(s) no programa</p></div></div>
+  <div class="toolbar"><div class="search">🔍 <input id="buscaAssin" placeholder="Buscar por nome, CPF ou conta..." oninput="filtrarAssin()"></div></div>
+  <table><thead><tr><th>Assinante</th><th>Plano</th><th>Dep.</th><th>Conta</th><th>Próx. cobrança</th><th>Economia</th><th>Status</th></tr></thead>
+  <tbody id="assinBody">${rows||'<tr><td colspan="7" class="empty">Nenhum assinante ainda.</td></tr>'}</tbody></table>`;
+}
+
+function renderFin(){
+  const totalAberto = D.fat.reduce((s,f)=>s+Number(f.valor||0),0);
+  const vencidas = D.fat.filter(f=>f.vencida).length;
+  const rows = D.fat.map(f=>`
+    <tr>
+      <td>${f.assinante}</td><td>${f.numero_conta}</td>
+      <td><span class="pill ${planClass(planSlugFromNome(f.plano_nome))}">${f.plano_nome}</span></td>
+      <td>${f.competencia}</td><td>${f.vencimento}</td><td>${money(f.valor)}</td>
+      <td><span class="stt ${f.vencida?'canc':'pend'}"><span class="d"></span>${f.vencida?'Vencida':'Em aberto'}</span></td>
+    </tr>`).join("");
+  return `
+  <div class="phead"><div><h1>Financeiro</h1><p>Receita e faturas em aberto</p></div></div>
+  <div class="kpis">
+    <div class="kpi"><div class="ic g">💵</div><div class="l">MRR (receita recorrente)</div><div class="v">${money(D.kpis.mrr)}</div><div class="t muted">contas ativas</div></div>
+    <div class="kpi"><div class="ic b">📅</div><div class="l">Receita anual projetada</div><div class="v">${money(Number(D.kpis.mrr||0)*12)}</div><div class="t muted">MRR × 12</div></div>
+    <div class="kpi"><div class="ic a">⏳</div><div class="l">A receber (em aberto)</div><div class="v">${money(totalAberto)}</div><div class="t muted">${D.fat.length} fatura(s)</div></div>
+    <div class="kpi"><div class="ic r">🔴</div><div class="l">Faturas vencidas</div><div class="v">${vencidas}</div><div class="t down">cobrança</div></div>
+  </div>
+  <div class="card"><h3>Faturas em aberto</h3><div class="csub">Ordenadas por vencimento</div>
+  <table><thead><tr><th>Assinante</th><th>Conta</th><th>Plano</th><th>Competência</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead>
+  <tbody>${rows||'<tr><td colspan="7" class="empty">Nenhuma fatura em aberto. 🎉</td></tr>'}</tbody></table></div>`;
+}
+
+function renderCart(){
+  const rows = D.cart.map(c=>`
+    <tr>
+      <td><b>${c.numero}</b></td><td>${c.titular_cartao}</td><td>${c.papel}</td>
+      <td>${c.conta_titular}</td>
+      <td><span class="pill ${planClass(c.plano_slug)}">${c.plano_nome}</span></td>
+      <td><span class="stt ${c.cartao_status==='ativo'&&c.adesao_status==='ativo'?'ok':'pend'}"><span class="d"></span>${c.cartao_status==='bloqueado'?'Bloqueado':cap(c.adesao_status)}</span></td>
+    </tr>`).join("");
+  return `
+  <div class="phead"><div><h1>Cartões</h1><p>${D.cart.length} cartão(ões) emitido(s)</p></div></div>
+  <div class="toolbar"><div class="search">🔍 <input id="buscaCart" placeholder="Buscar por nome ou nº do cartão..." oninput="filtrarCart()"></div></div>
+  <table><thead><tr><th>Nº do cartão</th><th>Titular do cartão</th><th>Papel</th><th>Conta (titular)</th><th>Plano</th><th>Status</th></tr></thead>
+  <tbody id="cartBody">${rows||'<tr><td colspan="6" class="empty">Nenhum cartão emitido ainda.</td></tr>'}</tbody></table>
+  <div class="card"><div class="csub" style="margin:0">Cada conta gera 1 cartão para o titular + 1 por dependente. A cor segue o plano; o acento identifica a pessoa.</div></div>`;
+}
+
+function renderUso(){
+  const usados = D.uso.filter(u=>u.volume>0);
+  const totalVol = usados.reduce((s,u)=>s+Number(u.volume),0) || 1;
+  const totalEco = D.uso.reduce((s,u)=>s+Number(u.economia_gerada||0),0);
+  const rows = usados.map(u=>`
+    <div><div class="top"><b>${u.servico}</b><span>${u.volume} · ${Math.round(100*u.volume/totalVol)}%</span></div>
+    <div class="track"><i style="width:${Math.round(100*u.volume/totalVol)}%;background:var(--azul)"></i></div></div>`).join("");
+  return `
+  <div class="phead"><div><h1>Uso &amp; benefícios</h1><p>Quais serviços estão sendo usados com o cartão</p></div></div>
+  <div class="kpis">
+    <div class="kpi"><div class="ic b">🩺</div><div class="l">Atendimentos com cartão</div><div class="v">${D.kpis.total_atendimentos||0}</div><div class="t muted">total</div></div>
+    <div class="kpi"><div class="ic g">💸</div><div class="l">Economia gerada</div><div class="v">${money(totalEco)}</div><div class="t up">aos clientes</div></div>
+    <div class="kpi"><div class="ic p">📊</div><div class="l">Serviços usados</div><div class="v">${usados.length}</div><div class="t muted">de ${D.uso.length}</div></div>
+    <div class="kpi"><div class="ic a">🔁</div><div class="l">Vol. médio</div><div class="v">${usados.length?Math.round(totalVol/usados.length):0}</div><div class="t muted">por serviço</div></div>
+  </div>
+  <div class="card"><h3>Serviços mais usados</h3><div class="csub">Volume no período</div>
+  <div class="mix">${rows||'<div class="empty">Nenhum uso registrado ainda.</div>'}</div></div>`;
+}
+
+/* ---------- filtros de busca ---------- */
+function cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : ""; }
+function planSlugFromNome(n){ return /gran/i.test(n)?"gran":/individual/i.test(n)?"ind":"fam"; }
+function filtrarAssin(){
+  const q=(document.getElementById("buscaAssin").value||"").toLowerCase();
+  const body=document.getElementById("assinBody");
+  const f=D.assin.filter(a=>(a.assinante||"").toLowerCase().includes(q)||(a.cpf||"").includes(q)||(a.numero_conta||"").toLowerCase().includes(q));
+  body.innerHTML=f.map(a=>`<tr><td><div class="who"><div class="a" style="background:${a.plano_cor}">${iniciais(a.assinante)}</div><div>${a.assinante}<small>${a.cpf||""}</small></div></div></td><td><span class="pill ${planClass(a.plano_slug)}">${a.plano_nome}</span></td><td>${a.dependentes}</td><td>${a.numero_conta}</td><td>${a.proxima_cobranca||"—"}</td><td>${money(a.economia_total)}</td><td><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></td></tr>`).join("")||'<tr><td colspan="7" class="empty">Nada encontrado.</td></tr>';
+}
+function filtrarCart(){
+  const q=(document.getElementById("buscaCart").value||"").toLowerCase();
+  const body=document.getElementById("cartBody");
+  const f=D.cart.filter(c=>(c.titular_cartao||"").toLowerCase().includes(q)||(c.numero||"").toLowerCase().includes(q));
+  body.innerHTML=f.map(c=>`<tr><td><b>${c.numero}</b></td><td>${c.titular_cartao}</td><td>${c.papel}</td><td>${c.conta_titular}</td><td><span class="pill ${planClass(c.plano_slug)}">${c.plano_nome}</span></td><td><span class="stt ${c.cartao_status==='ativo'&&c.adesao_status==='ativo'?'ok':'pend'}"><span class="d"></span>${c.cartao_status==='bloqueado'?'Bloqueado':cap(c.adesao_status)}</span></td></tr>`).join("")||'<tr><td colspan="6" class="empty">Nada encontrado.</td></tr>';
+}
+
+const RENDER = { geral:renderGeral, assin:renderAssin, fin:renderFin, cart:renderCart, uso:renderUso };
+function mostrar(p){
+  document.getElementById("conteudo").innerHTML = RENDER[p]();
+  document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("on", b.dataset.p===p));
+}
+
+/* ---------- boot ---------- */
+(async ()=>{
+  const eq = await guard();
+  if (!eq) return;
+  document.getElementById("uNome").textContent = eq.nome + " · " + cap(eq.papel);
+  document.getElementById("uAv").textContent = iniciais(eq.nome);
+  await carregar();
+  mostrar("geral");
+  document.querySelectorAll("#tabbar button").forEach(b=>b.onclick=()=>{ mostrar(b.dataset.p); window.scrollTo({top:0,behavior:"smooth"}); });
+})();
+</script>
+</body>
+</html>

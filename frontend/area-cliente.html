@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Área — Mais Equilibrium</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#1860A8;--azul-d:#15406E;--azul-l:#3E86D6;--aqua:#54C0CC;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;
+  --ink:#16293c;--muted:#6b7f90;--muted2:#92a4b3;--line:#e4edf5;--mist:#F1F7FC;--bg:#eef4fa;
+  --ok:#1E8449;--okbg:#E7F6ED;--risk:#C0392B;--riskbg:#FBEAEB;--warn:#B7791F;--warnbg:#FCF3E2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{font-family:'Quicksand',sans-serif}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#cddbe8;border-radius:6px}
+
+/* topo */
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+.top .in{max-width:1080px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .nm{font-family:'Quicksand';font-weight:700;color:var(--azul-d);font-size:17px}
+.brand .nm span{color:var(--azul)}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.userchip{display:flex;align-items:center;gap:9px;font-size:13.5px}
+.userchip .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--azul-d),var(--azul));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:13px;cursor:pointer;overflow:hidden;position:relative}
+.userchip .av img{width:100%;height:100%;object-fit:cover}
+.btn-out{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Quicksand';transition:.15s}
+.btn-out:hover{background:var(--riskbg);color:var(--risk);border-color:var(--risk)}
+
+.wrap{max-width:1080px;margin:0 auto;padding:28px 24px 70px}
+.hello{font-size:24px;color:var(--azul-d);margin-bottom:3px}
+.hello-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+@media(max-width:840px){.layout{grid-template-columns:1fr}}
+
+/* ===== CARTÃO TILT 3D ===== */
+.card-area{perspective:1200px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.tilt{width:100%;max-width:380px;aspect-ratio:1.6/1;border-radius:20px;position:relative;overflow:hidden;cursor:pointer;
+  color:#fff;box-shadow:0 22px 50px rgba(21,64,110,.32);transition:transform .12s ease-out;transform-style:preserve-3d}
+.tilt .pin{position:absolute;right:-30px;bottom:-30px;width:180px;height:180px;opacity:.16}
+.tilt .shine{position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.4),transparent 46%);opacity:0;transition:opacity .2s}
+.tilt:hover .shine{opacity:1}
+.tilt .pad{position:absolute;inset:0;padding:24px 26px;transform:translateZ(40px);display:flex;flex-direction:column}
+.tilt .kick{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.9;font-weight:700;font-family:'Quicksand'}
+.tilt .foto{position:absolute;top:22px;right:24px;width:54px;height:54px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Quicksand';font-weight:700;font-size:18px;overflow:hidden;transform:translateZ(50px)}
+.tilt .foto img{width:100%;height:100%;object-fit:cover}
+.tilt .nome{font-family:'Quicksand';font-weight:700;font-size:21px;margin-top:auto}
+.tilt .num{letter-spacing:.16em;font-size:15px;margin-top:8px;opacity:.96}
+.tilt .meta{display:flex;gap:22px;margin-top:14px;font-size:11.5px}
+.tilt .meta b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;font-weight:700}
+
+/* seletor de família */
+.fam{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fam button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 14px;font-family:'Quicksand';font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px}
+.fam button .dot{width:9px;height:9px;border-radius:50%}
+.fam button.on{border-color:var(--azul);color:var(--azul);background:var(--mist)}
+.fam .add{color:var(--azul)}
+
+/* coluna direita */
+.stat-eco{background:linear-gradient(135deg,#1E8449,#27AE60);color:#fff;border-radius:18px;padding:22px;position:relative;overflow:hidden}
+.stat-eco .l{font-size:12px;opacity:.9;font-family:'Quicksand';font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.stat-eco .v{font-family:'Quicksand';font-weight:700;font-size:40px;line-height:1.1;margin-top:4px}
+.stat-eco .s{font-size:13px;opacity:.92;margin-top:6px}
+.stat-eco .pin{position:absolute;right:-18px;bottom:-18px;width:120px;height:120px;opacity:.14}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:18px}
+.card h3{font-size:15px;color:var(--azul-d);margin-bottom:4px}
+.card .sub{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:none}
+.li .ic{width:38px;height:38px;border-radius:11px;background:var(--mist);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.li .g{flex:1;min-width:0}.li .g b{display:block;font-size:14px}.li .g small{color:var(--muted);font-size:12px}
+.li .r{text-align:right;font-size:12.5px}
+.badge-ok{font-size:11px;font-weight:700;color:var(--ok);background:var(--okbg);padding:4px 10px;border-radius:20px}
+.fatura .r b{font-family:'Quicksand';color:var(--azul-d)}
+.stt{font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+.stt .d{width:7px;height:7px;border-radius:50%}
+.stt.aberto{color:var(--warn)}.stt.aberto .d{background:var(--ambar)}
+.stt.vencida{color:var(--risk)}.stt.vencida .d{background:var(--risk)}
+.empty{text-align:center;color:var(--muted);font-size:13.5px;padding:24px}
+.loading{text-align:center;color:var(--muted);padding:70px}
+.loading .cvs{width:42px;height:42px;margin:0 auto 12px;animation:spin 2s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="blade"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
+<g id="cv-al"><use href="#blade" fill="#1860A8"/><use href="#blade" fill="#F0B43C" transform="rotate(90)"/><use href="#blade" fill="#1860A8" transform="rotate(180)"/><use href="#blade" fill="#F0B43C" transform="rotate(270)"/></g>
+<g id="cv-white"><use href="#blade" fill="#fff"/><use href="#blade" fill="#fff" transform="rotate(90)"/><use href="#blade" fill="#fff" transform="rotate(180)"/><use href="#blade" fill="#fff" transform="rotate(270)"/></g>
+</defs></svg>
+
+<div class="top"><div class="in">
+  <div class="brand"><svg width="30" height="30" viewBox="-55 -55 110 110"><use href="#cv-al"/></svg>
+    <div class="nm">Mais <span>Equilibrium</span></div></div>
+  <div class="right">
+    <div class="userchip"><span id="uNomeTop" style="font-weight:600"></span><div class="av" id="uAv">—</div></div>
+    <button class="btn-out" onclick="sair()">Sair</button>
+  </div>
+</div></div>
+
+<div class="wrap" id="wrap">
+  <div class="loading"><svg class="cvs" viewBox="-55 -55 110 110"><use href="#cv-al"/></svg>Carregando sua área…</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../shared/config.js"></script>
+<script src="../shared/foto_crop.js"></script>
+<script src="area-cliente.js"></script>
+</body>
+</html>

@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Entrar — Mais Equilibrium</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon-multi.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-multi-32.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-multi.png">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--azul:#1860A8;--marinho:#15406E;--aqua:#54C0CC;--ambar:#F0B43C;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#e2ebf3;--mist:#F1F7FC;--risk:#C0392B;--riskbg:#FBE9EA}
@@ -49,25 +52,15 @@ h1,h2{font-family:'Quicksand',sans-serif}
     <div class="nm">Mais <span>Equilibrium</span></div>
     <small>MED CENTER</small>
   </div>
-  <div id="loginBox">
-    <h1>Bem-vindo</h1>
-    <div class="sub">Entre na sua conta para continuar</div>
+  <h1>Bem-vindo</h1>
+  <div class="sub">Entre na sua conta para continuar</div>
 
-    <div class="field"><label>E-mail</label><input id="email" type="email" placeholder="seu@email.com" autocomplete="username"></div>
-    <div class="field"><label>Senha</label><input id="senha" type="password" placeholder="••••••••" autocomplete="current-password"></div>
-    <button class="btn" id="btnEntrar" onclick="entrar()">Entrar</button>
-    <div class="msg" id="msg"></div>
+  <div class="field"><label>E-mail</label><input id="email" type="email" placeholder="seu@email.com" autocomplete="username"></div>
+  <div class="field"><label>Senha</label><input id="senha" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+  <button class="btn" id="btnEntrar" onclick="entrar()">Entrar</button>
+  <div class="msg" id="msg"></div>
 
-    <div class="foot">Ainda não é cliente? <a href="../index.html">Conheça o Mais Equilibrium</a></div>
-  </div>
-
-  <div id="seletor" style="display:none">
-    <h1>Como deseja entrar?</h1>
-    <div class="sub">Sua conta tem acesso de equipe e de paciente. Escolha por onde entrar agora.</div>
-    <button class="btn" id="optEquipe" style="margin-top:18px">Entrar como Gestão</button>
-    <button class="btn" id="optPaciente" style="margin-top:12px;background:var(--aqua);color:#0c3b40">Entrar como paciente</button>
-    <div class="foot" style="margin-top:18px"><a href="#" onclick="location.reload();return false;">← Voltar</a></div>
-  </div>
+  <div class="foot">Ainda não é cliente? <a href="../index.html">Conheça o Mais Equilibrium</a></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -79,39 +72,17 @@ function showMsg(t, tipo){ const m=$("msg"); m.textContent=t; m.className="msg "
 
 document.addEventListener("keydown",(e)=>{ if(e.key==="Enter") entrar(); });
 
-async function perfisDoUsuario(userId){
-  // detecta TODOS os perfis do usuário (pode ser equipe E paciente ao mesmo tempo)
-  const [{ data: eq }, { data: as }] = await Promise.all([
-    sb.from("equipe").select("papel,ativo").eq("auth_user_id", userId).maybeSingle(),
-    sb.from("assinantes").select("id").eq("auth_user_id", userId).maybeSingle(),
-  ]);
-  let destinoEquipe = null;
+async function rotaPorPapel(userId){
+  // 1. é equipe?
+  const { data: eq } = await sb.from("equipe").select("papel,ativo").eq("auth_user_id", userId).maybeSingle();
   if (eq && eq.ativo){
-    if (eq.papel === "gestor" || eq.papel === "financeiro") destinoEquipe = "gestao.html";
-    else if (eq.papel === "recepcao") destinoEquipe = "recepcao.html";
+    if (eq.papel === "gestor" || eq.papel === "financeiro") return "gestao.html";
+    if (eq.papel === "recepcao") return "recepcao.html";
   }
-  const destinoPaciente = as ? "area-cliente.html" : null;
-  return { destinoEquipe, destinoPaciente, papelEquipe: (eq && eq.ativo) ? eq.papel : null };
-}
-
-// decide o que fazer com os perfis: 0 = erro, 1 = redireciona, 2 = mostra seletor
-function resolverDestino(perfis){
-  const { destinoEquipe, destinoPaciente } = perfis;
-  if (destinoEquipe && destinoPaciente) return { tipo: "escolher", perfis };
-  if (destinoEquipe)   return { tipo: "ir", destino: destinoEquipe };
-  if (destinoPaciente) return { tipo: "ir", destino: destinoPaciente };
-  return { tipo: "nenhum" };
-}
-
-function mostrarSeletor(perfis){
-  const papel = perfis.papelEquipe === "recepcao" ? "Recepção"
-              : perfis.papelEquipe === "financeiro" ? "Financeiro" : "Gestão";
-  $("loginBox").style.display = "none";
-  const sel = $("seletor");
-  sel.style.display = "block";
-  $("optEquipe").textContent = "Entrar como " + papel;
-  $("optEquipe").onclick = () => { window.location.href = perfis.destinoEquipe; };
-  $("optPaciente").onclick = () => { window.location.href = perfis.destinoPaciente; };
+  // 2. é cliente (titular)?
+  const { data: as } = await sb.from("assinantes").select("id").eq("auth_user_id", userId).maybeSingle();
+  if (as) return "area-cliente.html";
+  return null; // sem perfil
 }
 
 async function entrar(){
@@ -122,16 +93,14 @@ async function entrar(){
   try{
     const { data, error } = await sb.auth.signInWithPassword({ email, password: senha });
     if (error){ showMsg("E-mail ou senha incorretos.","err"); return; }
-    const perfis = await perfisDoUsuario(data.user.id);
-    const r = resolverDestino(perfis);
-    if (r.tipo === "nenhum"){
+    const destino = await rotaPorPapel(data.user.id);
+    if (!destino){
       await sb.auth.signOut();
       showMsg("Sua conta ainda não tem um perfil vinculado. Fale com a clínica.","err");
       return;
     }
-    if (r.tipo === "escolher"){ mostrarSeletor(perfis); return; }
     showMsg("Tudo certo! Redirecionando...","ok");
-    window.location.href = r.destino;
+    window.location.href = destino;
   }catch(e){
     console.error(e); showMsg("Erro ao entrar. Tente novamente.","err");
   }finally{
@@ -139,14 +108,12 @@ async function entrar(){
   }
 }
 
-// se já estiver logado, pula direto (ou mostra o seletor se tiver dois perfis)
+// se já estiver logado, pula direto
 (async ()=>{
   const { data } = await sb.auth.getSession();
   if (data.session){
-    const perfis = await perfisDoUsuario(data.session.user.id);
-    const r = resolverDestino(perfis);
-    if (r.tipo === "ir") window.location.href = r.destino;
-    else if (r.tipo === "escolher") mostrarSeletor(perfis);
+    const destino = await rotaPorPapel(data.session.user.id);
+    if (destino) window.location.href = destino;
   }
 })();
 

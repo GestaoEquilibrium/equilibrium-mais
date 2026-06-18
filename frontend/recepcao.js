@@ -216,13 +216,18 @@ function pintarGuias(lista){
     <td style="text-align:right"><button class="btn-mini" onclick='abrirGuiaUso(${JSON.stringify(u).replace(/'/g,"&#39;")})'>📄 Guia</button></td></tr>`).join("");
 }
 
-/* ---- guia PDF (placeholder — implementado na próxima camada) ---- */
+/* ---- guia PDF (janela suspensa A4 paisagem) ---- */
 function abrirGuiaUso(u){
-  abrirModal("Guia · "+(u.protocolo||""), `<div class="note">A guia em PDF (A4 paisagem) será gerada aqui na próxima etapa.<br><br><b>Protocolo:</b> ${u.protocolo||"—"}<br><b>Paciente:</b> ${u.paciente}<br><b>Especialidade:</b> ${u.servico}<br><b>Valor:</b> ${money(u.valor_pago)}</div>`);
+  // enriquece com CPF/conta do cartão (vw_uso_cartao não traz esses campos)
+  if(!u.cpf_paciente || !u.numero_conta){
+    const c=D.cartoes.find(x=>x.cartao_id===u.cartao_id || x.numero===u.numero_cartao);
+    if(c){ u={...u, cpf_paciente:u.cpf_paciente||c.cpf, numero_conta:u.numero_conta||c.numero_conta}; }
+  }
+  if(window.CortexGuia) CortexGuia.individual(u);
 }
 function abrirGuiaGeralHoje(){
   if(!D.usosHoje.length){alert("Nenhuma execução hoje para gerar a guia geral.");return;}
-  abrirModal("Guia geral de hoje", `<div class="note">A guia geral consolidada (todas as execuções do dia) será gerada aqui na próxima etapa. Hoje: <b>${D.usosHoje.length}</b> execução(ões).</div>`);
+  if(window.CortexGuia) CortexGuia.geral(D.usosHoje);
 }
 
 /* ---- modal genérico ---- */

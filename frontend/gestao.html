@@ -176,6 +176,43 @@ tbody tr.clickable:hover{background:var(--mist)}
 .dr-li .r{text-align:right;font-size:12.5px}
 .dr-eco{color:var(--ok);font-weight:700;font-family:'Quicksand'}
 
+/* ====== EQUIPE (form inline) ====== */
+.eq-grid{display:grid;grid-template-columns:0.78fr 1.6fr;gap:18px;align-items:start}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.field input,.field select{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;font-size:14px;font-family:'Inter';transition:.15s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(24,96,168,.1)}
+.roles{display:flex;gap:8px}
+.role-opt{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:11px 6px;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted);transition:.15s}
+.role-opt.on{border-color:var(--azul);background:var(--mist);color:var(--azul)}
+.btn-full{font-family:'Quicksand';font-weight:600;border:none;border-radius:12px;padding:13px 18px;font-size:14px;cursor:pointer;width:100%;background:var(--azul);color:#fff;transition:.18s;margin-top:6px}
+.btn-full:hover{background:var(--azul-d)}.btn-full:disabled{opacity:.6;cursor:not-allowed}
+.msg{font-size:13.5px;border-radius:11px;padding:12px 14px;margin-top:14px;display:none}
+.msg.err{background:var(--riskbg);color:var(--risk);display:block}
+.msg.ok{background:var(--okbg);color:var(--ok);display:block}
+.cred{background:#FFF7E6;border:1px solid var(--ambar);border-radius:12px;padding:14px;margin-top:14px;display:none}
+.cred.show{display:block}
+.cred .l{font-size:12px;color:var(--ambar-d);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.cred .v{font-family:'Quicksand';font-weight:700;font-size:18px;color:var(--azul-d);margin-top:4px;word-break:break-all}
+.cred .copy{margin-top:10px;border:1px solid var(--ambar);background:#fff;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--ambar-d);cursor:pointer}
+.rowacts{display:flex;gap:6px;justify-content:flex-end}
+#equipeBody td{padding:11px 13px}
+.act{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 8px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Quicksand'}
+.act.toggle{color:var(--ambar-d)}.act.toggle:hover{background:#FFF7E6}
+.act.del{color:var(--risk)}.act.del:hover{background:var(--riskbg)}
+.act:disabled{opacity:.4;cursor:not-allowed}
+.tag-me{font-size:11px;color:var(--muted);background:var(--mist);padding:3px 8px;border-radius:10px}
+.modal{position:fixed;inset:0;background:rgba(21,64,110,.45);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
+.modal.show{display:flex}
+.modal .box{background:#fff;border-radius:18px;padding:28px;max-width:380px;width:90%;text-align:center;box-shadow:0 30px 70px rgba(8,30,55,.4)}
+.modal .box h3{font-size:18px;color:var(--azul-d);margin-bottom:8px}
+.modal .box p{font-size:14px;color:var(--muted);margin-bottom:20px}
+.modal .acts{display:flex;gap:10px}
+.modal .acts button{flex:1;border-radius:11px;padding:12px;font-family:'Quicksand';font-weight:600;font-size:14px;cursor:pointer;border:none}
+.modal .cancel{background:var(--mist);color:var(--muted)}
+.modal .ok{background:var(--risk);color:#fff}
+@media(max-width:820px){.eq-grid{grid-template-columns:1fr}}
+
 .empty{text-align:center;color:var(--muted);font-size:14px;padding:36px}
 .loading{text-align:center;color:var(--muted);font-size:14px;padding:60px}
 .loading .cv-spin{width:44px;height:44px;margin:0 auto 14px;animation:spin 2s linear infinite}
@@ -243,6 +280,13 @@ tbody tr.clickable:hover{background:var(--mist)}
 <div class="drawer-bg" id="drawerBg" onclick="fecharDrawer()"></div>
 <div class="drawer" id="drawer"></div>
 
+<!-- MODAL confirmar exclusão de membro -->
+<div class="modal" id="modalEq"><div class="box">
+  <h3 id="mTit">Confirmar</h3>
+  <p id="mTxt">Tem certeza?</p>
+  <div class="acts"><button class="cancel" onclick="fecharModalEq()">Cancelar</button><button class="ok" id="mOk">Confirmar</button></div>
+</div></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../shared/config.js"></script>
 <script>
@@ -261,6 +305,7 @@ async function guard(){
   const {data}=await sb.auth.getSession();
   if(!data.session){location.href="login.html";return null;}
   const uid=data.session.user.id;
+  tokenEq=data.session.access_token; meuId=uid;
   const {data:eq}=await sb.from("equipe").select("nome,papel,ativo").eq("auth_user_id",uid).maybeSingle();
   if(!eq||!eq.ativo||!(eq.papel==="gestor"||eq.papel==="financeiro")){
     alert("Acesso restrito à equipe de gestão.");await sb.auth.signOut();location.href="login.html";return null;
@@ -465,15 +510,114 @@ function secUso(){
   <div class="card" style="margin-top:18px"><div class="ch"><h3>Serviços mais usados</h3></div><div class="sub">Volume de atendimentos por serviço</div>${bars}</div>`;
 }
 
+/* ================= EQUIPE (inline) ================= */
+const FN_EQUIPE = window.MAIS_CONFIG.url + "/functions/v1/gerir-equipe";
+const corPapel={gestor:"#5b50c9",financeiro:"#0F6E56",recepcao:"#185FA5"};
+let papelSel="recepcao", tokenEq=null, meuId=null;
+
 function secEquipe(){
-  return `<div class="sec-h"><div><h1>Equipe</h1><p>Gerencie quem tem acesso ao sistema</p></div></div>
-  <div class="card" style="text-align:center;padding:40px">
-    <svg width="60" height="60" viewBox="-55 -55 110 110" style="margin-bottom:14px"><use href="#cv-al"/></svg>
-    <h3 style="margin-bottom:8px">Cadastro e gestão de profissionais</h3>
-    <p style="color:var(--muted);max-width:46ch;margin:0 auto 20px">Crie acessos para recepção, financeiro e gestão, defina papéis e gerencie ativações na página dedicada.</p>
-    <a href="config.html" style="display:inline-block;background:var(--azul);color:#fff;font-family:'Quicksand';font-weight:600;padding:13px 24px;border-radius:12px;text-decoration:none">Abrir gestão de equipe →</a>
+  return `<div class="sec-h"><div><h1>Equipe</h1><p>Cadastre e gerencie quem tem acesso ao sistema</p></div></div>
+  <div class="eq-grid">
+    <div class="card">
+      <div class="ch"><h3>Novo profissional</h3></div>
+      <div class="sub">Você cria o acesso; a pessoa completa o perfil e troca a senha no 1º acesso.</div>
+      <div class="field"><label>Nome completo</label><input id="f_nome" placeholder="Nome do profissional"></div>
+      <div class="field"><label>E-mail (será o login)</label><input id="f_email" type="email" placeholder="profissional@email.com"></div>
+      <div class="field"><label>Função no sistema</label>
+        <div class="roles" id="roles">
+          <div class="role-opt ${papelSel==='recepcao'?'on':''}" data-r="recepcao">🏥 Recepção</div>
+          <div class="role-opt ${papelSel==='financeiro'?'on':''}" data-r="financeiro">💰 Financeiro</div>
+          <div class="role-opt ${papelSel==='gestor'?'on':''}" data-r="gestor">⚙️ Gestor</div>
+        </div>
+      </div>
+      <button class="btn-full" id="btnCriar" onclick="criarMembro()">Criar acesso</button>
+      <div class="msg" id="msgEq"></div>
+      <div class="cred" id="cred"><div class="l">Senha provisória — repasse ao profissional</div><div class="v" id="credSenha">—</div><button class="copy" onclick="copiarSenha()">📋 Copiar senha</button></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:22px 22px 14px"><div class="ch"><h3>Equipe cadastrada</h3><span class="tag-soft" id="contagemEq">—</span></div></div>
+      <div class="tbl-wrap" style="border:none;border-radius:0"><table>
+        <thead><tr><th>Profissional</th><th>Função</th><th>Status</th><th style="text-align:right">Ações</th></tr></thead>
+        <tbody id="equipeBody"><tr><td colspan="4" class="loading">Carregando equipe…</td></tr></tbody>
+      </table></div>
+    </div>
   </div>`;
 }
+
+function bindEquipe(){
+  document.querySelectorAll("#roles .role-opt").forEach(el=>{
+    el.onclick=()=>{papelSel=el.dataset.r;document.querySelectorAll("#roles .role-opt").forEach(x=>x.classList.toggle("on",x===el));};
+  });
+  carregarEquipe();
+}
+
+async function callFnEquipe(payload){
+  const r=await fetch(FN_EQUIPE,{method:"POST",headers:{"Authorization":"Bearer "+tokenEq,"apikey":window.MAIS_CONFIG.anonKey,"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  return r.json();
+}
+
+async function carregarEquipe(){
+  const {data,error}=await sb.from("vw_equipe_lista").select("*").order("criado_em");
+  const body=document.getElementById("equipeBody"); if(!body)return;
+  if(error){body.innerHTML=`<tr><td colspan="4" class="empty">Erro: ${error.message}</td></tr>`;return;}
+  const cont=document.getElementById("contagemEq"); if(cont)cont.textContent=`${data.length} pessoa(s)`;
+  if(!data.length){body.innerHTML='<tr><td colspan="4" class="empty">Nenhum membro ainda.</td></tr>';return;}
+  body.innerHTML=data.map(m=>{
+    const eu=m.auth_user_id===meuId;
+    return `<tr>
+      <td><div class="who"><div class="a" style="background:${corPapel[m.papel]||'#1860A8'}">${ini(m.nome)}</div><div>${m.nome} ${eu?'<span class="tag-me">você</span>':''}<small>${m.email||''}</small></div></div></td>
+      <td><span class="pill ${m.papel}">${labelPapel[m.papel]||cap(m.papel)}</span></td>
+      <td><span class="stt ${m.ativo?'ok':'pend'}"><span class="d"></span>${m.ativo?'Ativo':'Inativo'}</span></td>
+      <td><div class="rowacts">
+        <button class="act toggle" ${eu?'disabled':''} onclick="toggleMembro('${m.auth_user_id}',${m.ativo})">${m.ativo?'Inativar':'Reativar'}</button>
+        <button class="act del" ${eu?'disabled':''} onclick="pedirExcluirMembro('${m.auth_user_id}','${(m.nome||'').replace(/'/g,"")}')">Excluir</button>
+      </div></td></tr>`;
+  }).join("");
+}
+
+async function criarMembro(){
+  const nome=document.getElementById("f_nome").value.trim(), email=document.getElementById("f_email").value.trim();
+  const msg=document.getElementById("msgEq");
+  function show(t,tipo){msg.textContent=t;msg.className="msg "+tipo;}
+  if(!nome||!email){show("Preencha nome e e-mail.","err");return;}
+  const btn=document.getElementById("btnCriar"); btn.disabled=true; btn.textContent="Criando...";
+  document.getElementById("cred").classList.remove("show");
+  try{
+    const res=await callFnEquipe({acao:"criar",nome,email,papel:papelSel});
+    if(!res.ok){show(res.erro||"Erro ao criar.","err");return;}
+    show("Acesso criado para "+nome+".","ok");
+    document.getElementById("credSenha").textContent=res.senha_provisoria;
+    document.getElementById("cred").classList.add("show");
+    document.getElementById("f_nome").value=""; document.getElementById("f_email").value="";
+    await carregarEquipe();
+  }catch(e){show("Erro: "+(e.message||e),"err");}
+  finally{btn.disabled=false;btn.textContent="Criar acesso";}
+}
+function copiarSenha(){navigator.clipboard.writeText(document.getElementById("credSenha").textContent);}
+async function toggleMembro(id,estaAtivo){
+  const res=await callFnEquipe({acao:estaAtivo?"inativar":"reativar",auth_user_id:id});
+  if(!res.ok){alert(res.erro||"Erro.");return;}
+  await carregarEquipe();
+}
+let alvoExcluir=null;
+function pedirExcluirMembro(id,nome){
+  alvoExcluir=id;
+  document.getElementById("mTit").textContent="Excluir "+nome+"?";
+  document.getElementById("mTxt").textContent="O login e o acesso serão removidos definitivamente. Esta ação não pode ser desfeita.";
+  document.getElementById("modalEq").classList.add("show");
+}
+function fecharModalEq(){document.getElementById("modalEq").classList.remove("show");alvoExcluir=null;}
+document.addEventListener("DOMContentLoaded",()=>{
+  const mok=document.getElementById("mOk");
+  if(mok)mok.onclick=async()=>{
+    if(!alvoExcluir)return;
+    mok.disabled=true;mok.textContent="Excluindo...";
+    const res=await callFnEquipe({acao:"excluir",auth_user_id:alvoExcluir});
+    mok.disabled=false;mok.textContent="Confirmar";fecharModalEq();
+    if(!res.ok){alert(res.erro||"Erro ao excluir.");return;}
+    await carregarEquipe();
+  };
+});
 
 /* ================= NAV ================= */
 const SEC={geral:{f:secGeral,t:"Visão geral"},assin:{f:secAssin,t:"Assinantes"},cart:{f:secCart,t:"Cartões"},fin:{f:secFin,t:"Financeiro"},uso:{f:secUso,t:"Uso & Benefícios"},equipe:{f:secEquipe,t:"Equipe"}};
@@ -485,6 +629,7 @@ function mostrar(s){
   document.getElementById("content").scrollTo?.(0,0);
   // re-vincula filtros
   if(s==="assin")document.querySelectorAll("#fltAssin button").forEach(b=>b.onclick=()=>{fltAssinVal=b.dataset.f;document.querySelectorAll("#fltAssin button").forEach(x=>x.classList.toggle("on",x===b));fAssin();});
+  if(s==="equipe")bindEquipe();
 }
 
 /* cataventos decorativos */

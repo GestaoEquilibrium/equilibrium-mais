@@ -59,6 +59,9 @@ h1,h2,h3,h4{font-family:'Quicksand',sans-serif}
 .userchip .nm{font-weight:600}.userchip .rl{font-size:11.5px;color:var(--muted)}
 .btn-out{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Quicksand';transition:.15s}
 .btn-out:hover{background:var(--riskbg);color:var(--risk);border-color:var(--risk)}
+.btn-recep{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--azul);cursor:pointer;font-family:'Quicksand';transition:.15s;display:none;align-items:center;gap:7px}
+.btn-recep:hover{background:var(--mist);border-color:var(--azul)}
+.btn-recep .ic{font-size:15px}
 .content{padding:28px;flex:1;animation:fade .3s ease}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
@@ -273,6 +276,7 @@ tbody tr.clickable:hover{background:var(--mist)}
       <button class="hamb" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
       <div class="crumb">Gestão / <b id="crumbSec">Visão geral</b></div>
       <div class="right">
+        <button class="btn-recep" id="btnRecep" onclick="location.href='recepcao.html'"><span class="ic">⚡</span> Ir para recepção</button>
         <div class="userchip"><div><div class="nm" id="uNome">—</div><div class="rl" id="uRole">—</div></div><div class="av" id="uAv">—</div></div>
         <button class="btn-out" onclick="sair()">Sair</button>
       </div>
@@ -676,6 +680,8 @@ function abrirCropFoto(){
   document.getElementById("uAv").onclick=abrirCropFoto;
   // só gestor vê Equipe
   if(eq.papel!=="gestor"){const b=document.querySelector('[data-sec="equipe"]');if(b)b.style.display="none";const g=b?.previousElementSibling;if(g&&g.classList.contains("grp"))g.style.display="none";}
+  // botão "Ir para recepção" só para o gestor
+  if(eq.papel==="gestor"){const br=document.getElementById("btnRecep");if(br)br.style.display="inline-flex";}
   plantarCv("sbCv",6,.5);
   await carregar();
   // badge de pendências no menu Financeiro

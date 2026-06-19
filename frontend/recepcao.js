@@ -109,7 +109,7 @@ function selecionar(c,ativo){
   sel=c;
   const cor=c.cor_acento||"#1860A8";
   const card=document.getElementById("bigCard");
-  card.style.background=`linear-gradient(135deg, ${escurece(cor)}, ${cor})`;
+  card.style.background=`linear-gradient(135deg, ${escurece(cor,0.5)}, ${escurece(cor,0.72)})`;
   document.getElementById("bcNome").textContent=c.paciente;
   document.getElementById("bcNum").textContent=c.numero;
   document.getElementById("bcAv").textContent=ini(c.paciente);
@@ -121,11 +121,12 @@ function selecionar(c,ativo){
   goStep(2);
 }
 
-function escurece(hex){
+function escurece(hex, f){
+  f = (f==null) ? 0.55 : f;
   const h=(hex||"#1860A8").replace("#","");
-  const r=Math.max(0,parseInt(h.slice(0,2),16)-40);
-  const g=Math.max(0,parseInt(h.slice(2,4),16)-40);
-  const b=Math.max(0,parseInt(h.slice(4,6),16)-40);
+  const r=Math.round(parseInt(h.slice(0,2),16)*f);
+  const g=Math.round(parseInt(h.slice(2,4),16)*f);
+  const b=Math.round(parseInt(h.slice(4,6),16)*f);
   return `rgb(${r},${g},${b})`;
 }
 

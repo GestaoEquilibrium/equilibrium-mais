@@ -82,12 +82,9 @@
     try {
       const { error } = await sb().auth.updateUser({ password: s1 });
       if (error) { msg("Não foi possível salvar: " + error.message, "err"); return; }
-      // zera a flag na tabela informada
-      if (cfg.tabela && cfg.chaveColuna) {
-        await sb().from(cfg.tabela)
-          .update({ must_change_password: false })
-          .eq(cfg.chaveColuna, cfg.chaveValor);
-      }
+      // zera a flag via função SECURITY DEFINER (não depende do RLS)
+      const { error: e2 } = await sb().rpc("marcar_senha_trocada");
+      if (e2) console.error("flag senha:", e2);
       msg("Senha atualizada!", "ok");
       setTimeout(() => {
         fechar();

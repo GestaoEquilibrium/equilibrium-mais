@@ -223,8 +223,9 @@ async function salvarNovaSenha(){
 
     const { data: { user } } = await sb.auth.getUser();
     if (user){
-      // zera a flag (só afeta assinantes; sem erro se a linha não existir)
-      await sb.from("assinantes").update({ must_change_password: false }).eq("auth_user_id", user.id);
+      // zera a flag via função SECURITY DEFINER (não depende do RLS)
+      const { error: e2 } = await sb.rpc("marcar_senha_trocada");
+      if (e2) console.error("flag senha:", e2);
     }
 
     showMsg("Senha atualizada! Redirecionando...","ok");

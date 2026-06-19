@@ -6,6 +6,8 @@
 (function () {
   const sb = window.maisClient;
   const money = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
+  // formata com centavos (usado p/ exibir o preço do cartão com -1 centavo na tabela)
+  const moneyC = (n) => "R$ " + Number(n).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const state = {
     planos: {}, servicos: [], plan: null,
@@ -48,7 +50,7 @@
       tr.innerHTML =
         `<td>${s.icone || ""} ${s.nome}</td>` +
         `<td class="old">${money(s.preco_particular)}</td>` +
-        `<td class="c">${money(s.preco_cartao)}<span class="off-badge">-${pct}%</span></td>`;
+        `<td class="c">${s.preco_cartao > 0 ? moneyC(s.preco_cartao - 0.01) : money(s.preco_cartao)}<span class="off-badge">-${pct}%</span></td>`;
       tb.appendChild(tr);
     });
   }

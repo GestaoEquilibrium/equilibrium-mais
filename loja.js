@@ -119,7 +119,7 @@
       r.className = "row";
       r.innerHTML =
         `<label>${s.icone || ""} ${s.nome}</label>` +
-        `<span class="pp">${money(s.preco_particular)}→${money(s.preco_cartao)}</span>` +
+        `<span class="pp"><s>${money(s.preco_particular)}</s>→<b class="cc">${s.preco_cartao > 0 ? moneyC(s.preco_cartao - 0.01) : money(s.preco_cartao)}</b></span>` +
         `<div class="stp"><button data-d="-1" data-s="${s.slug}">−</button>` +
         `<input id="q_${s.slug}" value="0" readonly>` +
         `<button data-d="1" data-s="${s.slug}">+</button></div>`;
@@ -128,7 +128,7 @@
     c.querySelectorAll("button[data-s]").forEach((b) => (b.onclick = () => bump(b.dataset.s, +b.dataset.d)));
     const neuroSvc = state.servicos.find((s) => s.slug === "neuro");
     const lbl = document.querySelector('label[for="ck_neuro"]');
-    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(${money(neuroSvc.preco_particular)} → ${money(neuroSvc.preco_cartao)})</span>`;
+    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(<s>${money(neuroSvc.preco_particular)}</s> → ${neuroSvc.preco_cartao > 0 ? moneyC(neuroSvc.preco_cartao - 0.01) : money(neuroSvc.preco_cartao)})</span>`;
   }
 
   function bump(slug, d) {

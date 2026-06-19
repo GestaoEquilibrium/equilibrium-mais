@@ -27,11 +27,16 @@ h1,h2{font-family:'Quicksand',sans-serif}
 .field input:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(24,96,168,.12)}
 .btn{font-family:'Quicksand';font-weight:600;border:none;border-radius:13px;padding:15px;font-size:15px;cursor:pointer;width:100%;background:var(--azul);color:#fff;transition:.18s;margin-top:6px}
 .btn:hover{background:var(--marinho)}.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.sec{background:var(--mist);color:var(--marinho)}
+.btn.sec:hover{background:#e3eef8}
 .msg{font-size:13.5px;border-radius:11px;padding:12px 14px;margin-top:16px;display:none}
 .msg.err{background:var(--riskbg);color:var(--risk);display:block}
 .msg.ok{background:#E9F6EE;color:#1E8449;display:block}
 .foot{text-align:center;margin-top:22px;font-size:12.5px}
-.foot a{color:var(--azul);text-decoration:none;font-weight:600}
+.foot a{color:var(--azul);text-decoration:none;font-weight:600;cursor:pointer}
+.linkrow{text-align:right;margin:-8px 0 16px}
+.linkrow a{color:var(--azul);text-decoration:none;font-weight:600;font-size:12.5px;cursor:pointer}
+.hint{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:14px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -49,24 +54,51 @@ h1,h2{font-family:'Quicksand',sans-serif}
     <div class="nm">Mais <span>Equilibrium</span></div>
     <small>MED CENTER</small>
   </div>
+
+  <!-- ====== LOGIN ====== -->
   <div id="loginBox">
     <h1>Bem-vindo</h1>
     <div class="sub">Entre na sua conta para continuar</div>
 
     <div class="field"><label>E-mail</label><input id="email" type="email" placeholder="seu@email.com" autocomplete="username"></div>
     <div class="field"><label>Senha</label><input id="senha" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+    <div class="linkrow"><a onclick="abrirEsqueci()">Esqueci minha senha</a></div>
     <button class="btn" id="btnEntrar" onclick="entrar()">Entrar</button>
     <div class="msg" id="msg"></div>
 
     <div class="foot">Ainda não é cliente? <a href="../index.html">Conheça o Mais Equilibrium</a></div>
   </div>
 
+  <!-- ====== SELETOR (equipe + paciente) ====== -->
   <div id="seletor" style="display:none">
     <h1>Como deseja entrar?</h1>
     <div class="sub">Sua conta tem acesso de equipe e de paciente. Escolha por onde entrar agora.</div>
     <button class="btn" id="optEquipe" style="margin-top:18px">Entrar como Gestão</button>
     <button class="btn" id="optPaciente" style="margin-top:12px;background:var(--aqua);color:#0c3b40">Entrar como paciente</button>
-    <div class="foot" style="margin-top:18px"><a href="#" onclick="location.reload();return false;">← Voltar</a></div>
+    <div class="foot" style="margin-top:18px"><a onclick="location.reload()">← Voltar</a></div>
+  </div>
+
+  <!-- ====== NOVA SENHA (1º acesso + recuperação) ====== -->
+  <div id="novaSenha" style="display:none">
+    <h1 id="nsTitulo">Defina sua senha</h1>
+    <div class="sub" id="nsSub">Para sua segurança, troque a senha inicial por uma senha só sua.</div>
+
+    <div class="field"><label>Nova senha</label><input id="ns1" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password"></div>
+    <div class="field"><label>Confirmar nova senha</label><input id="ns2" type="password" placeholder="Repita a nova senha" autocomplete="new-password"></div>
+    <button class="btn" id="btnSalvarSenha" onclick="salvarNovaSenha()">Salvar nova senha</button>
+    <div class="msg" id="msg2"></div>
+  </div>
+
+  <!-- ====== ESQUECI A SENHA ====== -->
+  <div id="esqueci" style="display:none">
+    <h1>Recuperar acesso</h1>
+    <div class="sub">Enviaremos um link para você criar uma nova senha.</div>
+
+    <div class="field"><label>E-mail da conta</label><input id="recEmail" type="email" placeholder="seu@email.com" autocomplete="username"></div>
+    <div class="hint">O link chega no seu e-mail (verifique também o spam). Ao clicar, você volta para esta página já pronto para criar a nova senha.</div>
+    <button class="btn" id="btnEnviarRec" onclick="enviarRecuperacao()">Enviar link de recuperação</button>
+    <button class="btn sec" onclick="voltarLogin()" style="margin-top:10px">← Voltar para o login</button>
+    <div class="msg" id="msg3"></div>
   </div>
 </div>
 
@@ -75,15 +107,34 @@ h1,h2{font-family:'Quicksand',sans-serif}
 <script>
 const sb = window.maisClient;
 const $ = (id) => document.getElementById(id);
-function showMsg(t, tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; }
 
-document.addEventListener("keydown",(e)=>{ if(e.key==="Enter") entrar(); });
+const TELAS = ["loginBox","seletor","novaSenha","esqueci"];
+const MSGBOX = { loginBox:"msg", seletor:"msg", novaSenha:"msg2", esqueci:"msg3" };
+let telaAtual = "loginBox";
+
+function mostrar(tela){
+  telaAtual = tela;
+  TELAS.forEach(t => $(t).style.display = (t===tela ? "block" : "none"));
+  // limpa mensagens ao trocar de tela
+  ["msg","msg2","msg3"].forEach(m=>{ const e=$(m); e.textContent=""; e.className="msg"; });
+}
+function showMsg(t, tipo){ const m=$(MSGBOX[telaAtual]); m.textContent=t; m.className="msg "+tipo; }
+
+let perfisCache = null;        // perfis do usuário logado
+let modoRecuperacao = false;   // veio do link de e-mail
+
+// Enter dispara a ação da tela ativa
+document.addEventListener("keydown",(e)=>{
+  if(e.key!=="Enter") return;
+  if(telaAtual==="loginBox") entrar();
+  else if(telaAtual==="novaSenha") salvarNovaSenha();
+  else if(telaAtual==="esqueci") enviarRecuperacao();
+});
 
 async function perfisDoUsuario(userId){
-  // detecta TODOS os perfis do usuário (pode ser equipe E paciente ao mesmo tempo)
   const [{ data: eq }, { data: as }] = await Promise.all([
     sb.from("equipe").select("papel,ativo").eq("auth_user_id", userId).maybeSingle(),
-    sb.from("assinantes").select("id").eq("auth_user_id", userId).maybeSingle(),
+    sb.from("assinantes").select("id,must_change_password").eq("auth_user_id", userId).maybeSingle(),
   ]);
   let destinoEquipe = null;
   if (eq && eq.ativo){
@@ -91,10 +142,14 @@ async function perfisDoUsuario(userId){
     else if (eq.papel === "recepcao") destinoEquipe = "recepcao.html";
   }
   const destinoPaciente = as ? "area-cliente.html" : null;
-  return { destinoEquipe, destinoPaciente, papelEquipe: (eq && eq.ativo) ? eq.papel : null };
+  return {
+    destinoEquipe, destinoPaciente,
+    papelEquipe: (eq && eq.ativo) ? eq.papel : null,
+    ehAssinante: !!as,
+    mustChange: !!(as && as.must_change_password),
+  };
 }
 
-// decide o que fazer com os perfis: 0 = erro, 1 = redireciona, 2 = mostra seletor
 function resolverDestino(perfis){
   const { destinoEquipe, destinoPaciente } = perfis;
   if (destinoEquipe && destinoPaciente) return { tipo: "escolher", perfis };
@@ -106,12 +161,25 @@ function resolverDestino(perfis){
 function mostrarSeletor(perfis){
   const papel = perfis.papelEquipe === "recepcao" ? "Recepção"
               : perfis.papelEquipe === "financeiro" ? "Financeiro" : "Gestão";
-  $("loginBox").style.display = "none";
-  const sel = $("seletor");
-  sel.style.display = "block";
+  mostrar("seletor");
   $("optEquipe").textContent = "Entrar como " + papel;
   $("optEquipe").onclick = () => { window.location.href = perfis.destinoEquipe; };
   $("optPaciente").onclick = () => { window.location.href = perfis.destinoPaciente; };
+}
+
+// roteia o usuário já autenticado para o destino certo (ou força troca de senha)
+function rotear(perfis){
+  if (perfis.ehAssinante && perfis.mustChange){ abrirNovaSenha(false); return; }
+  const r = resolverDestino(perfis);
+  if (r.tipo === "nenhum"){
+    sb.auth.signOut();
+    mostrar("loginBox");
+    showMsg("Sua conta ainda não tem um perfil vinculado. Fale com a clínica.","err");
+    return;
+  }
+  if (r.tipo === "escolher"){ mostrarSeletor(perfis); return; }
+  showMsg("Tudo certo! Redirecionando...","ok");
+  window.location.href = r.destino;
 }
 
 async function entrar(){
@@ -123,15 +191,8 @@ async function entrar(){
     const { data, error } = await sb.auth.signInWithPassword({ email, password: senha });
     if (error){ showMsg("E-mail ou senha incorretos.","err"); return; }
     const perfis = await perfisDoUsuario(data.user.id);
-    const r = resolverDestino(perfis);
-    if (r.tipo === "nenhum"){
-      await sb.auth.signOut();
-      showMsg("Sua conta ainda não tem um perfil vinculado. Fale com a clínica.","err");
-      return;
-    }
-    if (r.tipo === "escolher"){ mostrarSeletor(perfis); return; }
-    showMsg("Tudo certo! Redirecionando...","ok");
-    window.location.href = r.destino;
+    perfisCache = perfis;
+    rotear(perfis);
   }catch(e){
     console.error(e); showMsg("Erro ao entrar. Tente novamente.","err");
   }finally{
@@ -139,14 +200,91 @@ async function entrar(){
   }
 }
 
-// se já estiver logado, pula direto (ou mostra o seletor se tiver dois perfis)
+/* ---------- NOVA SENHA (1º acesso e recuperação) ---------- */
+function abrirNovaSenha(recovery){
+  modoRecuperacao = !!recovery;
+  $("nsTitulo").textContent = recovery ? "Criar nova senha" : "Defina sua senha";
+  $("nsSub").textContent = recovery
+    ? "Escolha uma nova senha para acessar sua conta."
+    : "Sua senha inicial é o seu CPF. Para sua segurança, crie agora uma senha só sua.";
+  $("ns1").value = ""; $("ns2").value = "";
+  mostrar("novaSenha");
+  $("ns1").focus();
+}
+
+async function salvarNovaSenha(){
+  const s1 = $("ns1").value, s2 = $("ns2").value;
+  if (s1.length < 6){ showMsg("A senha precisa ter ao menos 6 caracteres.","err"); return; }
+  if (s1 !== s2){ showMsg("As senhas não conferem.","err"); return; }
+  const btn = $("btnSalvarSenha"); btn.disabled = true; btn.textContent = "Salvando...";
+  try{
+    const { error } = await sb.auth.updateUser({ password: s1 });
+    if (error){ showMsg("Não foi possível salvar: " + error.message, "err"); return; }
+
+    const { data: { user } } = await sb.auth.getUser();
+    if (user){
+      // zera a flag (só afeta assinantes; sem erro se a linha não existir)
+      await sb.from("assinantes").update({ must_change_password: false }).eq("auth_user_id", user.id);
+    }
+
+    showMsg("Senha atualizada! Redirecionando...","ok");
+    const perfis = (perfisCache && !modoRecuperacao) ? perfisCache : await perfisDoUsuario(user.id);
+    perfisCache = perfis;
+    const r = resolverDestino(perfis);
+    setTimeout(()=>{
+      if (r.tipo === "ir") window.location.href = r.destino;
+      else if (r.tipo === "escolher") mostrarSeletor(perfis);
+      else window.location.href = "area-cliente.html";
+    }, 700);
+  }catch(e){
+    console.error(e); showMsg("Erro ao salvar a senha. Tente novamente.","err");
+  }finally{
+    btn.disabled = false; btn.textContent = "Salvar nova senha";
+  }
+}
+
+/* ---------- ESQUECI A SENHA ---------- */
+function abrirEsqueci(){
+  const emailDigitado = $("email").value.trim();
+  mostrar("esqueci");
+  if (emailDigitado) $("recEmail").value = emailDigitado;
+  $("recEmail").focus();
+}
+function voltarLogin(){ mostrar("loginBox"); }
+
+async function enviarRecuperacao(){
+  const email = $("recEmail").value.trim();
+  if (!email){ showMsg("Informe seu e-mail.","err"); return; }
+  const btn = $("btnEnviarRec"); btn.disabled = true; btn.textContent = "Enviando...";
+  try{
+    const redirectTo = window.location.origin + window.location.pathname;
+    await sb.auth.resetPasswordForEmail(email, { redirectTo });
+    // não revela se o e-mail existe — sempre confirma o envio
+    mostrar("loginBox");
+    showMsg("Se houver uma conta com esse e-mail, enviamos um link para redefinir a senha. Verifique sua caixa de entrada e o spam.","ok");
+  }catch(e){
+    console.error(e); showMsg("Erro ao enviar. Tente novamente.","err");
+  }finally{
+    btn.disabled = false; btn.textContent = "Enviar link de recuperação";
+  }
+}
+
+/* ---------- detecção do link de recuperação (volta do e-mail) ---------- */
+sb.auth.onAuthStateChange((event)=>{
+  if (event === "PASSWORD_RECOVERY"){
+    abrirNovaSenha(true);
+  }
+});
+
+/* ---------- sessão já ativa: roteia (ou força troca) ---------- */
 (async ()=>{
+  // se viemos do link de recuperação, deixa o onAuthStateChange cuidar
+  if (window.location.hash.includes("type=recovery")) return;
   const { data } = await sb.auth.getSession();
   if (data.session){
     const perfis = await perfisDoUsuario(data.session.user.id);
-    const r = resolverDestino(perfis);
-    if (r.tipo === "ir") window.location.href = r.destino;
-    else if (r.tipo === "escolher") mostrarSeletor(perfis);
+    perfisCache = perfis;
+    rotear(perfis);
   }
 })();
 

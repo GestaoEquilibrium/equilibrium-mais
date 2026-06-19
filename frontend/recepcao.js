@@ -17,7 +17,7 @@ async function guard(){
   const {data}=await sb.auth.getSession();
   if(!data.session){location.href="login.html";return null;}
   const uid=data.session.user.id;
-  const {data:eq}=await sb.from("equipe").select("nome,papel,ativo,foto_path,auth_user_id").eq("auth_user_id",uid).maybeSingle();
+  const {data:eq}=await sb.from("equipe").select("nome,papel,ativo,foto_path,auth_user_id,must_change_password").eq("auth_user_id",uid).maybeSingle();
   if(!eq||!eq.ativo||!(eq.papel==="recepcao"||eq.papel==="gestor")){
     alert("Acesso restrito à recepção.");await sb.auth.signOut();location.href="login.html";return null;
   }
@@ -303,4 +303,11 @@ function resetDataHora(){
   resetDataHora();
   document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>trocarAba(b.dataset.tab));
   await carregar();
+  // pop-up após login: 1º acesso troca a senha automática
+  if(eq.must_change_password && window.TrocarSenha){
+    setTimeout(()=>TrocarSenha.abrir({
+      tabela:"equipe", chaveColuna:"auth_user_id", chaveValor:EU.uid,
+      onPronto:()=>{ EU.must_change_password=false; }
+    }), 500);
+  }
 })();

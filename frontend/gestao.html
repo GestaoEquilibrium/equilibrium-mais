@@ -301,6 +301,7 @@ tbody tr.clickable:hover{background:var(--mist)}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../shared/config.js"></script>
 <script src="../shared/foto_crop.js"></script>
+<script src="../shared/trocar_senha.js"></script>
 <script>
 const sb = window.maisClient;
 const money = (n)=>"R$ "+Math.round(Number(n||0)).toLocaleString("pt-BR");
@@ -318,7 +319,7 @@ async function guard(){
   if(!data.session){location.href="login.html";return null;}
   const uid=data.session.user.id;
   tokenEq=data.session.access_token; meuId=uid;
-  const {data:eq}=await sb.from("equipe").select("nome,papel,ativo,foto_path").eq("auth_user_id",uid).maybeSingle();
+  const {data:eq}=await sb.from("equipe").select("nome,papel,ativo,foto_path,must_change_password").eq("auth_user_id",uid).maybeSingle();
   if(!eq||!eq.ativo||!(eq.papel==="gestor"||eq.papel==="financeiro")){
     alert("Acesso restrito à equipe de gestão.");await sb.auth.signOut();location.href="login.html";return null;
   }
@@ -688,8 +689,13 @@ function abrirCropFoto(){
   const venc=D.fat.filter(f=>f.vencida).length;const bg=document.getElementById("bgFin");if(venc>0&&bg){bg.style.display="inline-block";bg.textContent=venc;}
   document.querySelectorAll("#sbNav button").forEach(b=>b.onclick=()=>mostrar(b.dataset.sec));
   mostrar("geral");
-  // pop-up após login: se não tem foto, pede (só some quando enviar)
-  if(!eq.foto_path){ setTimeout(abrirCropFoto, 600); }
+  // pop-up após login: 1º acesso troca a senha automática; depois pede foto se faltar
+  if(eq.must_change_password && window.TrocarSenha){
+    setTimeout(()=>TrocarSenha.abrir({
+      tabela:"equipe", chaveColuna:"auth_user_id", chaveValor:EU.uid,
+      onPronto:()=>{ EU.must_change_password=false; if(!EU.foto_path) abrirCropFoto(); }
+    }), 500);
+  } else if(!eq.foto_path){ setTimeout(abrirCropFoto, 600); }
 })();
 </script>
 </body>

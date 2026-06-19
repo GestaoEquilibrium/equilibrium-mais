@@ -182,4 +182,6 @@ function bindTilt(){
   await carregar();
   if(!D.adesao){ document.getElementById("wrap").innerHTML='<div class="empty" style="padding:80px">Nenhuma adesão ativa encontrada.</div>'; return; }
   render();
+  // 1º acesso: força o aceite do contrato (só aparece se ainda não foi aceito)
+  if(window.ContratoPopup && D.adesao.id){ ContratoPopup.abrir({ adesaoId: D.adesao.id }); }
 })();

@@ -6,10 +6,10 @@
 <title>Entrar — Mais Equilibrium</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--azul:#1860A8;--marinho:#15406E;--aqua:#54C0CC;--ambar:#F0B43C;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#e2ebf3;--mist:#F1F7FC;--risk:#C0392B;--riskbg:#FBE9EA}
+:root{--azul:#6E9A4A;--marinho:#4F7634;--aqua:#3FB6C4;--ambar:#F0B43C;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#E3ECE0;--mist:#F2F7EC;--risk:#C0392B;--riskbg:#FBE9EA}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(160deg,#15406E,#1860A8 75%);position:relative;overflow:hidden}
+  background:linear-gradient(160deg,#4F7634,#6E9A4A 75%);position:relative;overflow:hidden}
 h1,h2{font-family:'Quicksand',sans-serif}
 .bgcv{position:absolute;inset:0;z-index:1;pointer-events:none}
 .bgcv .cv{position:absolute;animation:spin var(--sp,9s) linear infinite}
@@ -28,7 +28,7 @@ h1,h2{font-family:'Quicksand',sans-serif}
 .btn{font-family:'Quicksand';font-weight:600;border:none;border-radius:13px;padding:15px;font-size:15px;cursor:pointer;width:100%;background:var(--azul);color:#fff;transition:.18s;margin-top:6px}
 .btn:hover{background:var(--marinho)}.btn:disabled{opacity:.6;cursor:not-allowed}
 .btn.sec{background:var(--mist);color:var(--marinho)}
-.btn.sec:hover{background:#e3eef8}
+.btn.sec:hover{background:#EAF2E0}
 .msg{font-size:13.5px;border-radius:11px;padding:12px 14px;margin-top:16px;display:none}
 .msg.err{background:var(--riskbg);color:var(--risk);display:block}
 .msg.ok{background:#E9F6EE;color:#1E8449;display:block}
@@ -43,7 +43,7 @@ h1,h2{font-family:'Quicksand',sans-serif}
 
 <svg width="0" height="0" style="position:absolute"><defs>
 <g id="blade"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
-<g id="catavento"><use href="#blade" fill="#1860A8"/><use href="#blade" fill="#54C0CC" transform="rotate(90)"/><use href="#blade" fill="#F0B43C" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></g>
+<g id="catavento"><use href="#blade" fill="#6E9A4A"/><use href="#blade" fill="#3FB6C4" transform="rotate(90)"/><use href="#blade" fill="#F0B43C" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></g>
 </defs></svg>
 
 <div class="bgcv" id="bgcv"></div>
@@ -292,7 +292,7 @@ sb.auth.onAuthStateChange((event)=>{
 // cataventos de fundo
 (function(){
   const host=document.getElementById("bgcv"); const NS="http://www.w3.org/2000/svg";
-  const pals=[["#54C0CC","#F0B43C","#E45460","#ffffff"],["#ffffff","#54C0CC","#F0B43C","#E45460"]];
+  const pals=[["#3FB6C4","#F0B43C","#E45460","#ffffff"],["#ffffff","#3FB6C4","#F0B43C","#E45460"]];
   const pos=[[6,12,140,12],[82,8,90,9],[12,70,80,10],[78,66,110,14],[44,84,60,8]];
   pos.forEach((p,idx)=>{
     const s=document.createElementNS(NS,"svg"); s.setAttribute("viewBox","-55 -55 110 110");

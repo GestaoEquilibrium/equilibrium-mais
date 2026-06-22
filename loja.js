@@ -259,7 +259,7 @@
     } else {
       const anual = p.preco_mensal * 11;
       set("p_ciclo", "Anual à vista"); set("p_totlab", "Total anual"); set("p_tot", money(anual));
-      if (bn) bn.innerHTML = '<b style="color:var(--ambar-d)">Pague 11, leve 12</b> — 1 mês grátis e libera a carência da Avaliação Neuropsicológica.';
+      if (bn) bn.innerHTML = '<b style="color:var(--ambar-d)">Pague 11, leve 12</b> — 1 mês grátis e elegibilidade imediata na Avaliação Neuropsicológica.';
     }
     renderPayArea();
   }

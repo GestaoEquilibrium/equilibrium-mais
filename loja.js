@@ -444,7 +444,7 @@
     if (f.unit === null) { set("pj_tot", "Sob consulta"); return; }
     set("pj_tot", money(f.unit * n + dep * 15) + "/mês");
   }
-  function enviarAdesaoPJ() {
+  async function enviarAdesaoPJ() {
     const g = (id) => (document.getElementById(id)?.value || "").trim();
     const razao = g("pj_razao"), fant = g("pj_fant"), cnpj = g("pj_cnpj"), resp = g("pj_resp"), mail = g("pj_mail"), tel = g("pj_tel");
     const n = parseInt(g("pj_num") || "0", 10) || 0, dep = parseInt(g("pj_dep") || "0", 10) || 0;
@@ -453,6 +453,15 @@
       if (hint) hint.textContent = "Preencha razão social, CNPJ, responsável, telefone e nº de colaboradores."; return;
     }
     const f = faixaPJ(n);
+    // grava a solicitação no banco (não bloqueia o WhatsApp se falhar)
+    try {
+      await sb.rpc("solicitar_adesao_pj", {
+        p_razao_social: razao, p_nome_fantasia: fant, p_cnpj: cnpj,
+        p_num_colaboradores: n, p_num_dependentes: dep, p_porte: f.label,
+        p_valor_unitario: f.unit, p_responsavel_nome: resp,
+        p_responsavel_email: mail, p_responsavel_telefone: tel,
+      });
+    } catch (e) { console.error("solicitar_adesao_pj:", e); }
     const totTxt = f.unit === null ? "Sob consulta" : money(f.unit * n + dep * 15) + "/mês";
     const txt = "\n\n[ADESÃO EMPRESARIAL]\nEmpresa: " + razao + (fant ? " (" + fant + ")" : "") +
       "\nCNPJ: " + cnpj + "\nResponsável: " + resp + "\nTelefone: " + tel + "\nE-mail: " + mail +

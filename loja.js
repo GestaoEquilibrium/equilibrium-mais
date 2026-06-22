@@ -6,6 +6,7 @@
 (function () {
   const sb = window.maisClient;
   const money = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
+  const moneyC = (n) => "R$ " + Number(n).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const state = {
     planos: {}, servicos: [], plan: null,
@@ -48,7 +49,7 @@
       tr.innerHTML =
         `<td>${s.icone || ""} ${s.nome}</td>` +
         `<td class="old">${money(s.preco_particular)}</td>` +
-        `<td class="c">${money(s.preco_cartao)}<span class="off-badge">-${pct}%</span></td>`;
+        `<td class="c">${moneyC(s.preco_cartao - 0.01)}<span class="off-badge">-${pct}%</span></td>`;
       tb.appendChild(tr);
     });
   }
@@ -117,7 +118,7 @@
       r.className = "row";
       r.innerHTML =
         `<label>${s.icone || ""} ${s.nome}</label>` +
-        `<span class="pp">${money(s.preco_particular)}→${money(s.preco_cartao)}</span>` +
+        `<span class="pp"><s>${money(s.preco_particular)}</s> → <span class="cc">${moneyC(s.preco_cartao - 0.01)}</span></span>` +
         `<div class="stp"><button data-d="-1" data-s="${s.slug}">−</button>` +
         `<input id="q_${s.slug}" value="0" readonly>` +
         `<button data-d="1" data-s="${s.slug}">+</button></div>`;
@@ -126,7 +127,7 @@
     c.querySelectorAll("button[data-s]").forEach((b) => (b.onclick = () => bump(b.dataset.s, +b.dataset.d)));
     const neuroSvc = state.servicos.find((s) => s.slug === "neuro");
     const lbl = document.querySelector('label[for="ck_neuro"]');
-    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(${money(neuroSvc.preco_particular)} → ${money(neuroSvc.preco_cartao)})</span>`;
+    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(<s>${money(neuroSvc.preco_particular)}</s> → <span class="cc">${moneyC(neuroSvc.preco_cartao - 0.01)}</span>)</span>`;
   }
 
   function bump(slug, d) {

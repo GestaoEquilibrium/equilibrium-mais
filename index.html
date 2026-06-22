@@ -10,13 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --azul:#2E7D4F;--marinho:#1B5638;--aqua:#33A595;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;
-  --ink:#16293c;--muted:#6c7f8e;--line:#e3ece6;--mist:#F1F8F3;--ok:#1E8449;--okbg:#E9F6EE;
+  --azul:#6E9A4A;--marinho:#4F7634;--aqua:#3FB6C4;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;
+  --ink:#16293c;--muted:#6c7f8e;--line:#e3ece6;--mist:#F2F7EC;--ok:#1E8449;--okbg:#E9F6EE;
   --risk:#C0392B;--riskbg:#FBE9EA;--card-r:20px
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#F1F8F3;line-height:1.55;overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#F2F7EC;line-height:1.55;overflow-x:hidden}
 h1,h2,h3{font-family:'Quicksand',sans-serif}
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 .btn{font-family:'Quicksand';font-weight:600;border:none;border-radius:14px;padding:14px 26px;font-size:15px;cursor:pointer;transition:.18s;text-align:center;display:inline-flex;align-items:center;gap:8px;justify-content:center}
@@ -35,17 +35,17 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .emp-panel{display:flex;justify-content:center;align-items:center;min-height:280px;width:100%}
 .leque-wrap[hidden],.emp-panel[hidden]{display:none}
 .frm[hidden]{display:none}
-.emp-card{position:relative;width:330px;background:linear-gradient(160deg,#C0392B,#E45460);color:#fff;border-radius:20px;padding:24px 24px 22px;box-shadow:0 24px 54px rgba(196,57,43,.4);overflow:hidden}
-.emp-pin{position:absolute;right:-22px;bottom:-24px;width:130px;height:130px;opacity:.16}
-.emp-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-family:'Quicksand';opacity:.95}
-.emp-price{font-family:'Quicksand';font-size:18px;font-weight:600;margin-top:6px;opacity:.97}
-.emp-price b{font-size:34px}.emp-price small{font-size:13px;opacity:.85;font-weight:600}
+.emp-card{position:relative;width:330px;background:linear-gradient(160deg,#FCEEED,#F8E0DE);color:#A23B45;border:1px solid #F1CBC8;border-radius:20px;padding:24px 24px 22px;box-shadow:0 18px 44px rgba(196,57,43,.13);overflow:hidden}
+.emp-pin{position:absolute;right:-22px;bottom:-24px;width:130px;height:130px;opacity:.12}
+.emp-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-family:'Quicksand';color:#C0392B}
+.emp-price{font-family:'Quicksand';font-size:18px;font-weight:600;margin-top:6px;color:#A23B45}
+.emp-price b{font-size:34px;color:#C0392B}.emp-price small{font-size:13px;opacity:.8;font-weight:600}
 .emp-tiers{width:100%;border-collapse:collapse;margin:14px 0 10px;position:relative;z-index:1}
-.emp-tiers td{font-family:'Quicksand';font-size:13px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.18)}
-.emp-tiers td:last-child{text-align:right;font-weight:700}
-.emp-note{font-size:11.5px;opacity:.85;margin-bottom:16px;position:relative;z-index:1}
+.emp-tiers td{font-family:'Quicksand';font-size:13px;padding:5px 0;border-bottom:1px solid rgba(196,57,43,.16);color:#9A4048}
+.emp-tiers td:last-child{text-align:right;font-weight:700;color:#C0392B}
+.emp-note{font-size:11.5px;color:#B26A6A;margin-bottom:16px;position:relative;z-index:1}
 .emp-cta{display:flex;gap:10px;position:relative;z-index:1}
-.btn-emp{background:#fff;color:#C0392B;box-shadow:0 8px 20px rgba(0,0,0,.18);flex:1}.btn-emp:hover{filter:brightness(.97)}
+.btn-emp{background:#E45460;color:#fff;box-shadow:0 8px 20px rgba(228,84,96,.32);flex:1}.btn-emp:hover{filter:brightness(.97)}
 .btn-wpp{background:#25D366;color:#fff;flex:1}.btn-wpp:hover{filter:brightness(.95)}
 /* modal proposta */
 .pmodal{position:fixed;inset:0;background:rgba(16,41,60,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
@@ -59,7 +59,7 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .pmodal-box input:focus{outline:none;border-color:var(--azul)}
 .pmodal-row{display:flex;gap:12px}.pmodal-row label{flex:1}
 .pmodal-go{width:100%;margin-top:6px}
-.btn-g{background:#F1F8F3;color:var(--muted)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-g{background:#F2F7EC;color:var(--muted)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -84,8 +84,8 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* HERO */
-.hero{position:relative;background:#F1F8F3;overflow:hidden;padding:54px 0 70px;border-bottom-left-radius:36px;border-bottom-right-radius:36px;border-bottom:1px solid var(--line);transition:background .35s ease}
-.hero.emp{background:#FCF2F1}
+.hero{position:relative;background:#F2F7EC;overflow:hidden;padding:54px 0 70px;border-bottom-left-radius:36px;border-bottom-right-radius:36px;border-bottom:1px solid var(--line);transition:background .35s ease}
+.hero.emp{background:#FDF3F2}
 .hero-cv{position:absolute;inset:0;z-index:1;pointer-events:none}
 .hero-cv .cv{position:absolute;animation:cvspin var(--sp,8s) linear infinite}
 @keyframes cvspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
@@ -351,7 +351,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
        </div>
        <div class="emp-panel" id="empPanel" hidden>
         <div class="emp-card">
-          <svg class="emp-pin" viewBox="-55 -55 110 110"><use href="#blade" fill="#fff"/><use href="#blade" fill="#fff" transform="rotate(90)"/><use href="#blade" fill="#fff" transform="rotate(180)"/><use href="#blade" fill="#fff" transform="rotate(270)"/></svg>
+          <svg class="emp-pin" viewBox="-55 -55 110 110"><use href="#blade" fill="#E45460"/><use href="#blade" fill="#E45460" transform="rotate(90)"/><use href="#blade" fill="#E45460" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></svg>
           <div class="emp-tag">Empresarial</div>
           <div class="emp-price">a partir de <b>R$ 16</b><small>/func./mês</small></div>
           <table class="emp-tiers">

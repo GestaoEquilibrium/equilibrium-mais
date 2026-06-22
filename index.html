@@ -34,6 +34,7 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 /* card empresarial */
 .emp-panel{display:flex;justify-content:center;align-items:center;min-height:280px;width:100%}
 .leque-wrap[hidden],.emp-panel[hidden]{display:none}
+.frm[hidden]{display:none}
 .emp-card{position:relative;width:330px;background:linear-gradient(160deg,#C0392B,#E45460);color:#fff;border-radius:20px;padding:24px 24px 22px;box-shadow:0 24px 54px rgba(196,57,43,.4);overflow:hidden}
 .emp-pin{position:absolute;right:-22px;bottom:-24px;width:130px;height:130px;opacity:.16}
 .emp-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-family:'Quicksand';opacity:.95}
@@ -315,7 +316,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
         <p class="sub">Um cartão de benefícios para você e quem você ama cuidarem da saúde pagando muito menos em toda a rede Equilibrium. Não é plano de saúde — é desconto de verdade, na hora que você precisar.</p>
         <div class="cta">
           <button class="btn btn-a" onclick="go('calc')">Simular minha economia</button>
-          <button class="btn btn-ghost" onclick="go('adesao')">Quero aderir</button>
+          <button class="btn btn-ghost" onclick="irAderir()">Quero aderir</button>
         </div>
         <div class="trust">
           <span>✓ <b>Desconto na hora</b> nas terapias</span>
@@ -463,9 +464,13 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
 <!-- ===================== ADESÃO ===================== -->
 <section class="view" id="adesao"><div class="wrap" style="padding:48px 0 70px">
   <div class="kick" style="color:var(--ambar-d)">Adesão</div>
-  <h2 style="font-size:28px;color:var(--marinho)">Seus dados</h2>
-  <p style="color:var(--muted);margin-top:8px">Preencha o titular e os dependentes (nominais, com CPF).</p>
-  <div class="frm">
+  <h2 id="adTitle" style="font-size:28px;color:var(--marinho)">Seus dados</h2>
+  <p id="adSub" style="color:var(--muted);margin-top:8px">Preencha o titular e os dependentes (nominais, com CPF).</p>
+  <div class="pfpj ad-tg" style="margin-top:18px">
+    <button class="pfpj-b on" data-m="pf" onclick="setAdTipo('pf')">Pessoa Física</button>
+    <button class="pfpj-b" data-m="pj" onclick="setAdTipo('pj')">Empresa</button>
+  </div>
+  <div class="frm" id="adPF" style="margin-top:18px">
     <div>
       <div class="card"><h3 style="color:var(--azul);font-size:17px;margin-bottom:14px">Plano</h3>
         <div class="field"><select id="adPlan" onchange="syncPlan()"></select></div>
@@ -494,6 +499,44 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
       <div class="tot"><span>Total</span><span id="s_tot">R$ 0/mês</span></div>
       <button class="btn btn-p" style="width:100%;margin-top:18px" onclick="toPay()">Ir para pagamento →</button>
       <div class="hint" id="adHint"></div>
+    </div>
+  </div>
+
+  <div class="frm" id="adPJ" hidden style="margin-top:18px">
+    <div>
+      <div class="card"><h3 style="color:var(--coral);font-size:17px;margin-bottom:14px">Empresa</h3>
+        <div class="field"><label>Razão social</label><input id="pj_razao" placeholder="Razão social da empresa"></div>
+        <div class="f2">
+          <div class="field"><label>Nome fantasia</label><input id="pj_fant" placeholder="Opcional"></div>
+          <div class="field"><label>CNPJ</label><input id="pj_cnpj" placeholder="00.000.000/0000-00"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px"><h3 style="color:var(--coral);font-size:17px;margin-bottom:14px">Plano empresarial</h3>
+        <div class="f2">
+          <div class="field"><label>Nº de colaboradores</label><input id="pj_num" type="number" min="1" placeholder="ex: 30" oninput="recalcPJ()"></div>
+          <div class="field"><label>Nº de dependentes</label><input id="pj_dep" type="number" min="0" placeholder="0 (opcional)" oninput="recalcPJ()"></div>
+        </div>
+        <div class="hint">O valor por colaborador segue a faixa da empresa. Dependentes: +R$ 15/mês cada.</div>
+      </div>
+      <div class="card" style="margin-top:18px"><h3 style="color:var(--coral);font-size:17px;margin-bottom:14px">Responsável</h3>
+        <div class="field"><label>Nome do responsável</label><input id="pj_resp" placeholder="Quem cuida do contrato"></div>
+        <div class="f2">
+          <div class="field"><label>E-mail</label><input id="pj_mail" type="email" placeholder="contato@empresa.com.br"></div>
+          <div class="field"><label>Telefone</label><input id="pj_tel" placeholder="(34) 90000-0000"></div>
+        </div>
+      </div>
+    </div>
+    <div class="summary">
+      <h3 style="font-family:'Quicksand';color:var(--coral);margin-bottom:12px;font-size:17px">Resumo empresarial</h3>
+      <div class="li"><span>Faixa</span><span id="pj_faixa" style="color:var(--muted)">—</span></div>
+      <div class="li"><span>Por colaborador</span><span id="pj_unit" style="color:var(--muted)">—</span></div>
+      <div class="li"><span>Colaboradores</span><span id="pj_vidas" style="color:var(--muted)">0</span></div>
+      <div class="li"><span>Dependentes</span><span id="pj_deps" style="color:var(--muted)">0</span></div>
+      <div class="tot"><span>Estimativa</span><span id="pj_tot">R$ 0/mês</span></div>
+      <button class="btn" style="width:100%;margin-top:18px;background:var(--coral);color:#fff" onclick="enviarAdesaoPJ()">Solicitar adesão empresarial</button>
+      <div class="hint" id="pjHint"></div>
+      <div class="hint" id="pjOk" hidden style="color:var(--ok)">✓ Solicitação enviada! Abrimos o WhatsApp com seus dados — nossa equipe retorna com o contrato e a ativação do portal.</div>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px">A adesão empresarial é feita com contrato e ativação assistida — sem cobrança automática agora.</p>
     </div>
   </div>
 </div></section>

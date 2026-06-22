@@ -395,7 +395,8 @@
     if (ep) ep.hidden = pf;
     const hero = document.querySelector(".hero");
     if (hero) hero.classList.toggle("emp", !pf);
-    document.querySelectorAll(".pfpj-b").forEach((b) => b.classList.toggle("on", b.dataset.m === (pf ? "pf" : "pj")));
+    state.modo = pf ? "pf" : "pj";
+    document.querySelectorAll(".hero-right .pfpj-b").forEach((b) => b.classList.toggle("on", b.dataset.m === (pf ? "pf" : "pj")));
   }
   function abrirProposta() { const m = document.getElementById("pmodal"); if (m) m.classList.add("on"); }
   function fecharProposta() { const m = document.getElementById("pmodal"); if (m) m.classList.remove("on"); }
@@ -408,7 +409,59 @@
     fecharProposta();
   }
 
-  Object.assign(window, { go, bump, calc, syncPlan, addDep, delDep, toPay, setBill, setMethod, confirmAd, escolherPlano, updateSummaryProxy, setModo, abrirProposta, fecharProposta, enviarProposta });
+  /* ---------- adesão Pessoa Física / Empresa (PJ) ---------- */
+  function setAdTipo(m) {
+    const pj = m === "pj";
+    const pf = document.getElementById("adPF"), pjEl = document.getElementById("adPJ");
+    if (pf) pf.hidden = pj;
+    if (pjEl) pjEl.hidden = !pj;
+    document.querySelectorAll(".ad-tg .pfpj-b").forEach((b) => b.classList.toggle("on", b.dataset.m === m));
+    const t = document.getElementById("adTitle"), s = document.getElementById("adSub");
+    if (t) t.textContent = pj ? "Dados da empresa" : "Seus dados";
+    if (s) s.textContent = pj
+      ? "Preencha os dados da empresa para solicitar a adesão empresarial."
+      : "Preencha o titular e os dependentes (nominais, com CPF).";
+    if (pj) recalcPJ();
+  }
+  function irAderir() { setAdTipo(state.modo === "pj" ? "pj" : "pf"); go("adesao"); }
+  function faixaPJ(n) {
+    if (n >= 500) return { label: "500+ colaboradores", unit: null };
+    if (n >= 150) return { label: "150–499", unit: 16 };
+    if (n >= 50) return { label: "50–149", unit: 20 };
+    return { label: "10–49", unit: 25 };
+  }
+  function recalcPJ() {
+    const n = parseInt(document.getElementById("pj_num")?.value || "0", 10) || 0;
+    const dep = parseInt(document.getElementById("pj_dep")?.value || "0", 10) || 0;
+    const f = faixaPJ(n);
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    set("pj_faixa", n ? f.label : "—");
+    set("pj_unit", f.unit ? money(f.unit) + "/func." : (n >= 500 ? "sob consulta" : "—"));
+    set("pj_vidas", n || 0);
+    set("pj_deps", dep || 0);
+    if (!n) { set("pj_tot", "R$ 0/mês"); return; }
+    if (f.unit === null) { set("pj_tot", "Sob consulta"); return; }
+    set("pj_tot", money(f.unit * n + dep * 15) + "/mês");
+  }
+  function enviarAdesaoPJ() {
+    const g = (id) => (document.getElementById(id)?.value || "").trim();
+    const razao = g("pj_razao"), fant = g("pj_fant"), cnpj = g("pj_cnpj"), resp = g("pj_resp"), mail = g("pj_mail"), tel = g("pj_tel");
+    const n = parseInt(g("pj_num") || "0", 10) || 0, dep = parseInt(g("pj_dep") || "0", 10) || 0;
+    const hint = document.getElementById("pjHint");
+    if (!razao || !cnpj || !resp || !tel || !n) {
+      if (hint) hint.textContent = "Preencha razão social, CNPJ, responsável, telefone e nº de colaboradores."; return;
+    }
+    const f = faixaPJ(n);
+    const totTxt = f.unit === null ? "Sob consulta" : money(f.unit * n + dep * 15) + "/mês";
+    const txt = "\n\n[ADESÃO EMPRESARIAL]\nEmpresa: " + razao + (fant ? " (" + fant + ")" : "") +
+      "\nCNPJ: " + cnpj + "\nResponsável: " + resp + "\nTelefone: " + tel + "\nE-mail: " + mail +
+      "\nColaboradores: " + n + "\nDependentes: " + dep + "\nFaixa: " + f.label + "\nEstimativa: " + totTxt;
+    window.open("https://wa.me/" + WPP_EMP + "?text=" + wppMsg(txt), "_blank");
+    const ok = document.getElementById("pjOk"); if (ok) ok.hidden = false;
+    if (hint) hint.textContent = "";
+  }
+
+  Object.assign(window, { go, bump, calc, syncPlan, addDep, delDep, toPay, setBill, setMethod, confirmAd, escolherPlano, updateSummaryProxy, setModo, abrirProposta, fecharProposta, enviarProposta, setAdTipo, irAderir, recalcPJ, enviarAdesaoPJ });
 
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", async () => {

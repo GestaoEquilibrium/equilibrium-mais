@@ -324,6 +324,12 @@ const cap = (s)=>s?s.charAt(0).toUpperCase()+s.slice(1):"";
 const planClass=(s)=>s==="ind"?"ind":s==="gran"?"gran":"fam";
 const planSlugNome=(n)=>/gran/i.test(n)?"gran":/individual/i.test(n)?"ind":"fam";
 const stClass=(s)=>s==="ativo"?"ok":s==="cancelado"?"canc":"pend";
+function dataHora(ts){
+  if(!ts) return "—";
+  const d=new Date(ts);
+  if(isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("pt-BR")+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
 const labelPapel={gestor:"Gestor",financeiro:"Financeiro",recepcao:"Recepção"};
 const D={};
 
@@ -472,6 +478,9 @@ function abrirPerfil(conta){
       <div class="dr-card"><h4>Faturas</h4>${fatHtml}</div>
       <div class="dr-card"><h4>Histórico de uso</h4>${usoHtml}</div>
       <div class="dr-card"><h4>Contrato</h4>
+        <div class="dr-li"><div class="mini">📄</div><div class="g"><small>Aceite do contrato</small><b>${a.contrato_aceito_em
+            ? `<span class="stt ok"><span class="d"></span>Aceito em ${dataHora(a.contrato_aceito_em)}</span>`
+            : `<span class="stt pend"><span class="d"></span>Pendente</span>`}</b></div>${a.contrato_aceito_em&&a.contrato_versao?`<div class="r">${a.contrato_versao}</div>`:""}</div>
         <div class="dr-li"><div class="g"><small>Adesão</small><b>${a.data_adesao||"—"}</b></div><div class="g"><small>Fidelidade até</small><b>${a.fidelidade_ate||"—"}</b></div></div>
         <div class="dr-li"><div class="g"><small>Status</small><b><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></b></div><div class="g"><small>Próx. cobrança</small><b>${a.proxima_cobranca||"—"}</b></div></div>
       </div>

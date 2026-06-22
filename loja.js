@@ -6,8 +6,6 @@
 (function () {
   const sb = window.maisClient;
   const money = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
-  // formata com centavos (usado p/ exibir o preço do cartão com -1 centavo na tabela)
-  const moneyC = (n) => "R$ " + Number(n).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const state = {
     planos: {}, servicos: [], plan: null,
@@ -50,7 +48,7 @@
       tr.innerHTML =
         `<td>${s.icone || ""} ${s.nome}</td>` +
         `<td class="old">${money(s.preco_particular)}</td>` +
-        `<td class="c">${s.preco_cartao > 0 ? moneyC(s.preco_cartao - 0.01) : money(s.preco_cartao)}<span class="off-badge">-${pct}%</span></td>`;
+        `<td class="c">${money(s.preco_cartao)}<span class="off-badge">-${pct}%</span></td>`;
       tb.appendChild(tr);
     });
   }
@@ -119,7 +117,7 @@
       r.className = "row";
       r.innerHTML =
         `<label>${s.icone || ""} ${s.nome}</label>` +
-        `<span class="pp"><s>${money(s.preco_particular)}</s>→<b class="cc">${s.preco_cartao > 0 ? moneyC(s.preco_cartao - 0.01) : money(s.preco_cartao)}</b></span>` +
+        `<span class="pp">${money(s.preco_particular)}→${money(s.preco_cartao)}</span>` +
         `<div class="stp"><button data-d="-1" data-s="${s.slug}">−</button>` +
         `<input id="q_${s.slug}" value="0" readonly>` +
         `<button data-d="1" data-s="${s.slug}">+</button></div>`;
@@ -128,7 +126,7 @@
     c.querySelectorAll("button[data-s]").forEach((b) => (b.onclick = () => bump(b.dataset.s, +b.dataset.d)));
     const neuroSvc = state.servicos.find((s) => s.slug === "neuro");
     const lbl = document.querySelector('label[for="ck_neuro"]');
-    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(<s>${money(neuroSvc.preco_particular)}</s> → ${neuroSvc.preco_cartao > 0 ? moneyC(neuroSvc.preco_cartao - 0.01) : money(neuroSvc.preco_cartao)})</span>`;
+    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(${money(neuroSvc.preco_particular)} → ${money(neuroSvc.preco_cartao)})</span>`;
   }
 
   function bump(slug, d) {
@@ -349,7 +347,7 @@
     const host = document.getElementById("heroCv");
     if (!host) return;
     const NS = "http://www.w3.org/2000/svg";
-    const pals = [["#54C0CC","#F0B43C","#E45460","#ffffff"],["#ffffff","#54C0CC","#F0B43C","#E45460"],["#F0B43C","#ffffff","#54C0CC","#E45460"]];
+    const pals = [["#33A595","#1860A8","#F0B43C","#E45460"],["#E45460","#33A595","#1860A8","#F0B43C"],["#F0B43C","#E45460","#33A595","#1860A8"]];
     const pos = [[3,8,150,12],[84,4,96,9],[10,62,84,8],[74,58,120,14],[40,14,60,10],[92,70,64,7],[55,72,72,11]];
     pos.forEach((p, idx) => {
       const s = document.createElementNS(NS, "svg");

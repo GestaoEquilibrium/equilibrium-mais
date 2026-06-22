@@ -83,7 +83,8 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* HERO */
-.hero{position:relative;background:#F1F8F3;overflow:hidden;padding:54px 0 70px;border-bottom-left-radius:36px;border-bottom-right-radius:36px;border-bottom:1px solid var(--line)}
+.hero{position:relative;background:#F1F8F3;overflow:hidden;padding:54px 0 70px;border-bottom-left-radius:36px;border-bottom-right-radius:36px;border-bottom:1px solid var(--line);transition:background .35s ease}
+.hero.emp{background:#FCF2F1}
 .hero-cv{position:absolute;inset:0;z-index:1;pointer-events:none}
 .hero-cv .cv{position:absolute;animation:cvspin var(--sp,8s) linear infinite}
 @keyframes cvspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}

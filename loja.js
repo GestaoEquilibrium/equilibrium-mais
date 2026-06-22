@@ -393,6 +393,8 @@
     const lw = document.getElementById("lequeWrap"), ep = document.getElementById("empPanel");
     if (lw) lw.hidden = !pf;
     if (ep) ep.hidden = pf;
+    const hero = document.querySelector(".hero");
+    if (hero) hero.classList.toggle("emp", !pf);
     document.querySelectorAll(".pfpj-b").forEach((b) => b.classList.toggle("on", b.dataset.m === (pf ? "pf" : "pj")));
   }
   function abrirProposta() { const m = document.getElementById("pmodal"); if (m) m.classList.add("on"); }

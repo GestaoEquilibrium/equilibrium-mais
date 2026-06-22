@@ -386,7 +386,7 @@
 
   /* ---------- expõe handlers ---------- */
   /* ---------- modo PF / Empresas + proposta corporativa ---------- */
-  const WPP_EMP = "5534999999999"; // <-- TROCAR pelo WhatsApp comercial (DDI+DDD+numero, ex: 5534999998888)
+  const WPP_EMP = "5534997813331"; // WhatsApp comercial
   const wppMsg = (extra) => encodeURIComponent("Olá! Tenho interesse no plano Empresarial do Equilibrium Mais Saúde." + (extra || ""));
   function setModo(m) {
     const pf = m !== "pj";

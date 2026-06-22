@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Entrar — Mais Equilibrium</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon-multi.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-multi-32.png">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--azul:#6E9A4A;--marinho:#4F7634;--aqua:#3FB6C4;--ambar:#F0B43C;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#E3ECE0;--mist:#F2F7EC;--risk:#C0392B;--riskbg:#FBE9EA}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(160deg,#4F7634,#6E9A4A 75%);position:relative;overflow:hidden}
+  background:linear-gradient(160deg,#F2F7EC,#EAF2DF);position:relative;overflow:hidden}
 h1,h2{font-family:'Quicksand',sans-serif}
 .bgcv{position:absolute;inset:0;z-index:1;pointer-events:none}
 .bgcv .cv{position:absolute;animation:spin var(--sp,9s) linear infinite}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.card{position:relative;z-index:2;background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 30px 70px rgba(8,30,55,.4);margin:20px}
+.card{position:relative;z-index:2;background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 24px 54px rgba(79,118,52,.16);border:1px solid #E3ECE0;margin:20px}
 .brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:26px}
 .brand .nm{font-family:'Quicksand';font-weight:700;color:var(--marinho);font-size:20px}
 .brand .nm span{color:var(--azul)}
@@ -51,8 +53,8 @@ h1,h2{font-family:'Quicksand',sans-serif}
 <div class="card">
   <div class="brand">
     <svg width="52" height="52" viewBox="-55 -55 110 110"><use href="#catavento"/></svg>
-    <div class="nm">Mais <span>Equilibrium</span></div>
-    <small>MED CENTER</small>
+    <div class="nm"><span>equilibrium</span></div>
+    <small style="color:var(--aqua)">mais saúde</small>
   </div>
 
   <!-- ====== LOGIN ====== -->
@@ -292,13 +294,13 @@ sb.auth.onAuthStateChange((event)=>{
 // cataventos de fundo
 (function(){
   const host=document.getElementById("bgcv"); const NS="http://www.w3.org/2000/svg";
-  const pals=[["#3FB6C4","#F0B43C","#E45460","#ffffff"],["#ffffff","#3FB6C4","#F0B43C","#E45460"]];
+  const pals=[["#6E9A4A","#3FB6C4","#F0B43C","#E45460"],["#E45460","#6E9A4A","#3FB6C4","#F0B43C"]];
   const pos=[[6,12,140,12],[82,8,90,9],[12,70,80,10],[78,66,110,14],[44,84,60,8]];
   pos.forEach((p,idx)=>{
     const s=document.createElementNS(NS,"svg"); s.setAttribute("viewBox","-55 -55 110 110");
     s.setAttribute("width",p[2]); s.setAttribute("height",p[2]); s.classList.add("cv");
     s.style.left=p[0]+"%"; s.style.top=p[1]+"%"; s.style.setProperty("--sp",p[3]+"s");
-    s.style.opacity=idx<2?"0.5":"0.2"; if(idx%2)s.style.animationDirection="reverse";
+    s.style.opacity=idx<2?"0.30":"0.16"; if(idx%2)s.style.animationDirection="reverse";
     const c=pals[idx%pals.length];
     [0,90,180,270].forEach((rot,i)=>{ const u=document.createElementNS(NS,"use"); u.setAttribute("href","#blade"); u.setAttribute("fill",c[i]); u.setAttribute("transform","rotate("+rot+")"); s.appendChild(u); });
     host.appendChild(s);

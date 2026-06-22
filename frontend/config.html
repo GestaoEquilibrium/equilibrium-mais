@@ -9,9 +9,9 @@
 <link rel="apple-touch-icon" href="../assets/apple-touch-gestao.png">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--azul:#1860A8;--marinho:#15406E;--aqua:#54C0CC;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#e2ebf3;--mist:#F1F7FC;--ok:#1E8449;--okbg:#E9F6EE;--risk:#C0392B;--riskbg:#FBE9EA}
+:root{--azul:#6E9A4A;--marinho:#4F7634;--aqua:#3FB6C4;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;--ink:#16293c;--muted:#6c7f8e;--line:#E3ECE0;--mist:#F2F7EC;--ok:#1E8449;--okbg:#E9F6EE;--risk:#C0392B;--riskbg:#FBE9EA}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#eef3f8;line-height:1.5}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#EFF4E9;line-height:1.5}
 h1,h2,h3{font-family:'Quicksand',sans-serif}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
 .nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
@@ -61,7 +61,7 @@ tbody tr:hover{background:var(--mist)}
 .who .a{width:32px;height:32px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Quicksand';font-weight:700}
 .who small{display:block;color:var(--muted);font-size:12px}
 .pill{font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
-.pill.gestor{background:#EEEDFE;color:#5b50c9}.pill.financeiro{background:#E1F5EE;color:#0F6E56}.pill.recepcao{background:#E6F1FB;color:#185FA5}
+.pill.gestor{background:#EEEDFE;color:#5b50c9}.pill.financeiro{background:#E1F5EE;color:#0F6E56}.pill.recepcao{background:#EDF4E2;color:#6E9A4A}
 .stt{font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
 .stt .d{width:8px;height:8px;border-radius:50%}
 .stt.on{color:var(--ok)}.stt.on .d{background:var(--ok)}
@@ -91,13 +91,13 @@ tbody tr:hover{background:var(--mist)}
 
 <svg width="0" height="0" style="position:absolute"><defs>
 <g id="blade"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
-<g id="catavento"><use href="#blade" fill="#1860A8"/><use href="#blade" fill="#54C0CC" transform="rotate(90)"/><use href="#blade" fill="#F0B43C" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></g>
+<g id="catavento"><use href="#blade" fill="#6E9A4A"/><use href="#blade" fill="#3FB6C4" transform="rotate(90)"/><use href="#blade" fill="#F0B43C" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></g>
 </defs></svg>
 
 <div class="nav"><div class="wrap">
   <div class="brand" onclick="location.href='gestao.html'">
     <svg width="32" height="32" viewBox="-55 -55 110 110"><use href="#catavento"/></svg>
-    <b>Mais <span>Equilibrium</span></b><span class="badge-adm">GESTÃO</span>
+    <b><span>equilibrium</span></b><span class="badge-adm">GESTÃO</span>
   </div>
   <div class="user">
     <a class="back" href="gestao.html">← Painel</a>
@@ -166,7 +166,7 @@ const FN = window.MAIS_CONFIG.url + "/functions/v1/gerir-equipe";
 const $ = (id)=>document.getElementById(id);
 const iniciais = (n)=>(n||"?").split(" ").filter(Boolean).slice(0,2).map(s=>s[0]).join("").toUpperCase();
 const cap = (s)=>s?s.charAt(0).toUpperCase()+s.slice(1):"";
-const corPapel = {gestor:"#5b50c9",financeiro:"#0F6E56",recepcao:"#185FA5"};
+const corPapel = {gestor:"#5b50c9",financeiro:"#0F6E56",recepcao:"#6E9A4A"};
 const labelPapel = {gestor:"Gestor",financeiro:"Financeiro",recepcao:"Recepção"};
 let MEU_ID=null, papelSel="recepcao", token=null;
 
@@ -212,7 +212,7 @@ async function carregar(){
   body.innerHTML = data.map(m=>{
     const eu = m.auth_user_id===MEU_ID;
     return `<tr>
-      <td><div class="who"><div class="a" style="background:${corPapel[m.papel]||'#1860A8'}">${iniciais(m.nome)}</div>
+      <td><div class="who"><div class="a" style="background:${corPapel[m.papel]||'#6E9A4A'}">${iniciais(m.nome)}</div>
         <div>${m.nome} ${eu?'<span class="tag-me">você</span>':''}<small>${m.email||''}</small></div></div></td>
       <td><span class="pill ${m.papel}">${labelPapel[m.papel]||cap(m.papel)}</span></td>
       <td><span class="stt ${m.ativo?'on':'off'}"><span class="d"></span>${m.ativo?'Ativo':'Inativo'}</span></td>

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-55 -55 110 110">
 <g id="b"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
-<use href="#b" fill="#1860A8"/>
-<use href="#b" fill="#54C0CC" transform="rotate(90)"/>
-<use href="#b" fill="#F0B43C" transform="rotate(180)"/>
-<use href="#b" fill="#E45460" transform="rotate(270)"/>
+<use href="#b" fill="#8D9B3E" transform="rotate(45)"/>
+<use href="#b" fill="#2F9B8E" transform="rotate(135)"/>
+<use href="#b" fill="#A8CC4A" transform="rotate(225)"/>
+<use href="#b" fill="#27634A" transform="rotate(315)"/>
 </svg>

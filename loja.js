@@ -385,7 +385,28 @@
   }
 
   /* ---------- expõe handlers ---------- */
-  Object.assign(window, { go, bump, calc, syncPlan, addDep, delDep, toPay, setBill, setMethod, confirmAd, escolherPlano, updateSummaryProxy });
+  /* ---------- modo PF / Empresas + proposta corporativa ---------- */
+  const WPP_EMP = "5534999999999"; // <-- TROCAR pelo WhatsApp comercial (DDI+DDD+numero, ex: 5534999998888)
+  const wppMsg = (extra) => encodeURIComponent("Olá! Tenho interesse no plano Empresarial do Equilibrium Mais Saúde." + (extra || ""));
+  function setModo(m) {
+    const pf = m !== "pj";
+    const lw = document.getElementById("lequeWrap"), ep = document.getElementById("empPanel");
+    if (lw) lw.hidden = !pf;
+    if (ep) ep.hidden = pf;
+    document.querySelectorAll(".pfpj-b").forEach((b) => b.classList.toggle("on", b.dataset.m === (pf ? "pf" : "pj")));
+  }
+  function abrirProposta() { const m = document.getElementById("pmodal"); if (m) m.classList.add("on"); }
+  function fecharProposta() { const m = document.getElementById("pmodal"); if (m) m.classList.remove("on"); }
+  function enviarProposta() {
+    const g = (id) => (document.getElementById(id)?.value || "").trim();
+    const empresa = g("pf_emp"), resp = g("pf_resp"), tel = g("pf_tel"), email = g("pf_mail"), n = g("pf_num");
+    if (!empresa || !resp || !tel) { alert("Preencha ao menos empresa, responsável e telefone."); return; }
+    const extra = "\n\nEmpresa: " + empresa + "\nResponsável: " + resp + "\nTelefone: " + tel + "\nE-mail: " + email + "\nNº de colaboradores: " + n;
+    window.open("https://wa.me/" + WPP_EMP + "?text=" + wppMsg(extra), "_blank");
+    fecharProposta();
+  }
+
+  Object.assign(window, { go, bump, calc, syncPlan, addDep, delDep, toPay, setBill, setMethod, confirmAd, escolherPlano, updateSummaryProxy, setModo, abrirProposta, fecharProposta, enviarProposta });
 
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", async () => {
@@ -395,5 +416,6 @@
     renderLeque(); renderSvcTable(); renderPlans();
     renderCalcRows(); fillSelect("calcPlan"); fillSelect("adPlan");
     syncPlan(); calc(); setBill("mes"); setMethod("card");
+    const _w = document.getElementById("empWpp"); if (_w) _w.href = "https://wa.me/" + WPP_EMP + "?text=" + wppMsg();
   });
 })();

@@ -103,20 +103,20 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
         <svg width="34" height="34" viewBox="-55 -55 110 110"><use href="#cvwhite"/></svg>
         <div class="nm"><span>equilibrium</span></div>
       </div>
-      <h1>Tudo certo! 🎉</h1>
-      <div class="sub">Sua adesão está confirmada e seu contrato aceito.</div>
+      <h1>Adesão recebida! 🎉</h1>
+      <div class="sub">Recebemos sua adesão. Seu acesso já está sendo preparado.</div>
     </div>
     <div class="body">
       <div class="done">
         <div class="box">
-          <p>Seu acesso à área do cliente já está sendo preparado. Use os dados abaixo para entrar:</p>
+          <p>Entre no seu portal para finalizar — lá você vai <b>ler e aceitar o contrato de adesão</b> e liberar o uso do cartão.</p>
           <p style="margin-top:12px">
             <b>E-mail:</b> o que você cadastrou na adesão<br>
             <b>Senha inicial:</b> seu CPF (somente números)
           </p>
-          <p style="margin-top:12px;font-size:13px;color:var(--muted)">No primeiro acesso, recomendamos trocar a senha.</p>
+          <p style="margin-top:12px;font-size:13px;color:var(--muted)">No pagamento via PIX, a confirmação pode levar alguns minutos. No primeiro acesso, recomendamos trocar a senha.</p>
         </div>
-        <a class="btn" id="btnLogin" href="login.html?area=paciente">Ir para o login →</a>
+        <a class="btn" id="btnLogin" href="login.html?area=paciente">Ir para o portal →</a>
       </div>
     </div>
   </div>
@@ -177,7 +177,9 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
     }
   };
 
-  carregar();
+  // O aceite do contrato acontece DENTRO do portal (popup no 1º acesso),
+  // não aqui. Esta tela só confirma o recebimento da adesão.
+  show("doneView");
 })();
 </script>
 </body>

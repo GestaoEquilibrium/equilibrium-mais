@@ -357,7 +357,7 @@
       s.classList.add("cv");
       s.style.left = p[0] + "%"; s.style.top = p[1] + "%";
       s.style.setProperty("--sp", p[3] + "s");
-      s.style.opacity = idx < 3 ? "0.55" : "0.22";
+      s.style.opacity = idx < 3 ? "0.12" : "0.07";
       if (idx % 2) s.style.animationDirection = "reverse";
       const c = pals[idx % pals.length];
       [0,90,180,270].forEach((rot, i) => {

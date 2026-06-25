@@ -10,13 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --azul:#6E9A4A;--marinho:#4F7634;--aqua:#3FB6C4;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;
-  --ink:#16293c;--muted:#6c7f8e;--line:#e3ece6;--mist:#F2F7EC;--ok:#1E8449;--okbg:#E9F6EE;
+  --azul:#2FA8B8;--marinho:#1F7E8C;--aqua:#3FB6C4;--ambar:#F0B43C;--ambar-d:#BD8420;--coral:#E45460;
+  --ink:#16293c;--muted:#6c7f8e;--line:#e3ece6;--mist:#F2F9FA;--ok:#1E8449;--okbg:#E9F6EE;
   --risk:#C0392B;--riskbg:#FBE9EA;--card-r:20px
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#F2F7EC;line-height:1.55;overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#F2F9FA;line-height:1.55;overflow-x:hidden}
 h1,h2,h3{font-family:'Quicksand',sans-serif}
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 .btn{font-family:'Quicksand';font-weight:600;border:none;border-radius:14px;padding:14px 26px;font-size:15px;cursor:pointer;transition:.18s;text-align:center;display:inline-flex;align-items:center;gap:8px;justify-content:center}
@@ -30,22 +30,22 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .pfpj{display:inline-flex;background:rgba(46,125,79,.08);border:1px solid var(--line);border-radius:999px;padding:5px}
 .pfpj-b{font-family:'Quicksand';font-weight:700;font-size:13.5px;border:none;background:transparent;color:var(--muted);padding:9px 20px;border-radius:999px;cursor:pointer;transition:.18s}
 .pfpj-b.on{background:#fff;color:var(--azul);box-shadow:0 2px 10px rgba(27,86,56,.12)}
-.pfpj-b[data-m="pj"].on{color:var(--coral)}
+.pfpj-b[data-m="pj"].on{color:var(--aqua)}
 /* card empresarial */
 .emp-panel{display:flex;justify-content:center;align-items:center;min-height:280px;width:100%}
 .leque-wrap[hidden],.emp-panel[hidden]{display:none}
 .frm[hidden]{display:none}
-.emp-card{position:relative;width:330px;background:linear-gradient(160deg,#FCEEED,#F8E0DE);color:#A23B45;border:1px solid #F1CBC8;border-radius:20px;padding:24px 24px 22px;box-shadow:0 18px 44px rgba(196,57,43,.13);overflow:hidden}
+.emp-card{position:relative;width:330px;background:#fff;color:#1F7E8C;border:1px solid #CDEBEF;border-radius:20px;padding:24px 24px 22px;box-shadow:0 18px 44px rgba(47,168,184,.16);overflow:hidden}
 .emp-pin{position:absolute;right:-22px;bottom:-24px;width:130px;height:130px;opacity:.12}
-.emp-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-family:'Quicksand';color:#C0392B}
-.emp-price{font-family:'Quicksand';font-size:18px;font-weight:600;margin-top:6px;color:#A23B45}
-.emp-price b{font-size:34px;color:#C0392B}.emp-price small{font-size:13px;opacity:.8;font-weight:600}
+.emp-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-family:'Quicksand';color:#2FA8B8}
+.emp-price{font-family:'Quicksand';font-size:18px;font-weight:600;margin-top:6px;color:#1F7E8C}
+.emp-price b{font-size:34px;color:#2FA8B8}.emp-price small{font-size:13px;opacity:.8;font-weight:600}
 .emp-tiers{width:100%;border-collapse:collapse;margin:14px 0 10px;position:relative;z-index:1}
-.emp-tiers td{font-family:'Quicksand';font-size:13px;padding:5px 0;border-bottom:1px solid rgba(196,57,43,.16);color:#9A4048}
-.emp-tiers td:last-child{text-align:right;font-weight:700;color:#C0392B}
-.emp-note{font-size:11.5px;color:#B26A6A;margin-bottom:16px;position:relative;z-index:1}
+.emp-tiers td{font-family:'Quicksand';font-size:13px;padding:5px 0;border-bottom:1px solid rgba(47,168,184,.18);color:#2C7C88}
+.emp-tiers td:last-child{text-align:right;font-weight:700;color:#2FA8B8}
+.emp-note{font-size:11.5px;color:#6c7f8e;margin-bottom:16px;position:relative;z-index:1}
 .emp-cta{display:flex;gap:10px;position:relative;z-index:1}
-.btn-emp{background:#E45460;color:#fff;box-shadow:0 8px 20px rgba(228,84,96,.32);flex:1}.btn-emp:hover{filter:brightness(.97)}
+.btn-emp{background:#2FA8B8;color:#fff;box-shadow:0 8px 20px rgba(47,168,184,.32);flex:1}.btn-emp:hover{filter:brightness(.97)}
 .btn-wpp{background:#25D366;color:#fff;flex:1}.btn-wpp:hover{filter:brightness(.95)}
 /* modal proposta */
 .pmodal{position:fixed;inset:0;background:rgba(16,41,60,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
@@ -59,7 +59,7 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .pmodal-box input:focus{outline:none;border-color:var(--azul)}
 .pmodal-row{display:flex;gap:12px}.pmodal-row label{flex:1}
 .pmodal-go{width:100%;margin-top:6px}
-.btn-g{background:#F2F7EC;color:var(--muted)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-g{background:#F2F9FA;color:var(--muted)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -84,8 +84,8 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* HERO */
-.hero{position:relative;background:#F2F7EC;overflow:hidden;padding:54px 0 70px;border-bottom-left-radius:36px;border-bottom-right-radius:36px;border-bottom:1px solid var(--line);transition:background .35s ease}
-.hero.emp{background:#FDF3F2}
+.hero{position:relative;background:#F2F9FA;overflow:hidden;padding:54px 0 70px;border-bottom-left-radius:36px;border-bottom-right-radius:36px;border-bottom:1px solid var(--line);transition:background .35s ease}
+.hero.emp{background:#EAF5F6}
 .hero-cv{position:absolute;inset:0;z-index:1;pointer-events:none}
 .hero-cv .cv{position:absolute;animation:cvspin var(--sp,8s) linear infinite}
 @keyframes cvspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
@@ -107,7 +107,7 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
   box-shadow:0 18px 40px rgba(8,30,55,.45);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s;transform-origin:bottom center}
 .lq-card *{font-family:'Quicksand',sans-serif}
 .lq-ind{background:linear-gradient(135deg,#2a8f99,#33A595)}
-.lq-fam{background:linear-gradient(135deg,#15406E,#1860A8)}
+.lq-fam{background:linear-gradient(135deg,#ffd6db,#ffc7ce);color:#8E2D3A}
 .lq-gran{background:linear-gradient(135deg,#9a6f12,#F0B43C)}
 .lq-card[data-i="0"]{transform:translateX(-50%) translateX(-116px) rotate(-12deg)}
 .lq-card[data-i="1"]{transform:translateX(-50%) translateY(-12px);z-index:3}
@@ -123,7 +123,7 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .lq-who{font-size:12.5px;margin-top:7px;opacity:.92}
 .lq-pick{position:absolute;left:22px;bottom:18px;font-size:11.5px;font-weight:600;opacity:.9;display:flex;align-items:center;gap:5px}
 .lq-pill{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.94);font-size:10px;font-weight:700;padding:4px 10px;border-radius:14px}
-.lq-ind .lq-pill{color:#0a4a52}.lq-fam .lq-pill{color:#15406E}.lq-gran .lq-pill{color:#5a3d00}
+.lq-ind .lq-pill{color:#0a4a52}.lq-fam .lq-pill{color:#B23A48}.lq-gran .lq-pill{color:#5a3d00}
 
 /* SECTIONS */
 .sec{padding:64px 0}
@@ -276,16 +276,16 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
 <svg width="0" height="0" style="position:absolute"><defs>
   <g id="blade"><path d="M 13.2,-3.8 L 2.2,-3.8 Q 0,-3.8 0,-5.7 L 0,-46.6 Q 0,-48.5 1.9,-48.5 Q 3.9,-48.5 5.5,-46.6 L 24.4,-20.1 Q 25.2,-14 22.3,-8.4 Q 21,-6 19.4,-5.8 L 13.2,-3.8 Z"/></g>
   <g id="catavento">
-    <use href="#blade" fill="#33A595"/>
-    <use href="#blade" fill="#F0B43C" transform="rotate(90)"/>
-    <use href="#blade" fill="#E45460" transform="rotate(180)"/>
-    <use href="#blade" fill="#ffffff" transform="rotate(270)"/>
+    <use href="#blade" fill="#3FB6C4"/>
+    <use href="#blade" fill="#54C0CC" transform="rotate(90)"/>
+    <use href="#blade" fill="#2FA8B8" transform="rotate(180)"/>
+    <use href="#blade" fill="#6FCAD4" transform="rotate(270)"/>
   </g>
   <g id="catavento-marinho">
-    <use href="#blade" fill="#2E7D4F"/>
-    <use href="#blade" fill="#33A595" transform="rotate(90)"/>
-    <use href="#blade" fill="#F0B43C" transform="rotate(180)"/>
-    <use href="#blade" fill="#E45460" transform="rotate(270)"/>
+    <use href="#blade" fill="#2FA8B8"/>
+    <use href="#blade" fill="#3FB6C4" transform="rotate(90)"/>
+    <use href="#blade" fill="#1F7E8C" transform="rotate(180)"/>
+    <use href="#blade" fill="#54C0CC" transform="rotate(270)"/>
   </g>
 </defs></svg>
 
@@ -351,7 +351,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
        </div>
        <div class="emp-panel" id="empPanel" hidden>
         <div class="emp-card">
-          <svg class="emp-pin" viewBox="-55 -55 110 110"><use href="#blade" fill="#E45460"/><use href="#blade" fill="#E45460" transform="rotate(90)"/><use href="#blade" fill="#E45460" transform="rotate(180)"/><use href="#blade" fill="#E45460" transform="rotate(270)"/></svg>
+          <svg class="emp-pin" viewBox="-55 -55 110 110"><use href="#blade" fill="#3FB6C4"/><use href="#blade" fill="#3FB6C4" transform="rotate(90)"/><use href="#blade" fill="#3FB6C4" transform="rotate(180)"/><use href="#blade" fill="#3FB6C4" transform="rotate(270)"/></svg>
           <div class="emp-tag">Empresarial</div>
           <div class="emp-price">a partir de <b>R$ 16</b><small>/func./mês</small></div>
           <table class="emp-tiers">
@@ -504,21 +504,21 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
 
   <div class="frm" id="adPJ" hidden style="margin-top:18px">
     <div>
-      <div class="card"><h3 style="color:var(--coral);font-size:17px;margin-bottom:14px">Empresa</h3>
+      <div class="card"><h3 style="color:var(--aqua);font-size:17px;margin-bottom:14px">Empresa</h3>
         <div class="field"><label>Razão social</label><input id="pj_razao" placeholder="Razão social da empresa"></div>
         <div class="f2">
           <div class="field"><label>Nome fantasia</label><input id="pj_fant" placeholder="Opcional"></div>
           <div class="field"><label>CNPJ</label><input id="pj_cnpj" placeholder="00.000.000/0000-00"></div>
         </div>
       </div>
-      <div class="card" style="margin-top:18px"><h3 style="color:var(--coral);font-size:17px;margin-bottom:14px">Plano empresarial</h3>
+      <div class="card" style="margin-top:18px"><h3 style="color:var(--aqua);font-size:17px;margin-bottom:14px">Plano empresarial</h3>
         <div class="f2">
           <div class="field"><label>Nº de colaboradores</label><input id="pj_num" type="number" min="1" placeholder="ex: 30" oninput="recalcPJ()"></div>
           <div class="field"><label>Nº de dependentes</label><input id="pj_dep" type="number" min="0" placeholder="0 (opcional)" oninput="recalcPJ()"></div>
         </div>
         <div class="hint">O valor por colaborador segue a faixa da empresa. Dependentes: +R$ 15/mês cada.</div>
       </div>
-      <div class="card" style="margin-top:18px"><h3 style="color:var(--coral);font-size:17px;margin-bottom:14px">Responsável</h3>
+      <div class="card" style="margin-top:18px"><h3 style="color:var(--aqua);font-size:17px;margin-bottom:14px">Responsável</h3>
         <div class="field"><label>Nome do responsável</label><input id="pj_resp" placeholder="Quem cuida do contrato"></div>
         <div class="f2">
           <div class="field"><label>E-mail</label><input id="pj_mail" type="email" placeholder="contato@empresa.com.br"></div>
@@ -527,13 +527,13 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
       </div>
     </div>
     <div class="summary">
-      <h3 style="font-family:'Quicksand';color:var(--coral);margin-bottom:12px;font-size:17px">Resumo empresarial</h3>
+      <h3 style="font-family:'Quicksand';color:var(--aqua);margin-bottom:12px;font-size:17px">Resumo empresarial</h3>
       <div class="li"><span>Faixa</span><span id="pj_faixa" style="color:var(--muted)">—</span></div>
       <div class="li"><span>Por colaborador</span><span id="pj_unit" style="color:var(--muted)">—</span></div>
       <div class="li"><span>Colaboradores</span><span id="pj_vidas" style="color:var(--muted)">0</span></div>
       <div class="li"><span>Dependentes</span><span id="pj_deps" style="color:var(--muted)">0</span></div>
       <div class="tot"><span>Estimativa</span><span id="pj_tot">R$ 0/mês</span></div>
-      <button class="btn" style="width:100%;margin-top:18px;background:var(--coral);color:#fff" onclick="enviarAdesaoPJ()">Solicitar adesão empresarial</button>
+      <button class="btn" style="width:100%;margin-top:18px;background:var(--aqua);color:#fff" onclick="enviarAdesaoPJ()">Solicitar adesão empresarial</button>
       <div class="hint" id="pjHint"></div>
       <div class="hint" id="pjOk" hidden style="color:var(--ok)">✓ Solicitação enviada! Abrimos o WhatsApp com seus dados — nossa equipe retorna com o contrato e a ativação do portal.</div>
       <p style="font-size:12px;color:var(--muted);margin-top:12px">A adesão empresarial é feita com contrato e ativação assistida — sem cobrança automática agora.</p>

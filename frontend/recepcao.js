@@ -236,15 +236,37 @@ async function verHistorico(cartaoId){
 }
 
 /* ================= GUIAS ================= */
-function renderGuias(){ pintarGuias(D.usosHoje); }
+let GUIAS=[];
+function renderGuias(){
+  const hoje=new Date().toISOString().slice(0,10);
+  const de=document.getElementById("gDe"), ate=document.getElementById("gAte");
+  if(de&&!de.value) de.value=hoje;
+  if(ate&&!ate.value) ate.value=hoje;
+  GUIAS=D.usosHoje; pintarGuias(GUIAS);
+}
+async function buscarGuiasPeriodo(){
+  const hoje=new Date().toISOString().slice(0,10);
+  const de=(document.getElementById("gDe").value||hoje);
+  const ate=(document.getElementById("gAte").value||hoje);
+  if(de>ate){ alert("A data inicial não pode ser maior que a final."); return; }
+  const body=document.getElementById("guiaBody");
+  body.innerHTML='<tr><td colspan="6" class="loading">Buscando guias do período…</td></tr>';
+  const {data,error}=await sb.from("vw_uso_cartao").select("*")
+    .gte("data_uso",de).lte("data_uso",ate)
+    .order("data_uso",{ascending:false}).order("hora",{ascending:false});
+  if(error){ body.innerHTML='<tr><td colspan="6" class="empty">Erro ao buscar: '+(error.message||error)+'</td></tr>'; return; }
+  GUIAS=data||[];
+  const q=document.getElementById("qGuia"); if(q) q.value="";
+  pintarGuias(GUIAS);
+}
 function filtrarGuias(){
   const raw=(document.getElementById("qGuia").value||"").trim().toLowerCase();
-  const f=D.usosHoje.filter(u=>(u.paciente||"").toLowerCase().includes(raw)||(u.numero_cartao||"").toLowerCase().includes(raw)||(u.protocolo||"").toLowerCase().includes(raw));
+  const f=GUIAS.filter(u=>(u.paciente||"").toLowerCase().includes(raw)||(u.numero_cartao||"").toLowerCase().includes(raw)||(u.protocolo||"").toLowerCase().includes(raw));
   pintarGuias(f);
 }
 function pintarGuias(lista){
   const body=document.getElementById("guiaBody");
-  if(!lista.length){body.innerHTML='<tr><td colspan="6" class="empty">Nenhuma execução hoje.</td></tr>';return;}
+  if(!lista.length){body.innerHTML='<tr><td colspan="6" class="empty">Nenhuma guia no período.</td></tr>';return;}
   body.innerHTML=lista.map(u=>`<tr>
     <td class="proto-cell">${u.protocolo||"—"}</td>
     <td>${u.paciente}</td><td>${u.servico}</td><td>${u.data_uso}</td><td>${money(u.valor_pago)}</td>

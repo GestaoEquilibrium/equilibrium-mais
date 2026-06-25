@@ -368,6 +368,9 @@ html.dark ::-webkit-scrollbar-thumb{background:#33465c}
       <div class="h-sub">Reimprima a guia de uma execução ou gere a guia geral do dia.</div></div>
     <div class="toolbar">
       <div class="search">🔍 <input id="qGuia" placeholder="Buscar por protocolo, paciente ou cartão…" oninput="filtrarGuias()"></div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600">De <input type="date" id="gDe" style="padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px"></label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600">Até <input type="date" id="gAte" style="padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px"></label>
+      <button class="btn-mini" style="padding:11px 16px" onclick="buscarGuiasPeriodo()">🔎 Buscar período</button>
       <button class="btn-mini" style="padding:11px 16px" onclick="abrirGuiaGeralHoje()">📑 Guia geral de hoje</button>
     </div>
     <div class="tbl-wrap"><table>

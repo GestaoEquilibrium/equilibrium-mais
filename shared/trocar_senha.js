@@ -23,19 +23,19 @@
     const s = document.createElement("style");
     s.id = "tsenhaCss";
     s.textContent = `
-    .tsenha-bg{position:fixed;inset:0;background:rgba(21,64,110,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1001;padding:20px}
+    .tsenha-bg{position:fixed;inset:0;background:rgba(19,75,128,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1001;padding:20px}
     .tsenha-bg.show{display:flex}
     .tsenha{background:#fff;border-radius:22px;padding:32px 30px;width:100%;max-width:380px;box-shadow:0 30px 70px rgba(8,30,55,.45);font-family:'Inter',system-ui,sans-serif;color:#16293c}
     .tsenha .hd{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:18px;text-align:center}
     .tsenha .ic{width:52px;height:52px;border-radius:50%;background:#F1F7FC;display:flex;align-items:center;justify-content:center;font-size:24px}
-    .tsenha h2{font-family:'Quicksand',sans-serif;font-size:20px;color:#15406E;margin:0}
+    .tsenha h2{font-family:'Quicksand',sans-serif;font-size:20px;color:#134b80;margin:0}
     .tsenha .sub{font-size:13.5px;color:#6c7f8e;line-height:1.5}
     .tsenha label{display:block;font-size:13px;color:#6c7f8e;margin-bottom:6px;font-weight:500}
     .tsenha .fld{margin-bottom:14px}
     .tsenha input{width:100%;border:1.5px solid #e2ebf3;border-radius:12px;padding:13px 14px;font-size:15px;font-family:'Inter';transition:.15s}
-    .tsenha input:focus{outline:none;border-color:#1860A8;box-shadow:0 0 0 3px rgba(24,96,168,.12)}
-    .tsenha .btn{font-family:'Quicksand',sans-serif;font-weight:600;border:none;border-radius:13px;padding:14px;font-size:15px;cursor:pointer;width:100%;background:#1860A8;color:#fff;transition:.18s;margin-top:4px}
-    .tsenha .btn:hover{background:#15406E}
+    .tsenha input:focus{outline:none;border-color:#1b6cb3;box-shadow:0 0 0 3px rgba(27,108,179,.12)}
+    .tsenha .btn{font-family:'Quicksand',sans-serif;font-weight:600;border:none;border-radius:13px;padding:14px;font-size:15px;cursor:pointer;width:100%;background:#1b6cb3;color:#fff;transition:.18s;margin-top:4px}
+    .tsenha .btn:hover{background:#134b80}
     .tsenha .btn:disabled{opacity:.6;cursor:not-allowed}
     .tsenha .msg{font-size:13px;border-radius:10px;padding:10px 12px;margin-top:12px;display:none}
     .tsenha .msg.err{background:#FBE9EA;color:#C0392B;display:block}

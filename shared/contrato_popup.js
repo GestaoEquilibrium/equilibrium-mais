@@ -18,18 +18,18 @@
     const s = document.createElement("style");
     s.id = "cpCss";
     s.textContent = `
-    .cp-bg{position:fixed;inset:0;background:rgba(21,64,110,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1002;padding:20px}
+    .cp-bg{position:fixed;inset:0;background:rgba(19,75,128,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1002;padding:20px}
     .cp-bg.show{display:flex}
     .cp{background:#fff;border-radius:22px;width:100%;max-width:560px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 70px rgba(8,30,55,.45);font-family:'Inter',system-ui,sans-serif;color:#16293c}
-    .cp .cp-head{background:linear-gradient(135deg,#1F7E8C,#2FA8B8);color:#fff;padding:20px 24px}
+    .cp .cp-head{background:linear-gradient(135deg,#134b80,#1b6cb3);color:#fff;padding:20px 24px}
     .cp .cp-head h2{font-family:'Quicksand',sans-serif;font-size:19px;margin:0}
     .cp .cp-head .sub{font-size:13px;opacity:.9;margin-top:4px}
-    .cp .cp-corpo{padding:20px 24px;overflow-y:auto;flex:1;white-space:pre-wrap;font-size:13.5px;line-height:1.6;color:#2c3e50;background:#F6FAF0;border-bottom:1px solid #D9EBEE}
+    .cp .cp-corpo{padding:20px 24px;overflow-y:auto;flex:1;white-space:pre-wrap;font-size:13.5px;line-height:1.6;color:#2c3e50;background:#F6FAF0;border-bottom:1px solid #d8e7f3}
     .cp .cp-foot{padding:18px 24px}
     .cp .cp-chkrow{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13.5px;margin-bottom:14px;user-select:none}
     .cp .cp-chkrow input{width:18px;height:18px;margin-top:1px;flex-shrink:0;cursor:pointer}
-    .cp .cp-btn{font-family:'Quicksand',sans-serif;font-weight:600;border:none;border-radius:13px;padding:14px;font-size:15px;cursor:pointer;width:100%;background:#2FA8B8;color:#fff;transition:.18s}
-    .cp .cp-btn:hover{background:#1F7E8C}
+    .cp .cp-btn{font-family:'Quicksand',sans-serif;font-weight:600;border:none;border-radius:13px;padding:14px;font-size:15px;cursor:pointer;width:100%;background:#1b6cb3;color:#fff;transition:.18s}
+    .cp .cp-btn:hover{background:#134b80}
     .cp .cp-btn:disabled{opacity:.5;cursor:not-allowed}
     .cp .cp-msg{font-size:13px;border-radius:10px;padding:10px 12px;margin-top:12px;display:none}
     .cp .cp-msg.err{background:#FBE9EA;color:#C0392B;display:block}

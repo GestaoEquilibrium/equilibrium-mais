@@ -44,9 +44,9 @@ async function carregar(){
 
 /* ---- cores do cartão por plano ---- */
 function gradPlano(slug){
-  if(slug==="ind") return "linear-gradient(135deg,#3FB6C4,#3FB6C4)";
+  if(slug==="ind") return "linear-gradient(135deg,#4ebfce,#4ebfce)";
   if(slug==="gran") return "linear-gradient(135deg,#BD8420,#F0B43C)";
-  return "linear-gradient(135deg,#1F7E8C,#2FA8B8)"; // familiar / default
+  return "linear-gradient(135deg,#134b80,#1b6cb3)"; // familiar / default
 }
 
 /* ---- render principal ---- */
@@ -112,7 +112,7 @@ function nomePlano(s){ return s==="ind"?"Individual":s==="gran"?"Gran Família":
 function renderFam(){
   const fam=document.getElementById("fam");
   fam.innerHTML=D.cartoes.map((c,i)=>`<button class="${i===cartaoSel?"on":""}" onclick="selCartao(${i})">
-    <span class="dot" style="background:${c.cor_acento||"#2FA8B8"}"></span>${primeiro(c.nome)}${c.is_titular?" (você)":""}</button>`).join("");
+    <span class="dot" style="background:${c.cor_acento||"#1b6cb3"}"></span>${primeiro(c.nome)}${c.is_titular?" (você)":""}</button>`).join("");
 }
 function selCartao(i){ cartaoSel=i; renderFam(); renderCartao(); renderHistorico(); }
 

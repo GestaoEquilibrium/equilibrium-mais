@@ -7,7 +7,7 @@ const ini = (n)=>(n||"?").split(" ").filter(Boolean).slice(0,2).map(s=>s[0]).joi
 const soDig = (s)=>(s||"").replace(/\D/g,"");
 const planClass=(s)=>s==="ind"?"ind":s==="gran"?"gran":"fam";
 const labelPapel={gestor:"Gestor",financeiro:"Financeiro",recepcao:"Recepção"};
-const ACENTOS=["#2FA8B8","#3FB6C4","#F0B43C","#E45460","#5FBFCC","#BD8420"];
+const ACENTOS=["#1b6cb3","#4ebfce","#F0B43C","#E45460","#5aa7d8","#BD8420"];
 
 const D={ cartoes:[], servicos:[], profissionais:[], usosHoje:[] };
 let EU=null, sel=null, ULTIMO_USO=null;
@@ -107,7 +107,7 @@ function selecionar(c,ativo){
     return;
   }
   sel=c;
-  const cor=c.cor_acento||"#2FA8B8";
+  const cor=c.cor_acento||"#1b6cb3";
   const card=document.getElementById("bigCard");
   card.style.background=`linear-gradient(135deg, ${escurece(cor,0.5)}, ${escurece(cor,0.72)})`;
   document.getElementById("bcNome").textContent=c.paciente;
@@ -123,7 +123,7 @@ function selecionar(c,ativo){
 
 function escurece(hex, f){
   f = (f==null) ? 0.55 : f;
-  const h=(hex||"#2FA8B8").replace("#","");
+  const h=(hex||"#1b6cb3").replace("#","");
   const r=Math.round(parseInt(h.slice(0,2),16)*f);
   const g=Math.round(parseInt(h.slice(2,4),16)*f);
   const b=Math.round(parseInt(h.slice(4,6),16)*f);
@@ -291,12 +291,12 @@ function abrirGuiaGeralHoje(){
 function abrirModal(titulo, html){
   let bg=document.getElementById("rcModal");
   if(!bg){ bg=document.createElement("div"); bg.id="rcModal";
-    bg.style.cssText="position:fixed;inset:0;background:rgba(21,64,110,.45);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px";
+    bg.style.cssText="position:fixed;inset:0;background:rgba(19,75,128,.45);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px";
     bg.onclick=(e)=>{if(e.target===bg)bg.remove();};
     document.body.appendChild(bg);
   }
   bg.innerHTML=`<div style="background:#fff;border-radius:20px;max-width:560px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 30px 70px rgba(8,30,55,.4)">
-    <div style="background:linear-gradient(135deg,#1F7E8C,#2FA8B8);color:#fff;padding:18px 22px;display:flex;align-items:center;justify-content:between;gap:12px">
+    <div style="background:linear-gradient(135deg,#134b80,#1b6cb3);color:#fff;padding:18px 22px;display:flex;align-items:center;justify-content:between;gap:12px">
       <h3 style="font-family:Quicksand;font-weight:700;font-size:17px;flex:1">${titulo}</h3>
       <button onclick="document.getElementById('rcModal').remove()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:16px">✕</button>
     </div>

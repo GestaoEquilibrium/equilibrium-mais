@@ -27,33 +27,33 @@
     const s = document.createElement("style");
     s.id = "cfoto-css";
     s.textContent = `
-    .cfoto-bg{position:fixed;inset:0;background:rgba(21,64,110,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000}
+    .cfoto-bg{position:fixed;inset:0;background:rgba(19,75,128,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000}
     .cfoto-bg.show{display:flex}
     .cfoto{background:#fff;border-radius:22px;width:min(420px,94vw);box-shadow:0 30px 70px rgba(8,30,55,.4);overflow:hidden;font-family:'Inter',system-ui,sans-serif}
-    .cfoto .hd{background:linear-gradient(135deg,#15406E,#1860A8);color:#fff;padding:20px 24px}
+    .cfoto .hd{background:linear-gradient(135deg,#134b80,#1b6cb3);color:#fff;padding:20px 24px}
     .cfoto .hd h3{font-family:'Quicksand',sans-serif;font-weight:700;font-size:18px;margin:0}
     .cfoto .hd p{font-size:12.5px;opacity:.85;margin-top:3px}
     .cfoto .bd{padding:22px 24px}
     .cfoto .drop{border:2px dashed #cdddec;border-radius:14px;padding:34px 18px;text-align:center;cursor:pointer;transition:.15s}
-    .cfoto .drop:hover{border-color:#1860A8;background:#F1F7FC}
+    .cfoto .drop:hover{border-color:#1b6cb3;background:#F1F7FC}
     .cfoto .drop .ic{font-size:34px}
-    .cfoto .drop b{display:block;color:#1860A8;font-family:'Quicksand';font-weight:600;margin-top:8px}
+    .cfoto .drop b{display:block;color:#1b6cb3;font-family:'Quicksand';font-weight:600;margin-top:8px}
     .cfoto .drop small{color:#6b7f90;font-size:12px}
     .cfoto .stage{display:none}
     .cfoto .stage.show{display:block}
-    .cfoto .frame{position:relative;width:260px;height:260px;margin:0 auto;border-radius:50%;overflow:hidden;background:#0b2138;touch-action:none;cursor:grab;box-shadow:0 0 0 3px #1860A8, 0 0 0 9px #e6f1fb}
+    .cfoto .frame{position:relative;width:260px;height:260px;margin:0 auto;border-radius:50%;overflow:hidden;background:#0b2138;touch-action:none;cursor:grab;box-shadow:0 0 0 3px #1b6cb3, 0 0 0 9px #e6f1fb}
     .cfoto .frame.drag{cursor:grabbing}
     .cfoto .frame canvas{position:absolute;left:0;top:0}
     .cfoto .frame .ring{position:absolute;inset:0;border-radius:50%;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
     .cfoto .zoom{display:flex;align-items:center;gap:12px;margin-top:18px}
     .cfoto .zoom span{font-size:16px}
-    .cfoto .zoom input{flex:1;accent-color:#1860A8}
+    .cfoto .zoom input{flex:1;accent-color:#1b6cb3}
     .cfoto .hint{font-size:12px;color:#6b7f90;text-align:center;margin-top:10px}
     .cfoto .ft{display:flex;gap:10px;padding:0 24px 22px}
     .cfoto .ft button{flex:1;border:none;border-radius:12px;padding:13px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:.15s}
     .cfoto .ft .cancel{background:#eef3f8;color:#6b7f90}
-    .cfoto .ft .trocar{background:#fff;color:#1860A8;border:1.5px solid #cdddec;flex:0 0 auto;padding:13px 16px}
-    .cfoto .ft .save{background:#1860A8;color:#fff}
+    .cfoto .ft .trocar{background:#fff;color:#1b6cb3;border:1.5px solid #cdddec;flex:0 0 auto;padding:13px 16px}
+    .cfoto .ft .save{background:#1b6cb3;color:#fff}
     .cfoto .ft .save:disabled{opacity:.6;cursor:not-allowed}
     .cfoto .msg{font-size:13px;border-radius:10px;padding:10px 13px;margin:0 24px 16px;display:none}
     .cfoto .msg.err{background:#FBEAEB;color:#C0392B;display:block}

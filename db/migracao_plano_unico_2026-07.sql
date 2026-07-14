@@ -19,6 +19,7 @@ update planos set
   max_pessoas     = 1,
   max_dependentes = 0,
   ordem           = 1,
+  cor_hex         = '#1B6CB3',   -- azul da logo original (identidade 14/07)
   ativo           = true
 where slug = 'ind';
 

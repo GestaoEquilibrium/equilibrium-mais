@@ -385,7 +385,8 @@
     const host = document.getElementById("heroCv");
     if (!host) return;
     const NS = "http://www.w3.org/2000/svg";
-    const pals = [["#33A595","#1860A8","#F0B43C","#E45460"],["#E45460","#33A595","#1860A8","#F0B43C"],["#F0B43C","#E45460","#33A595","#1860A8"]];
+    /* cataventos flutuantes nas cores da logo (família de azuis) */
+    const pals = [["#1b6cb3","#134b80","#4ebfce","#7fb3dc"],["#4ebfce","#1b6cb3","#7fb3dc","#134b80"],["#7fb3dc","#4ebfce","#134b80","#1b6cb3"]];
     const pos = [[3,8,150,12],[84,4,96,9],[10,62,84,8],[74,58,120,14],[40,14,60,10],[92,70,64,7],[55,72,72,11]];
     pos.forEach((p, idx) => {
       const s = document.createElementNS(NS, "svg");

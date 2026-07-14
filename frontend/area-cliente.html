@@ -54,15 +54,14 @@ h1,h2,h3,h4{font-family:'Quicksand',sans-serif}
 .tilt .num{letter-spacing:.16em;font-size:15px;margin-top:8px;opacity:.96}
 .tilt .meta{display:flex;gap:22px;margin-top:14px;font-size:11.5px}
 .tilt .meta b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;font-weight:700}
-/* ===== cartão oficial: prata escovada (logo azul, sem chip) ===== */
-.tilt.prata{color:#26404F;box-shadow:0 22px 50px rgba(38,64,79,.28)}
-.tilt.prata::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.5) 0 1px,rgba(160,172,182,.22) 1px 3px);mix-blend-mode:overlay;pointer-events:none;border-radius:20px}
-.tilt.prata .kick{color:#1b6cb3;opacity:1}
-.tilt.prata .pin{opacity:.14}
-.tilt.prata .pin use{fill:#7d8f9c}
-.tilt.prata .foto{border-color:rgba(27,108,179,.45);background:rgba(255,255,255,.65);color:#1b6cb3}
-.tilt.prata .meta b{opacity:.6}
-.tilt.prata .shine{background:radial-gradient(circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.65),transparent 46%)}
+/* ===== cartão oficial: marinho premium com detalhe dourado (sem chip) ===== */
+.tilt.premium{color:#EAF2F8;box-shadow:0 22px 50px rgba(8,30,55,.45)}
+.tilt.premium::before{content:"";position:absolute;left:24px;right:24px;top:58px;height:1.5px;background:linear-gradient(90deg,transparent,rgba(232,200,119,.8),transparent);pointer-events:none;z-index:1}
+.tilt.premium .kick{color:#E8C877;opacity:1}
+.tilt.premium .pin{right:14px;bottom:12px;width:116px;height:116px;opacity:.13}
+.tilt.premium .pin use{fill:#6FCBD8}
+.tilt.premium .foto{border-color:rgba(232,200,119,.55);background:rgba(255,255,255,.12)}
+.tilt.premium .meta b{opacity:.65}
 
 /* seletor de família */
 .fam{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}

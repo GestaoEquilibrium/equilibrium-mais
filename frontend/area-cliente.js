@@ -44,8 +44,8 @@ async function carregar(){
 
 /* ---- cores do cartão por plano ---- */
 function gradPlano(slug){
-  /* cartão oficial: prata escovada (logo azul) */
-  if(slug==="ind") return "linear-gradient(150deg,#F4F6F8 0%,#D9DEE3 30%,#EDF0F3 55%,#C9D0D6 100%)";
+  /* cartão oficial: marinho premium com detalhe dourado */
+  if(slug==="ind") return "linear-gradient(150deg,#0B2A45 0%,#123B5E 60%,#1A5FA8 130%)";
   if(slug==="gran") return "linear-gradient(135deg,#BD8420,#F0B43C)";
   return "linear-gradient(135deg,#134b80,#1b6cb3)"; // legado / default
 }
@@ -60,7 +60,7 @@ function render(){
     <div class="hello-sub">Conta ${D.adesao.numero_conta} · ${nomePlano(planoSlug)}</div>
     <div class="layout">
       <div class="card-area">
-        <div class="tilt${planoSlug==="ind"?" prata":""}" id="tilt" style="background:${gradPlano(planoSlug)}">
+        <div class="tilt${planoSlug==="ind"?" premium":""}" id="tilt" style="background:${gradPlano(planoSlug)}">
           <div class="shine"></div>
           <svg class="pin" viewBox="-55 -55 110 110"><use href="#cv-white"/></svg>
           <div class="foto" id="cardFoto"></div>

@@ -109,16 +109,17 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .leque.solo .lq-card:hover{transform:translateY(-10px) scale(1.04)!important}
 .leque.solo .lq-price{margin-top:22px}
 .leque.solo .lq-plan{padding-right:86px}
-/* cartão oficial: prata escovada com a marca em azul (sem chip) */
-.leque.solo .lq-card{background:linear-gradient(150deg,#F4F6F8 0%,#D9DEE3 30%,#EDF0F3 55%,#C9D0D6 100%);color:#26404F;box-shadow:0 18px 40px rgba(38,64,79,.35)}
-.leque.solo .lq-card::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.5) 0 1px,rgba(160,172,182,.22) 1px 3px);mix-blend-mode:overlay;pointer-events:none}
-.leque.solo .lq-plan{color:#3E5A6B}
-.leque.solo .lq-price{color:#26404F}
-.leque.solo .lq-who,.leque.solo .lq-ades{color:#5E7382;opacity:1}
-.leque.solo .lq-pick{color:#1b6cb3;opacity:1;font-weight:700}
-.leque.solo .lq-pill{background:#1b6cb3;color:#fff}
-.leque.solo .lq-pin{opacity:.15}
-.leque.solo .lq-pin use{fill:#7d8f9c}
+/* cartão oficial: marinho premium com detalhe dourado (sem chip) */
+.leque.solo .lq-card{background:linear-gradient(150deg,#0B2A45 0%,#123B5E 60%,#1A5FA8 130%);color:#EAF2F8;box-shadow:0 18px 40px rgba(8,30,55,.5)}
+.leque.solo .lq-card::before{content:"";position:absolute;left:22px;right:22px;top:62px;height:1.5px;background:linear-gradient(90deg,transparent,rgba(232,200,119,.8),transparent);pointer-events:none}
+.leque.solo .lq-plan{color:#D6E2EC}
+.leque.solo .lq-price{color:#fff}
+.leque.solo .lq-who{color:#B9CBD9;opacity:1}
+.leque.solo .lq-ades{color:#E8C877;opacity:1}
+.leque.solo .lq-pick{color:#E8C877;opacity:1;font-weight:700}
+.leque.solo .lq-pill{background:linear-gradient(140deg,#E8C877,#C79A3E);color:#3d2c05}
+.leque.solo .lq-pin{opacity:.15;right:12px;bottom:10px;width:88px;height:88px}
+.leque.solo .lq-pin use{fill:#6FCBD8}
 .lq-ades{font-size:12px;margin-top:4px;opacity:.85;font-weight:600}
 .lq-card{position:absolute;top:0;left:50%;width:290px;height:182px;border-radius:18px;overflow:hidden;color:#fff;cursor:pointer;
   box-shadow:0 18px 40px rgba(8,30,55,.45);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s;transform-origin:bottom center}
@@ -255,15 +256,15 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
 /* CONFIRMAÇÃO */
 .done{text-align:center;max-width:580px;margin:0 auto;padding:20px 0}
 .done .emoji{font-size:54px}
-.memcard{margin:28px auto 0;max-width:420px;height:236px;background:linear-gradient(150deg,#F4F6F8 0%,#D9DEE3 30%,#EDF0F3 55%,#C9D0D6 100%);border-radius:var(--card-r);padding:28px;color:#26404F;text-align:left;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(38,64,79,.3)}
-.memcard::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.5) 0 1px,rgba(160,172,182,.22) 1px 3px);mix-blend-mode:overlay;pointer-events:none}
+.memcard{margin:28px auto 0;max-width:420px;height:236px;background:linear-gradient(150deg,#0B2A45 0%,#123B5E 60%,#1A5FA8 130%);border-radius:var(--card-r);padding:28px;color:#EAF2F8;text-align:left;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(8,30,55,.5)}
+.memcard::before{content:"";position:absolute;left:26px;right:26px;top:66px;height:1.5px;background:linear-gradient(90deg,transparent,rgba(232,200,119,.8),transparent);pointer-events:none}
 .memcard *{font-family:'Quicksand'}
-.memcard .pin{position:absolute;right:-22px;bottom:-22px;width:150px;height:150px;opacity:.14}
-.memcard .pin use{fill:#7d8f9c}
-.memcard .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#1b6cb3;font-weight:700}
+.memcard .pin{position:absolute;right:14px;bottom:12px;width:104px;height:104px;opacity:.13}
+.memcard .pin use{fill:#6FCBD8}
+.memcard .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#E8C877;font-weight:700}
 .memcard .nm{font-size:22px;font-weight:700;margin-top:40px}
 .memcard .num{letter-spacing:.14em;font-size:16px;margin-top:10px}
-.memcard .meta{display:flex;justify-content:space-between;margin-top:18px;font-size:13px;color:#5E7382}
+.memcard .meta{display:flex;justify-content:space-between;margin-top:18px;font-size:13px;color:#B9CBD9}
 
 /* FOOTER */
 .foot{background:var(--marinho);color:#9fc0de;padding:40px 0 30px;border-top-left-radius:36px;border-top-right-radius:36px;margin-top:10px}

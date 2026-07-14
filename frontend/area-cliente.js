@@ -44,9 +44,10 @@ async function carregar(){
 
 /* ---- cores do cartão por plano ---- */
 function gradPlano(slug){
-  if(slug==="ind") return "linear-gradient(135deg,#4ebfce,#4ebfce)";
+  /* cartão oficial: prata escovada (logo azul) */
+  if(slug==="ind") return "linear-gradient(150deg,#F4F6F8 0%,#D9DEE3 30%,#EDF0F3 55%,#C9D0D6 100%)";
   if(slug==="gran") return "linear-gradient(135deg,#BD8420,#F0B43C)";
-  return "linear-gradient(135deg,#134b80,#1b6cb3)"; // familiar / default
+  return "linear-gradient(135deg,#134b80,#1b6cb3)"; // legado / default
 }
 
 /* ---- render principal ---- */
@@ -56,20 +57,20 @@ function render(){
   const temFam = D.cartoes.length>1;
   wrap.innerHTML = `
     <div class="hello">Olá, ${primeiro(D.assinante.nome)}! 👋</div>
-    <div class="hello-sub">Conta ${D.adesao.numero_conta} · plano ${nomePlano(planoSlug)}</div>
+    <div class="hello-sub">Conta ${D.adesao.numero_conta} · ${nomePlano(planoSlug)}</div>
     <div class="layout">
       <div class="card-area">
-        <div class="tilt" id="tilt" style="background:${gradPlano(planoSlug)}">
+        <div class="tilt${planoSlug==="ind"?" prata":""}" id="tilt" style="background:${gradPlano(planoSlug)}">
           <div class="shine"></div>
           <svg class="pin" viewBox="-55 -55 110 110"><use href="#cv-white"/></svg>
           <div class="foto" id="cardFoto"></div>
           <div class="pad">
-            <div class="kick">Cartão Mais Equilibrium</div>
+            <div class="kick">Cartão Equilibrium Mais Saúde</div>
             <div class="nome" id="cardNome"></div>
             <div class="num" id="cardNum"></div>
             <div class="meta">
               <div><b>Papel</b><span id="cardPapel"></span></div>
-              <div><b>Plano</b>${nomePlano(planoSlug)}</div>
+              <div><b>Cartão</b>${nomePlano(planoSlug)}</div>
               <div><b>Válido até</b>${fmtData(D.adesao.fidelidade_ate)}</div>
             </div>
           </div>

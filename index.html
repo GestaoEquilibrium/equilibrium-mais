@@ -109,6 +109,16 @@ h1,h2,h3{font-family:'Quicksand',sans-serif}
 .leque.solo .lq-card:hover{transform:translateY(-10px) scale(1.04)!important}
 .leque.solo .lq-price{margin-top:22px}
 .leque.solo .lq-plan{padding-right:86px}
+/* cartão oficial: prata escovada com a marca em azul (sem chip) */
+.leque.solo .lq-card{background:linear-gradient(150deg,#F4F6F8 0%,#D9DEE3 30%,#EDF0F3 55%,#C9D0D6 100%);color:#26404F;box-shadow:0 18px 40px rgba(38,64,79,.35)}
+.leque.solo .lq-card::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.5) 0 1px,rgba(160,172,182,.22) 1px 3px);mix-blend-mode:overlay;pointer-events:none}
+.leque.solo .lq-plan{color:#3E5A6B}
+.leque.solo .lq-price{color:#26404F}
+.leque.solo .lq-who,.leque.solo .lq-ades{color:#5E7382;opacity:1}
+.leque.solo .lq-pick{color:#1b6cb3;opacity:1;font-weight:700}
+.leque.solo .lq-pill{background:#1b6cb3;color:#fff}
+.leque.solo .lq-pin{opacity:.15}
+.leque.solo .lq-pin use{fill:#7d8f9c}
 .lq-ades{font-size:12px;margin-top:4px;opacity:.85;font-weight:600}
 .lq-card{position:absolute;top:0;left:50%;width:290px;height:182px;border-radius:18px;overflow:hidden;color:#fff;cursor:pointer;
   box-shadow:0 18px 40px rgba(8,30,55,.45);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s;transform-origin:bottom center}
@@ -245,13 +255,15 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
 /* CONFIRMAÇÃO */
 .done{text-align:center;max-width:580px;margin:0 auto;padding:20px 0}
 .done .emoji{font-size:54px}
-.memcard{margin:28px auto 0;max-width:420px;height:236px;background:linear-gradient(135deg,var(--marinho),var(--azul));border-radius:var(--card-r);padding:28px;color:#fff;text-align:left;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(19,75,128,.4)}
+.memcard{margin:28px auto 0;max-width:420px;height:236px;background:linear-gradient(150deg,#F4F6F8 0%,#D9DEE3 30%,#EDF0F3 55%,#C9D0D6 100%);border-radius:var(--card-r);padding:28px;color:#26404F;text-align:left;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(38,64,79,.3)}
+.memcard::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.5) 0 1px,rgba(160,172,182,.22) 1px 3px);mix-blend-mode:overlay;pointer-events:none}
 .memcard *{font-family:'Quicksand'}
-.memcard .pin{position:absolute;right:-22px;bottom:-22px;width:150px;height:150px;opacity:.18}
-.memcard .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--aqua);font-weight:700}
+.memcard .pin{position:absolute;right:-22px;bottom:-22px;width:150px;height:150px;opacity:.14}
+.memcard .pin use{fill:#7d8f9c}
+.memcard .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#1b6cb3;font-weight:700}
 .memcard .nm{font-size:22px;font-weight:700;margin-top:40px}
 .memcard .num{letter-spacing:.14em;font-size:16px;margin-top:10px}
-.memcard .meta{display:flex;justify-content:space-between;margin-top:18px;font-size:13px;color:#cfe0f0}
+.memcard .meta{display:flex;justify-content:space-between;margin-top:18px;font-size:13px;color:#5E7382}
 
 /* FOOTER */
 .foot{background:var(--marinho);color:#9fc0de;padding:40px 0 30px;border-top-left-radius:36px;border-top-right-radius:36px;margin-top:10px}

@@ -170,8 +170,8 @@ table.svc thead th:first-child{border-top-left-radius:12px}
 table.svc thead th:last-child{border-top-right-radius:12px}
 table.svc th:not(:first-child),table.svc td:not(:first-child){text-align:center}
 table.svc tbody tr:hover{background:var(--mist)}
-table.svc td.old{color:var(--risk);font-weight:700;font-family:'Quicksand';text-decoration:line-through}
-table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
+table.svc td.old{color:var(--muted);font-weight:600;font-family:'Quicksand';text-decoration:line-through}
+table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-size:15.5px}
 .off-badge{display:inline-block;background:var(--okbg);color:var(--ok);font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px}
 
 /* PLANOS (cards) */
@@ -320,16 +320,16 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
     <div class="wrap"><div class="hero-grid">
       <div>
         <div class="kick">Seu equilíbrio merece um mais</div>
-        <h1>Mais saúde, mais cuidado,<br><em>até 50% de desconto</em></h1>
-        <p class="sub">Um cartão de benefícios para você cuidar da saúde pagando muito menos em toda a rede Equilibrium. Não é plano de saúde — é desconto de verdade, na hora que você precisar.</p>
+        <h1>Metade do preço.<br><em>Dobro do cuidado.</em></h1>
+        <p class="sub">Um clube de descontos que dá 50% de desconto em todos os atendimentos da rede própria Equilibrium, por R$ 59,99 ao mês. Não é plano de saúde — é desconto direto, aplicado na recepção, no ato do atendimento.</p>
         <div class="cta">
           <button class="btn btn-a" onclick="go('calc')">Simular minha economia</button>
           <button class="btn btn-ghost" onclick="irAderir()">Quero aderir</button>
         </div>
         <div class="trust">
-          <span>✓ <b>Desconto na hora</b> nas terapias e consultas</span>
+          <span>✓ <b>Ativação imediata</b> após o pagamento</span>
           <span>✓ <b>Cartão individual,</b> seu e pessoal</span>
-          <span>✓ <b>Sem glosa,</b> sem burocracia</span>
+          <span>✓ <b>Sem multa</b> — cancele quando quiser</span>
         </div>
       </div>
       <div class="hero-right">
@@ -341,7 +341,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
         <!-- Plano único (jul/2026): um só cartão no hero -->
         <div class="leque solo" id="leque">
           <div class="lq-card lq-ind" data-slug="ind" onclick="escolherPlano('ind')">
-            <span class="lq-pill">Plano único</span>
+            <span class="lq-pill">Cartão único</span>
             <svg class="lq-pin" viewBox="-55 -55 110 110"><use href="#blade" fill="#fff"/><use href="#blade" fill="#fff" transform="rotate(90)"/><use href="#blade" fill="#fff" transform="rotate(180)"/><use href="#blade" fill="#fff" transform="rotate(270)"/></svg>
             <div class="lq-pad">
               <div class="lq-plan" data-plan-nome>Cartão Equilibrium Mais Saúde</div>
@@ -383,7 +383,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
       <p class="lead">Um benefício pensado para a vida real: terapia, psiquiatria, avaliação e o desenvolvimento das crianças — tudo com desconto de verdade.</p>
       <div class="bens">
         <div class="ben c1"><div class="ic">💙</div><h3>Mais economia</h3><p>Até 50% de desconto nos atendimentos da clínica, do início ao fim do tratamento.</p></div>
-        <div class="ben c2"><div class="ic">💳</div><h3>Mais simplicidade</h3><p>Um único plano, sem categorias: R$ 59,99/mês + R$ 50 de adesão única. Cartão com seu nome e número próprios.</p></div>
+        <div class="ben c2"><div class="ic">💳</div><h3>Mais simplicidade</h3><p>Um cartão único, sem categorias: R$ 59,99/mês, metade do preço em toda a rede própria. Com seu nome e número próprios.</p></div>
         <div class="ben c3"><div class="ic">⚡</div><h3>Mais agilidade</h3><p>Sem autorização, sem glosa, sem fila de convênio. Agendou, usou, pagou já com desconto.</p></div>
         <div class="ben c4"><div class="ic">🧠</div><h3>Mais cuidado</h3><p>Psicoterapia, psiquiatria, avaliação neuropsicológica e terapias infantis na mesma rede.</p></div>
         <div class="ben c5"><div class="ic">🔓</div><h3>Mais transparência</h3><p>Você sabe exatamente quanto paga. Sem letras miúdas, sem surpresa na fatura.</p></div>
@@ -431,8 +431,8 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
   <!-- PLANO -->
   <div class="sec alt">
     <div class="wrap">
-      <div class="seckick">O plano</div>
-      <h2>Um único plano, para cada pessoa</h2>
+      <div class="seckick">O cartão</div>
+      <h2>Um cartão único, para cada pessoa</h2>
       <p class="lead">Mensalidade pequena, desconto grande. Cartão individual e intransferível — cada pessoa faz a própria adesão.</p>
       <div class="plans solo" id="planCards"></div>
     </div>
@@ -451,7 +451,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
       <div class="calc-head"><span class="sp"></span><span class="lbl">Sem desconto<span class="ar">→</span><span class="cc">Com o cartão</span></span><span class="stpsp"></span></div>
       <div id="calcRows"></div>
       <div class="chkrow"><input type="checkbox" id="ck_neuro" onchange="calc()"><label for="ck_neuro">Vou fazer uma Avaliação Neuropsicológica</label></div>
-      <div class="field" style="margin-top:18px"><label>Plano escolhido</label><select id="calcPlan" onchange="calc()"></select></div>
+      <div class="field" style="margin-top:18px"><label>Cartão</label><select id="calcPlan" onchange="calc()"></select></div>
     </div>
     <div class="res">
       <div class="cmp"><span>Sem o cartão (particular)</span><b id="r_sem">R$ 0</b></div>
@@ -477,7 +477,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
   </div>
   <div class="frm" id="adPF" style="margin-top:18px">
     <div>
-      <div class="card" id="adPlanCard"><h3 style="color:var(--azul);font-size:17px;margin-bottom:14px">Plano</h3>
+      <div class="card" id="adPlanCard"><h3 style="color:var(--azul);font-size:17px;margin-bottom:14px">Cartão</h3>
         <div class="field"><select id="adPlan" onchange="syncPlan()"></select></div>
       </div>
       <div class="card" style="margin-top:18px"><h3 style="color:var(--azul);font-size:17px;margin-bottom:14px">Titular</h3>
@@ -498,7 +498,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
     </div>
     <div class="summary">
       <h3 style="font-family:'Quicksand';color:var(--azul);margin-bottom:12px;font-size:17px">Resumo</h3>
-      <div class="li"><span id="s_plan">Plano</span><span id="s_max" style="color:var(--muted);font-size:12px"></span></div>
+      <div class="li"><span id="s_plan">Cartão</span><span id="s_max" style="color:var(--muted);font-size:12px"></span></div>
       <div class="li"><span>Titular</span><span id="s_tit" style="color:var(--muted)">—</span></div>
       <div class="li"><span>Mensalidade</span><span id="s_tot" style="color:var(--muted)">—</span></div>
       <div class="li"><span>Adesão (única)</span><span id="s_ades" style="color:var(--muted)">—</span></div>
@@ -563,11 +563,12 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
       <h3 style="color:var(--azul);font-size:17px;margin-bottom:14px">Método</h3>
       <div class="method sel" id="mCard" onclick="setMethod('card')"><span class="ic">💳</span><div><b>Cartão de crédito</b><div style="font-size:12px;color:var(--muted)">Cobrança recorrente automática</div></div></div>
       <div class="method" id="mPix" onclick="setMethod('pix')"><span class="ic">📱</span><div><b>PIX</b><div style="font-size:12px;color:var(--muted)">À vista, com confirmação na hora</div></div></div>
+      <div class="method" id="mDeb" onclick="setMethod('debito')"><span class="ic">🏦</span><div><b>Cartão de débito</b><div style="font-size:12px;color:var(--muted)">À vista pelo Mercado Pago</div></div></div>
       <div id="payArea"></div>
     </div>
     <div class="summary">
       <h3 style="font-family:'Quicksand';color:var(--azul);margin-bottom:12px;font-size:17px">Resumo do pedido</h3>
-      <div class="li"><span>Plano</span><span id="p_plan">—</span></div>
+      <div class="li"><span>Cartão</span><span id="p_plan">—</span></div>
       <div class="li"><span>Titular</span><span id="p_tit" style="color:var(--muted)">—</span></div>
       <div class="li"><span>Ciclo</span><span id="p_ciclo" style="color:var(--muted)">Mensal</span></div>
       <div class="li"><span>Adesão (única)</span><span id="p_ades" style="color:var(--muted)">—</span></div>
@@ -589,7 +590,7 @@ table.svc td.c{color:var(--ok);font-weight:700;font-family:'Quicksand'}
       <div class="t">Cartão Equilibrium Mais Saúde</div>
       <div class="nm" id="c_nome">—</div>
       <div class="num" id="c_num">•••• •••• ••••</div>
-      <div class="meta"><span id="c_plan">Plano</span><span>Válido 12 meses</span></div>
+      <div class="meta"><span id="c_plan">Cartão</span><span>Ativação imediata</span></div>
     </div>
     <div style="margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-o" onclick="go('home')">Voltar ao início</button>

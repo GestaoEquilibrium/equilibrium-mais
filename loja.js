@@ -69,7 +69,7 @@
       tr.innerHTML =
         `<td>${s.icone || ""} ${s.nome}</td>` +
         `<td class="old">${money(s.preco_particular)}</td>` +
-        `<td class="c">${moneyC(s.preco_cartao - 0.01)}<span class="off-badge">-${pct}%</span></td>`;
+        `<td class="c">${moneyP(s.preco_cartao)}<span class="off-badge">-${pct}%</span></td>`;
       tb.appendChild(tr);
     });
   }
@@ -143,7 +143,7 @@
       r.className = "row";
       r.innerHTML =
         `<label>${s.icone || ""} ${s.nome}</label>` +
-        `<span class="pp"><s>${money(s.preco_particular)}</s> → <span class="cc">${moneyC(s.preco_cartao - 0.01)}</span></span>` +
+        `<span class="pp"><s>${money(s.preco_particular)}</s> → <span class="cc">${moneyP(s.preco_cartao)}</span></span>` +
         `<div class="stp"><button data-d="-1" data-s="${s.slug}">−</button>` +
         `<input id="q_${s.slug}" value="0" readonly>` +
         `<button data-d="1" data-s="${s.slug}">+</button></div>`;
@@ -152,7 +152,7 @@
     c.querySelectorAll("button[data-s]").forEach((b) => (b.onclick = () => bump(b.dataset.s, +b.dataset.d)));
     const neuroSvc = state.servicos.find((s) => s.slug === "neuro");
     const lbl = document.querySelector('label[for="ck_neuro"]');
-    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(<s>${money(neuroSvc.preco_particular)}</s> → <span class="cc">${moneyC(neuroSvc.preco_cartao - 0.01)}</span>)</span>`;
+    if (neuroSvc && lbl) lbl.innerHTML = `Vou fazer uma Avaliação Neuropsicológica <span style="color:var(--muted)">(<s>${money(neuroSvc.preco_particular)}</s> → <span class="cc">${moneyP(neuroSvc.preco_cartao)}</span>)</span>`;
   }
 
   function bump(slug, d) {
@@ -293,11 +293,11 @@
       set("p_totlab", "1ª cobrança (mensalidade + adesão)"); set("p_tot", moneyC(primeira));
       if (bn) bn.innerHTML = `A 1ª cobrança inclui a taxa de adesão única de <b>${moneyC(TAXA_ADESAO)}</b>. Depois, <b>${moneyC(p.preco_mensal)}/mês</b> no cartão. Sem multa — cancele quando quiser com aviso de 30 dias.`;
     } else {
-      const anual = Number(p.preco_mensal) * 11;
+      const anual = Number(p.preco_mensal) * 12;
       const primeira = anual + TAXA_ADESAO;
       set("p_ciclo", "Anual à vista");
       set("p_totlab", "Total (anual + adesão)"); set("p_tot", moneyC(primeira));
-      if (bn) bn.innerHTML = `<b style="color:var(--ambar-d)">Pague 11, leve 12</b> — 1 mês grátis e elegibilidade imediata na Avaliação Neuropsicológica. Anual: <b>${moneyC(anual)}</b> + adesão única de <b>${moneyC(TAXA_ADESAO)}</b>.`;
+      if (bn) bn.innerHTML = `<b style="color:var(--ambar-d)">Quitação anual antecipada</b> — elegibilidade imediata na Avaliação Neuropsicológica. 12 mensalidades (<b>${moneyC(anual)}</b>) + adesão única de <b>${moneyC(TAXA_ADESAO)}</b>.`;
     }
     renderPayArea();
   }

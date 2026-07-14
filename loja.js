@@ -458,7 +458,7 @@
     if (t) t.textContent = pj ? "Dados da empresa" : "Seus dados";
     if (s) s.textContent = pj
       ? "Preencha os dados da empresa para solicitar a adesão empresarial."
-      : "Preencha o titular e os dependentes (nominais, com CPF).";
+      : "Preencha seus dados para ativar o cartão. Ele é individual e intransferível.";
     if (pj) recalcPJ();
   }
   function irAderir() { setAdTipo(state.modo === "pj" ? "pj" : "pf"); go("adesao"); }

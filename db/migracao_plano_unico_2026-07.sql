@@ -1,6 +1,6 @@
 -- =============================================================================
 -- MIGRAÇÃO · CARTÃO ÚNICO — Cartão Equilibrium Mais Saúde (14/07/2026, v2)
--- Fonte da verdade: Playbook de Marca, Vendas e Comunicação (Versão 2 — Guilherme Marques)
+-- Fonte da verdade: Playbook v2 + ajuste de Wess (15/07): terapias infantis TODAS a 200→100
 -- Rodar no SQL Editor do Supabase (projeto svboktcgwccsedwoibmw)
 --
 -- Modelo: cartão único individual R$ 59,99/mês · 50% de desconto em toda a rede própria
@@ -42,12 +42,12 @@ insert into servicos (slug, nome, preco_particular, preco_cartao, icone, ativo, 
   ('consulta_medica',  'Consulta Médica',               400, 200,  '🩺', true, 2),
   ('rqe',              'Psiquiatra Especialista (RQE)', 600, 300,  '👨‍⚕️', true, 3),
   ('neuro',            'Avaliação Neuropsicológica',    4000, 2000,'🧠', true, 4),
-  ('aba',              'Terapia Infantil ABA',          250, 125,  '🧩', true, 5),
-  ('psicopedagogia',   'Psicopedagogia',                250, 125,  '📚', true, 6),
-  ('psicomotricidade', 'Psicomotricidade',              250, 125,  '🤸', true, 7),
-  ('fono',             'Fonoaudiologia',                300, 150,  '💬', true, 8),
-  ('terapia_ocupacional','Terapia Ocupacional',         300, 150,  '🧸', true, 9),
-  ('musicoterapia',    'Musicoterapia',                 300, 150,  '🎵', true, 10)
+  ('aba',              'Terapia Infantil ABA',          200, 100,  '🧩', true, 5),
+  ('psicopedagogia',   'Psicopedagogia',                200, 100,  '📚', true, 6),
+  ('psicomotricidade', 'Psicomotricidade',              200, 100,  '🤸', true, 7),
+  ('fono',             'Fonoaudiologia',                200, 100,  '💬', true, 8),
+  ('terapia_ocupacional','Terapia Ocupacional',         200, 100,  '🧸', true, 9),
+  ('musicoterapia',    'Musicoterapia',                 200, 100,  '🎵', true, 10)
 on conflict (slug) do update set
   nome = excluded.nome,
   preco_particular = excluded.preco_particular,

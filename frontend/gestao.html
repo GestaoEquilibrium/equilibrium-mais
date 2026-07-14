@@ -349,7 +349,7 @@ async function sair(){await sb.auth.signOut();location.href="login.html";}
 
 /* ---- carga ---- */
 async function carregar(){
-  const [k,mix,assin,cart,uso,fat,usoCard]=await Promise.all([
+  const [k,mix,assin,cart,uso,fat,usoCard,planos]=await Promise.all([
     sb.from("vw_kpis_gestao").select("*").maybeSingle(),
     sb.from("vw_mix_planos").select("*"),
     sb.from("vw_assinantes_lista").select("*").order("data_adesao",{ascending:false}),
@@ -357,9 +357,11 @@ async function carregar(){
     sb.from("vw_servicos_uso").select("*"),
     sb.from("vw_faturas_abertas").select("*"),
     sb.from("vw_uso_cartao").select("*"),
+    sb.from("planos").select("nome,preco_mensal"),
   ]);
   D.kpis=k.data||{};D.mix=mix.data||[];D.assin=assin.data||[];D.cart=cart.data||[];
   D.uso=uso.data||[];D.fat=fat.data||[];D.usoCard=usoCard.data||[];
+  D.planos=planos.data||[];
 }
 
 /* ================= DONUT ================= */
@@ -514,7 +516,8 @@ function secFin(){
   const k=D.kpis;const totalAberto=D.fat.reduce((s,f)=>s+Number(f.valor||0),0);const vencidas=D.fat.filter(f=>f.vencida).length;
   // receita por plano (a partir de assinantes ativos)
   const porPlano={};D.assin.filter(a=>a.status==="ativo").forEach(a=>{porPlano[a.plano_nome]=(porPlano[a.plano_nome]||0)+1;});
-  const precos={Individual:59,Familiar:99,"Gran Família":119};
+  /* preços lidos da tabela planos (antes eram hardcoded) */
+  const precos={};(D.planos||[]).forEach(p=>{precos[p.nome]=Number(p.preco_mensal)||0;});
   const recRows=Object.keys(porPlano).map(p=>{const rec=(precos[p]||0)*porPlano[p];const pct=k.mrr>0?Math.round(100*rec/Number(k.mrr)):0;return `<div class="barline"><div class="top"><b>${p}</b><span>${money(rec)} · ${porPlano[p]} ativo(s)</span></div><div class="track"><i style="width:${pct}%"></i></div></div>`;}).join("")||'<div class="empty">Sem receita ativa.</div>';
   const rows=D.fat.map(f=>`<tr><td>${f.assinante}</td><td>${f.numero_conta}</td><td><span class="pill ${planClass(planSlugNome(f.plano_nome))}">${f.plano_nome}</span></td><td>${f.competencia}</td><td>${f.vencimento}</td><td>${money(f.valor)}</td><td><span class="stt ${f.vencida?"canc":"pend"}"><span class="d"></span>${f.vencida?"Vencida":"Em aberto"}</span></td></tr>`).join("");
   return `<div class="sec-h"><div><h1>Financeiro</h1><p>Receita, projeções e cobranças</p></div></div>

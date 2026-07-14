@@ -7,11 +7,26 @@
   const sb = window.maisClient;
   const money = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
   const moneyC = (n) => "R$ " + Number(n).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  /* preço com centavos quando houver (59,99), inteiro quando redondo (200) */
+  const moneyP = (n) => (Number(n) % 1 === 0 ? money(n) : moneyC(n));
+
+  /* ===== MODELO ÚNICO (jul/2026) =====
+     Taxa de adesão única, cobrada junto com a 1ª mensalidade.
+     O valor também precisa estar refletido na Edge Function criar-checkout. */
+  const TAXA_ADESAO = 50;
+
+  /* PJ temporariamente fora do ar — modelo corporativo em revisão.
+     Reative mudando para true (nada foi apagado). */
+  const MOSTRAR_PJ = false;
 
   const state = {
     planos: {}, servicos: [], plan: null,
     bill: "mes", method: "card", deps: [], qty: {}, neuro: false, ultimaAdesao: null,
   };
+
+  const planoAtual = () => state.planos[state.plan];
+  const planosAtivos = () => Object.values(state.planos);
+  const planoUnico = () => planosAtivos().length === 1;
 
   /* ---------- carga dos catálogos ---------- */
   async function carregarCatalogos() {
@@ -23,19 +38,24 @@
     planos.forEach((p) => (state.planos[p.slug] = p));
     state.servicos = servicos;
     servicos.forEach((s) => (state.qty[s.slug] = 0));
-    state.plan = state.planos["fam"] ? "fam" : planos[0]?.slug;
+    state.plan = planos[0]?.slug;
     return true;
   }
 
-  /* ---------- leque do hero ---------- */
+  /* ---------- cartão do hero (plano único) ---------- */
   function renderLeque() {
-    Object.values(state.planos).forEach((p) => {
-      const who = p.max_dependentes === 0 ? "Só você" : "Até " + p.max_pessoas + " pessoas";
-      const pr = document.querySelector(`[data-price="${p.slug}"]`);
-      const wh = document.querySelector(`[data-who="${p.slug}"]`);
-      if (pr) pr.innerHTML = money(p.preco_mensal) + "<small>/mês</small>";
-      if (wh) wh.textContent = who;
-    });
+    const p = planoAtual();
+    if (!p) return;
+    const card = document.querySelector(".lq-card");
+    if (card) { card.dataset.slug = p.slug; card.onclick = () => escolherPlano(p.slug); }
+    const nm = document.querySelector("[data-plan-nome]");
+    const pr = document.querySelector("[data-plan-preco]");
+    const wh = document.querySelector("[data-plan-quem]");
+    const tx = document.querySelector("[data-plan-adesao]");
+    if (nm) nm.textContent = p.nome;
+    if (pr) pr.innerHTML = moneyP(p.preco_mensal) + "<small>/mês</small>";
+    if (wh) wh.textContent = "Cartão individual — só você";
+    if (tx) tx.textContent = "+ " + moneyP(TAXA_ADESAO) + " de adesão (única)";
   }
 
   /* ---------- tabela de descontos ---------- */
@@ -54,22 +74,22 @@
     });
   }
 
-  /* ---------- planos (cards da seção) ---------- */
+  /* ---------- plano (card da seção) ---------- */
   function renderPlans() {
     const c = document.getElementById("planCards");
     if (!c) return;
     c.innerHTML = "";
-    Object.values(state.planos).forEach((p) => {
-      const maxTxt = p.max_dependentes === 0 ? "Só o titular" : "Até " + p.max_pessoas + " pessoas";
+    planosAtivos().forEach((p) => {
+      const maxTxt = p.max_dependentes === 0 ? "Cartão individual — só o titular" : "Até " + p.max_pessoas + " pessoas";
       const d = document.createElement("div");
-      d.className = "plan" + (p.slug === "fam" ? " best" : "") + (state.plan === p.slug ? " sel" : "");
+      d.className = "plan" + (state.plan === p.slug ? " sel" : "");
       d.innerHTML =
         `<div class="ptop" style="background:${hexToTint(p.cor_hex)}">` +
         `<svg viewBox="-55 -55 110 110" width="28" height="28"><use href="#blade" fill="${p.cor_hex}"/>` +
         `<use href="#blade" fill="${p.cor_hex}" transform="rotate(90)"/><use href="#blade" fill="${p.cor_hex}" transform="rotate(180)"/>` +
         `<use href="#blade" fill="${p.cor_hex}" transform="rotate(270)"/></svg></div>` +
-        `<div class="nm">${p.nome}</div><div class="pr">${money(p.preco_mensal)}<small>/mês</small></div>` +
-        `<div class="mx">${maxTxt}</div>` +
+        `<div class="nm">${p.nome}</div><div class="pr">${moneyP(p.preco_mensal)}<small>/mês</small></div>` +
+        `<div class="mx">${maxTxt}<br><small style="color:var(--muted)">+ ${moneyP(TAXA_ADESAO)} de adesão, cobrada uma única vez</small></div>` +
         `<div class="pick">${state.plan === p.slug ? "✓ Selecionado" : "Selecionar"}</div>`;
       d.onclick = () => escolherPlano(p.slug);
       c.appendChild(d);
@@ -86,13 +106,18 @@
     const s = document.getElementById(id);
     if (!s) return;
     s.innerHTML = "";
-    Object.values(state.planos).forEach((p) => {
+    planosAtivos().forEach((p) => {
       const maxTxt = p.max_dependentes === 0 ? "Só o titular" : "Até " + p.max_pessoas + " pessoas";
       const o = document.createElement("option");
-      o.value = p.slug; o.textContent = `${p.nome} — ${money(p.preco_mensal)}/mês (${maxTxt})`;
+      o.value = p.slug; o.textContent = `${p.nome} — ${moneyP(p.preco_mensal)}/mês (${maxTxt})`;
       s.appendChild(o);
     });
     s.value = state.plan;
+    /* plano único: não há o que escolher — esconde o seletor */
+    if (planoUnico()) {
+      const field = s.closest(".field") || s;
+      field.style.display = "none";
+    }
   }
 
   function syncSelects() {
@@ -154,7 +179,7 @@
     const eco = semT - comT;
     const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
     set("r_sem", money(semT)); set("r_serv", money(comServ));
-    set("r_mens", money(plan ? plan.preco_mensal : 0));
+    set("r_mens", moneyP(plan ? plan.preco_mensal : 0));
     set("r_eco", money(Math.max(0, eco))); set("r_ano", money(Math.max(0, eco) * 12) + " por ano");
     const v = document.getElementById("r_verd");
     if (v) {
@@ -174,6 +199,11 @@
     set("s_plan", p.nome);
     set("s_max", p.max_dependentes === 0 ? "Só o titular" : "Até " + p.max_pessoas + " pessoas");
     if (state.deps.length > p.max_dependentes) state.deps = state.deps.slice(0, p.max_dependentes);
+    /* plano único sem dependentes: esconde os cards de escolha de plano e de dependentes */
+    const planCard = document.getElementById("adPlanCard");
+    if (planCard) planCard.style.display = planoUnico() ? "none" : "";
+    const depsCard = document.getElementById("depsCard");
+    if (depsCard) depsCard.style.display = p.max_dependentes === 0 ? "none" : "";
     renderDeps(); updateSummary(); renderPlans();
     const cp = document.getElementById("calcPlan"); if (cp) cp.value = state.plan;
     calc();
@@ -230,7 +260,9 @@
     const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
     set("s_tit", document.getElementById("t_nome")?.value || "—");
     set("s_deps", state.deps.length);
-    set("s_tot", money(p.preco_mensal) + "/mês");
+    set("s_ades", moneyC(TAXA_ADESAO));
+    set("s_tot", moneyC(p.preco_mensal) + "/mês");
+    set("s_prim", moneyC(Number(p.preco_mensal) + TAXA_ADESAO));
   }
   function updateSummaryProxy() { updateSummary(); }
 
@@ -253,14 +285,19 @@
     const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
     set("p_plan", p.nome);
     set("p_tit", document.getElementById("t_nome")?.value || "—");
+    set("p_ades", moneyC(TAXA_ADESAO));
     const bn = document.getElementById("billNote");
     if (state.bill === "mes") {
-      set("p_ciclo", "Mensal"); set("p_totlab", "Total mensal"); set("p_tot", money(p.preco_mensal));
-      if (bn) bn.textContent = "Cobrança todo mês no cartão. Cancele quando quiser (respeitando a fidelidade de 12 meses).";
+      const primeira = Number(p.preco_mensal) + TAXA_ADESAO;
+      set("p_ciclo", "Mensal");
+      set("p_totlab", "1ª cobrança (mensalidade + adesão)"); set("p_tot", moneyC(primeira));
+      if (bn) bn.innerHTML = `A 1ª cobrança inclui a taxa de adesão única de <b>${moneyC(TAXA_ADESAO)}</b>. Depois, <b>${moneyC(p.preco_mensal)}/mês</b> no cartão. Sem multa — cancele quando quiser com aviso de 30 dias.`;
     } else {
-      const anual = p.preco_mensal * 11;
-      set("p_ciclo", "Anual à vista"); set("p_totlab", "Total anual"); set("p_tot", money(anual));
-      if (bn) bn.innerHTML = '<b style="color:var(--ambar-d)">Pague 11, leve 12</b> — 1 mês grátis e elegibilidade imediata na Avaliação Neuropsicológica.';
+      const anual = Number(p.preco_mensal) * 11;
+      const primeira = anual + TAXA_ADESAO;
+      set("p_ciclo", "Anual à vista");
+      set("p_totlab", "Total (anual + adesão)"); set("p_tot", moneyC(primeira));
+      if (bn) bn.innerHTML = `<b style="color:var(--ambar-d)">Pague 11, leve 12</b> — 1 mês grátis e elegibilidade imediata na Avaliação Neuropsicológica. Anual: <b>${moneyC(anual)}</b> + adesão única de <b>${moneyC(TAXA_ADESAO)}</b>.`;
     }
     renderPayArea();
   }
@@ -339,7 +376,7 @@
     } catch (e) {
       console.error("Erro checkout:", e);
       alert("Não foi possível iniciar o pagamento: " + (e.message || e));
-      if (btn) { btn.disabled = false; btn.textContent = "Ir para o pagamento →"; }
+      if (btn) { btn.disabled = false; btn.textContent = "Confirmar adesão →"; }
     }
   }
 
@@ -476,6 +513,11 @@
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", async () => {
     plantCataventos();
+    /* PJ fora do ar: esconde os toggles PF/Empresas (hero e adesão) sem apagar nada */
+    if (!MOSTRAR_PJ) {
+      document.querySelectorAll(".hero-right .pfpj, .ad-tg").forEach((el) => (el.style.display = "none"));
+      setModo("pf"); setAdTipo("pf");
+    }
     const ok = await carregarCatalogos();
     if (!ok) return;
     renderLeque(); renderSvcTable(); renderPlans();

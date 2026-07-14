@@ -15,15 +15,15 @@ let EU=null, sel=null, ULTIMO_USO=null;
 /* ---- guarda: só equipe (recepcao/gestor) ---- */
 async function guard(){
   const {data}=await sb.auth.getSession();
-  if(!data.session){location.href="login.html";return null;}
+  if(!data.session){location.href="/login/";return null;}
   const uid=data.session.user.id;
   const {data:eq}=await sb.from("equipe").select("nome,papel,ativo,foto_path,auth_user_id,must_change_password").eq("auth_user_id",uid).maybeSingle();
   if(!eq||!eq.ativo||!(eq.papel==="recepcao"||eq.papel==="gestor")){
-    alert("Acesso restrito à recepção.");await sb.auth.signOut();location.href="login.html";return null;
+    alert("Acesso restrito à recepção.");await sb.auth.signOut();location.href="/login/";return null;
   }
   return {...eq,uid};
 }
-async function sair(){await sb.auth.signOut();location.href="login.html";}
+async function sair(){await sb.auth.signOut();location.href="/login/";}
 
 /* ---- carga ---- */
 async function carregar(){

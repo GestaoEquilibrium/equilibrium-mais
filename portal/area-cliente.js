@@ -13,13 +13,13 @@ let cartaoSel = 0;
 /* ---- guard: titular logado ---- */
 async function guard(){
   const {data}=await sb.auth.getSession();
-  if(!data.session){location.href="login.html";return null;}
+  if(!data.session){location.href="/login/";return null;}
   const uid=data.session.user.id;
   const {data:assin}=await sb.from("assinantes").select("*").eq("auth_user_id",uid).maybeSingle();
-  if(!assin){ alert("Conta de cliente não encontrada.");await sb.auth.signOut();location.href="login.html";return null; }
+  if(!assin){ alert("Conta de cliente não encontrada.");await sb.auth.signOut();location.href="/login/";return null; }
   return assin;
 }
-async function sair(){ await sb.auth.signOut(); location.href="login.html"; }
+async function sair(){ await sb.auth.signOut(); location.href="/login/"; }
 
 /* ---- carga ---- */
 async function carregar(){

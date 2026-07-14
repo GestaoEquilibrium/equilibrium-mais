@@ -1,5 +1,7 @@
 ﻿_backup_frontend_*/
 _extrai_tmp/
+*.backup_*
+*_backup_*
 *.zip
 .DS_Store
 Thumbs.db

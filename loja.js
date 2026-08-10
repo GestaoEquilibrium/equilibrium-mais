@@ -522,8 +522,8 @@
     const ok = await carregarCatalogos();
     if (!ok) return;
     renderLeque(); renderSvcTable(); renderPlans();
-    renderCalcRows(); fillSelect("calcPlan"); fillSelect("adPlan");
-    syncPlan(); calc(); setBill("mes"); setMethod("card");
+    fillSelect("adPlan");
+    syncPlan(); setBill("mes"); setMethod("card");
     const _w = document.getElementById("empWpp"); if (_w) _w.href = "https://wa.me/" + WPP_EMP + "?text=" + wppMsg();
   });
 })();

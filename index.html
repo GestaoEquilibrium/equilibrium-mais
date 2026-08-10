@@ -315,7 +315,6 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
   </div>
   <div class="steps" id="steps">
     <span class="s on" data-s="home" onclick="go('home')">Início</span>
-    <span class="s" data-s="calc" onclick="go('calc')">Calculadora</span>
     <span class="s" data-s="adesao" onclick="go('adesao')">Adesão</span>
     <span class="s" data-s="pay" onclick="go('pay')">Pagamento</span>
     <span class="s" data-s="done" onclick="go('done')">Cartão</span>
@@ -334,7 +333,7 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
         <h1>Metade do preço.<br><em>Dobro do cuidado.</em></h1>
         <p class="sub">Um clube de descontos que dá 50% de desconto em todos os atendimentos da rede própria Equilibrium, por R$ 59,99 ao mês. Não é plano de saúde — é desconto direto, aplicado na recepção, no ato do atendimento.</p>
         <div class="cta">
-          <button class="btn btn-a" onclick="go('calc')">Simular minha economia</button>
+          <button class="btn btn-a" onclick="document.getElementById('descontos').scrollIntoView({behavior:'smooth'})">Ver os descontos</button>
           <button class="btn btn-ghost" onclick="irAderir()">Quero aderir</button>
         </div>
         <div class="trust">
@@ -414,13 +413,13 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
         <div class="st"><div class="n">3</div><b>Economiza sempre</b><p>O ano inteiro, sem burocracia. Quanto mais você cuida da saúde, mais economiza.</p></div>
       </div>
       <div style="text-align:center;margin-top:34px">
-        <button class="btn btn-p" onclick="go('calc')">Ver quanto eu economizo →</button>
+        <button class="btn btn-p" onclick="irAderir()">Quero meu cartão →</button>
       </div>
     </div>
   </div>
 
   <!-- TABELA DE DESCONTOS -->
-  <div class="sec">
+  <div class="sec" id="descontos">
     <div class="wrap">
       <div class="seckick">Preço justo, de verdade</div>
       <h2>Tabela de descontos</h2>
@@ -452,30 +451,6 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
 </section>
 
 <!-- ===================== CALCULADORA ===================== -->
-<section class="view" id="calc"><div class="wrap" style="padding:48px 0 70px">
-  <div class="kick" style="color:var(--ambar-d)">Calculadora</div>
-  <h2 style="font-size:28px;color:var(--marinho)">Quanto você economiza por mês</h2>
-  <p style="color:var(--muted);margin-top:8px">Informe quantos atendimentos você costuma usar por mês.</p>
-  <div class="calc">
-    <div class="card">
-      <h3 style="color:var(--azul);font-size:17px;margin-bottom:8px">Seu uso mensal</h3>
-      <div class="calc-head"><span class="sp"></span><span class="lbl">Sem desconto<span class="ar">→</span><span class="cc">Com o cartão</span></span><span class="stpsp"></span></div>
-      <div id="calcRows"></div>
-      <div class="chkrow"><input type="checkbox" id="ck_neuro" onchange="calc()"><label for="ck_neuro">Vou fazer uma Avaliação Neuropsicológica</label></div>
-      <div class="field" style="margin-top:18px"><label>Cartão</label><select id="calcPlan" onchange="calc()"></select></div>
-    </div>
-    <div class="res">
-      <div class="cmp"><span>Sem o cartão (particular)</span><b id="r_sem">R$ 0</b></div>
-      <div class="cmp"><span>Serviços com o cartão</span><b id="r_serv">R$ 0</b></div>
-      <div class="cmp"><span>Mensalidade do cartão</span><b id="r_mens">R$ 0</b></div>
-      <div class="big"><div class="lab">Você economiza</div><div class="val" id="r_eco">R$ 0</div></div>
-      <div class="yr" id="r_ano">R$ 0 por ano</div>
-      <div class="verdict neu" id="r_verd">Informe seu uso para ver o resultado.</div>
-      <button class="btn btn-a" style="width:100%;margin-top:16px" onclick="go('adesao')">Quero o meu cartão →</button>
-      <div class="note">Esta simulação compara com o preço particular cheio. Prezamos pela transparência: se você usa um convênio barato para o mesmo serviço, vale comparar também.</div>
-    </div>
-  </div>
-</div></section>
 
 <!-- ===================== ADESÃO ===================== -->
 <section class="view" id="adesao"><div class="wrap" style="padding:48px 0 70px">
@@ -605,7 +580,6 @@ table.svc td.c{color:var(--azul);font-weight:700;font-family:'Quicksand';font-si
     </div>
     <div style="margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-o" onclick="go('home')">Voltar ao início</button>
-      <button class="btn btn-p" onclick="go('calc')">Fazer nova simulação</button>
     </div>
   </div>
 </div></section>

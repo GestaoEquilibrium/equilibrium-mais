@@ -510,23 +510,35 @@ async function imprimirContrato(adesaoId){
   abrirImpressaoContrato(a,titulo,corpo);
 }
 function abrirImpressaoContrato(a,titulo,corpo){
-  const aceite=a.contrato_aceito_em?("Aceito eletronicamente em "+a.contrato_aceito_em+(a.contrato_versao?(" (versão "+a.contrato_versao+")"):"")):"Pendente de aceite";
-  const esc=(t)=>String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  const w=window.open("","_blank","width=840,height=920");
-  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titulo)+'</title>'+
-    '<style>body{font-family:Georgia,serif;max-width:720px;margin:30px auto;color:#1a2b3c;line-height:1.55;padding:0 22px}'+
-    'h1{font-size:19px;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#777;font-size:12px;font-family:Arial;margin-bottom:16px}'+
-    '.meta{background:#f4f7fb;border:1px solid #e2ebf3;border-radius:10px;padding:14px 16px;margin:14px 0;font-size:12.5px;font-family:Arial}'+
-    '.meta div{margin:3px 0}.meta b{display:inline-block;min-width:110px;color:#555}'+
-    '.corpo{white-space:pre-wrap;font-size:13px}.noprint{text-align:center;margin:18px 0}'+
-    'button{padding:10px 18px;border:none;border-radius:8px;background:#1b6cb3;color:#fff;font-size:14px;cursor:pointer}'+
-    '@media print{.noprint{display:none}}</style></head><body>'+
-    '<div class="noprint"><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+
-    '<h1>'+esc(titulo)+'</h1><div class="sub">Grupo Equilibrium Med Center · Cartão Equilibrium Mais Saúde</div>'+
-    '<div class="meta"><div><b>Assinante:</b> '+esc(a.assinante)+'</div><div><b>CPF:</b> '+esc(a.cpf)+'</div>'+
-    '<div><b>Conta:</b> '+esc(a.numero_conta)+'</div><div><b>Plano:</b> '+esc(a.plano_nome)+'</div>'+
-    '<div><b>Adesão:</b> '+esc(a.data_adesao)+'</div><div><b>Aceite:</b> '+esc(aceite)+'</div></div>'+
-    '<div class="corpo">'+esc(corpo)+'</div></body></html>');
+  var aceite=a.contrato_aceito_em?("Aceito eletronicamente em "+a.contrato_aceito_em+(a.contrato_versao?(" · versão "+a.contrato_versao):"")):"Pendente de aceite";
+  imprimirDocContrato({titulo:titulo,corpo:corpo,aceite:aceite,assinante:a.assinante,cpf:a.cpf,numero_conta:a.numero_conta,plano:a.plano_nome,data:a.data_adesao});
+}
+function imprimirDocContrato(o){
+  var esc=function(t){return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;");};
+  var fmt=function(t){return String(t||"").split(/\n/).map(function(l){l=l.trim();if(!l)return"";var cl=/^cl[áa]usula/i.test(l)||/^(par[áa]grafo|anexo|considerando)\b/i.test(l)||(/^\d+[\.\)\u00ba]/.test(l)&&l.length<80);return cl?'<p class="cl">'+esc(l)+'</p>':'<p>'+esc(l)+'</p>';}).join("");};
+  var css="*{box-sizing:border-box}body{font-family:'Segoe UI',Arial,sans-serif;max-width:780px;margin:0 auto;color:#22303d;line-height:1.62;padding:44px 34px;background:#fff}"
+   +".head{text-align:center;padding-bottom:16px;border-bottom:1px solid rgba(19,75,128,.10);margin-bottom:20px}"
+   +".head .brand{font-size:22px;font-weight:800;color:#134b80;letter-spacing:.3px}.head .brand i{color:#1b6cb3;font-style:normal}.head .org{font-size:11px;color:#93a1af;margin-top:3px}"
+   +"h1{font-size:16.5px;text-align:center;color:#134b80;margin:2px 0 20px;font-weight:700}"
+   +".meta{background:rgba(27,108,179,.045);border:1px solid rgba(19,75,128,.09);border-radius:16px;padding:16px 20px;margin-bottom:24px;font-size:12.5px;display:grid;grid-template-columns:1fr 1fr;gap:7px 26px}"
+   +".meta div{display:flex;gap:8px}.meta b{color:#6a7987;min-width:74px;font-weight:600}"
+   +".corpo{font-size:13px;text-align:justify}.corpo p{margin:0 0 10px}.corpo .cl{font-weight:700;color:#134b80;margin:16px 0 6px;font-size:13.5px}"
+   +".sign{margin-top:36px;border:1px solid rgba(19,75,128,.09);border-radius:16px;padding:22px 24px;background:rgba(27,108,179,.03)}"
+   +".sign .st{font-size:12.5px;color:#6a7987;margin-bottom:30px}.sign .st b{color:#134b80}"
+   +".sign .ln{border-top:1px solid rgba(0,0,0,.16);width:62%;margin:0 auto;padding-top:7px;text-align:center;font-size:12px;color:#6a7987}"
+   +".noprint{text-align:center;margin:0 0 26px}.noprint button{padding:11px 24px;border:none;border-radius:11px;background:#1b6cb3;color:#fff;font-size:14px;font-weight:600;cursor:pointer}"
+   +"@media print{.noprint{display:none}body{padding:8px 0}}";
+  var w=window.open("","_blank","width=880,height=940");
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(o.titulo)+'</title><style>'+css+'</style></head><body>'
+   +'<div class="noprint"><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'
+   +'<div class="head"><div class="brand">equilibrium <i>mais saúde</i></div><div class="org">Grupo Equilibrium Med Center · Uberlândia/MG</div></div>'
+   +'<h1>'+esc(o.titulo)+'</h1>'
+   +'<div class="meta"><div><b>Assinante</b> '+esc(o.assinante)+'</div><div><b>CPF</b> '+esc(o.cpf)+'</div>'
+   +'<div><b>Conta</b> '+esc(o.numero_conta)+'</div><div><b>Plano</b> '+esc(o.plano)+'</div>'
+   +'<div><b>Adesão</b> '+esc(o.data)+'</div><div><b>Situação</b> '+esc(o.aceite)+'</div></div>'
+   +'<div class="corpo">'+fmt(o.corpo)+'</div>'
+   +'<div class="sign"><div class="st">'+esc(o.aceite)+'</div><div class="ln">'+esc(o.assinante||"Assinante")+'</div></div>'
+   +'</body></html>');
   w.document.close();
 }
 async function confirmarPgto(adesaoId){

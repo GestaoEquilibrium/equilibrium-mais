@@ -545,23 +545,7 @@ function imprimirDocContrato(o){
    +".noprint{text-align:center;margin:0 0 26px}.noprint button{padding:11px 24px;border:none;border-radius:11px;background:#1b6cb3;color:#fff;font-size:14px;font-weight:600;cursor:pointer}"
    +"@media print{.noprint{display:none}body{padding:8px 0}}";
   var w=window.open("","_blank","width=880,height=940");
-  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(o.titulo)+'</title><style>'+css+'
-/* ===== Design System v2 — refinamentos de interacao ===== */
-.sb-nav .nic{width:19px;height:19px;flex-shrink:0}
-.kpi{box-shadow:0 2px 10px rgba(19,75,128,.05)}
-.kpi:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(19,75,128,.16);border-color:#cfe0f0}
-.card{box-shadow:0 2px 10px rgba(19,75,128,.05)}
-.sb-nav button{transition:.18s cubic-bezier(.2,.7,.3,1)}
-.sb-nav button:hover{transform:translateX(3px)}
-tbody tr{transition:.15s}
-tbody tr:hover{background:var(--mist)}
-.btn-full,.btn-out,.btn-recep{transition:.18s cubic-bezier(.2,.7,.3,1)}
-.btn-full:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(27,108,179,.30)}
-.btn-full:active,.btn-out:active,.btn-recep:active,.sb-nav button:active,.role-opt:active{transform:scale(.97)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 4px rgba(27,108,179,.10)}
-.ui-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:uiRip .5s linear;pointer-events:none}
-@keyframes uiRip{to{transform:scale(3);opacity:0}}
-</style></head><body>'
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(o.titulo)+'</title><style>'+css+'</style></head><body>'
    +'<div class="noprint"><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'
    +'<div class="head"><div class="brand">equilibrium <i>mais saúde</i></div><div class="org">Grupo Equilibrium Med Center · Uberlândia/MG</div></div>'
    +'<h1>'+esc(o.titulo)+'</h1>'
@@ -570,10 +554,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul);bo
    +'<div><b>Adesão</b> '+esc(o.data)+'</div><div><b>Situação</b> '+esc(o.aceite)+'</div></div>'
    +'<div class="corpo">'+fmt(o.corpo)+'</div>'
    +'<div class="sign"><div class="st">'+esc(o.aceite)+'</div><div class="ln">'+esc(o.assinante||"Assinante")+'</div></div>'
-   +'<script>
-document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".btn-full");if(!b)return;var r=b.getBoundingClientRect();var sp=document.createElement("span");sp.className="ui-ripple";var d=Math.max(b.clientWidth,b.clientHeight);sp.style.width=sp.style.height=d+"px";sp.style.left=(e.clientX-r.left-d/2)+"px";sp.style.top=(e.clientY-r.top-d/2)+"px";if(getComputedStyle(b).position==="static")b.style.position="relative";b.style.overflow="hidden";b.appendChild(sp);setTimeout(function(){sp.remove();},500);});
-</script>
-</body></html>');
+   +'</body></html>');
   w.document.close();
 }
 async function confirmarPgto(adesaoId){

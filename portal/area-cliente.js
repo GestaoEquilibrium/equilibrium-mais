@@ -98,6 +98,12 @@ function render(){
           <div class="sub">Suas mensalidades</div>
           <div id="fatBox"></div>
         </div>
+
+        <div class="card">
+          <h3>Contrato</h3>
+          <div class="sub">Seu contrato de adesão</div>
+          <button onclick="imprimirContrato()" style="width:100%;margin-top:8px;padding:11px;border:1px solid var(--azul,#1b6cb3);border-radius:10px;background:#fff;color:var(--azul,#1b6cb3);font-weight:700;cursor:pointer">🖨️ Ver / Imprimir contrato</button>
+        </div>
       </div>
     </div>`;
 
@@ -186,3 +192,36 @@ function bindTilt(){
   // 1º acesso: força o aceite do contrato (só aparece se ainda não foi aceito)
   if(window.ContratoPopup && D.adesao.id){ ContratoPopup.abrir({ adesaoId: D.adesao.id }); }
 })();
+
+
+async function imprimirContrato(){
+  const adesaoId = D.adesao && D.adesao.id;
+  if(!adesaoId){ alert("Adesão não encontrada."); return; }
+  let titulo="Contrato de Adesão — Equilibrium Mais Saúde", corpo="", aceito="Pendente de aceite";
+  try{
+    const {data,error}=await sb.functions.invoke("contrato",{body:{acao:"carregar",adesao_id:adesaoId}});
+    if(error) throw error;
+    titulo=(data&&data.titulo)||titulo; corpo=(data&&data.corpo)||"";
+    if(data&&data.ja_aceito) aceito="Aceito eletronicamente"+(data.aceito_em?(" em "+data.aceito_em):"");
+  }catch(e){ alert("Não consegui carregar o contrato: "+(e.message||e)); return; }
+  const a={ assinante:(D.assinante&&D.assinante.nome)||"—", cpf:(D.assinante&&D.assinante.cpf)||"—",
+    numero_conta:D.adesao.numero_conta, plano_nome:nomePlano(D.adesao.plano_slug), data_adesao:fmtData(D.adesao.data_adesao) };
+  const esc=(t)=>String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const w=window.open("","_blank","width=840,height=920");
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titulo)+'</title>'+
+    '<style>body{font-family:Georgia,serif;max-width:720px;margin:30px auto;color:#1a2b3c;line-height:1.55;padding:0 22px}'+
+    'h1{font-size:19px;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#777;font-size:12px;font-family:Arial;margin-bottom:16px}'+
+    '.meta{background:#f4f7fb;border:1px solid #e2ebf3;border-radius:10px;padding:14px 16px;margin:14px 0;font-size:12.5px;font-family:Arial}'+
+    '.meta div{margin:3px 0}.meta b{display:inline-block;min-width:110px;color:#555}'+
+    '.corpo{white-space:pre-wrap;font-size:13px}.noprint{text-align:center;margin:18px 0}'+
+    'button{padding:10px 18px;border:none;border-radius:8px;background:#1b6cb3;color:#fff;font-size:14px;cursor:pointer}'+
+    '@media print{.noprint{display:none}}</style></head><body>'+
+    '<div class="noprint"><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+
+    '<h1>'+esc(titulo)+'</h1><div class="sub">Grupo Equilibrium Med Center · Cartão Equilibrium Mais Saúde</div>'+
+    '<div class="meta"><div><b>Assinante:</b> '+esc(a.assinante)+'</div><div><b>CPF:</b> '+esc(a.cpf)+'</div>'+
+    '<div><b>Conta:</b> '+esc(a.numero_conta)+'</div><div><b>Plano:</b> '+esc(a.plano_nome)+'</div>'+
+    '<div><b>Adesão:</b> '+esc(a.data_adesao)+'</div><div><b>Aceite:</b> '+esc(aceito)+'</div></div>'+
+    '<div class="corpo">'+esc(corpo)+'</div></body></html>');
+  w.document.close();
+}
+window.imprimirContrato=imprimirContrato;

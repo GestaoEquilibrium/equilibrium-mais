@@ -487,6 +487,7 @@ function abrirPerfil(conta){
             : `<span class="stt pend"><span class="d"></span>Pendente</span>`}</b></div>${a.contrato_aceito_em&&a.contrato_versao?`<div class="r">${a.contrato_versao}</div>`:""}</div>
         <div class="dr-li"><div class="g"><small>Adesão</small><b>${a.data_adesao||"—"}</b></div><div class="g"><small>Fidelidade até</small><b>${a.fidelidade_ate||"—"}</b></div></div>
         <div class="dr-li"><div class="g"><small>Status</small><b><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></b></div><div class="g"><small>Próx. cobrança</small><b>${a.proxima_cobranca||"—"}</b></div></div>
+        <button style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--azul);border-radius:10px;background:#fff;color:var(--azul);font-weight:700;cursor:pointer" onclick="imprimirContrato('${a.adesao_id}')">🖨️ Imprimir contrato</button>
       </div>
     </div>`;
   plantarCv("drCv",6,.5);
@@ -494,6 +495,36 @@ function abrirPerfil(conta){
   document.getElementById("drawer").classList.add("show");
 }
 function fecharDrawer(){document.getElementById("drawerBg").classList.remove("show");document.getElementById("drawer").classList.remove("show");}
+async function imprimirContrato(adesaoId){
+  const a=(D.assin||[]).find(x=>x.adesao_id===adesaoId)||{};
+  let titulo="Contrato de Adesão — Equilibrium Mais Saúde", corpo="";
+  try{
+    const {data,error}=await sb.functions.invoke("contrato",{body:{acao:"carregar",adesao_id:adesaoId}});
+    if(error) throw error;
+    titulo=(data&&data.titulo)||titulo; corpo=(data&&data.corpo)||"";
+  }catch(e){ alert("Não consegui carregar o texto do contrato: "+(e.message||e)); return; }
+  abrirImpressaoContrato(a,titulo,corpo);
+}
+function abrirImpressaoContrato(a,titulo,corpo){
+  const aceite=a.contrato_aceito_em?("Aceito eletronicamente em "+a.contrato_aceito_em+(a.contrato_versao?(" (versão "+a.contrato_versao+")"):"")):"Pendente de aceite";
+  const esc=(t)=>String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const w=window.open("","_blank","width=840,height=920");
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titulo)+'</title>'+
+    '<style>body{font-family:Georgia,serif;max-width:720px;margin:30px auto;color:#1a2b3c;line-height:1.55;padding:0 22px}'+
+    'h1{font-size:19px;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#777;font-size:12px;font-family:Arial;margin-bottom:16px}'+
+    '.meta{background:#f4f7fb;border:1px solid #e2ebf3;border-radius:10px;padding:14px 16px;margin:14px 0;font-size:12.5px;font-family:Arial}'+
+    '.meta div{margin:3px 0}.meta b{display:inline-block;min-width:110px;color:#555}'+
+    '.corpo{white-space:pre-wrap;font-size:13px}.noprint{text-align:center;margin:18px 0}'+
+    'button{padding:10px 18px;border:none;border-radius:8px;background:#1b6cb3;color:#fff;font-size:14px;cursor:pointer}'+
+    '@media print{.noprint{display:none}}</style></head><body>'+
+    '<div class="noprint"><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+
+    '<h1>'+esc(titulo)+'</h1><div class="sub">Grupo Equilibrium Med Center · Cartão Equilibrium Mais Saúde</div>'+
+    '<div class="meta"><div><b>Assinante:</b> '+esc(a.assinante)+'</div><div><b>CPF:</b> '+esc(a.cpf)+'</div>'+
+    '<div><b>Conta:</b> '+esc(a.numero_conta)+'</div><div><b>Plano:</b> '+esc(a.plano_nome)+'</div>'+
+    '<div><b>Adesão:</b> '+esc(a.data_adesao)+'</div><div><b>Aceite:</b> '+esc(aceite)+'</div></div>'+
+    '<div class="corpo">'+esc(corpo)+'</div></body></html>');
+  w.document.close();
+}
 async function confirmarPgto(adesaoId){
   const sel=document.getElementById("selVend"); const vendId=sel?sel.value:"";
   if(!confirm("Confirmar pagamento recebido FORA da plataforma? Isso ativa a conta do assinante.")) return;

@@ -274,6 +274,7 @@ html.dark ::-webkit-scrollbar-thumb{background:#33465c}
       <div class="grp">Negócio</div>
       <button data-sec="fin"><span class="ico">💰</span> Financeiro <span class="badge" id="bgFin" style="display:none"></span></button>
       <button data-sec="uso"><span class="ico">🩺</span> Uso & Benefícios</button>
+      <button data-sec="comis"><span class="ico">🤝</span> Comissões</button>
       <div class="grp">Administração</div>
       <button data-sec="equipe"><span class="ico">⚙️</span> Equipe</button>
     </nav>
@@ -348,7 +349,7 @@ async function sair(){await sb.auth.signOut();location.href="/login/";}
 
 /* ---- carga ---- */
 async function carregar(){
-  const [k,mix,assin,cart,uso,fat,usoCard,planos]=await Promise.all([
+  const [k,mix,assin,cart,uso,fat,usoCard,planos,vend,com]=await Promise.all([
     sb.from("vw_kpis_gestao").select("*").maybeSingle(),
     sb.from("vw_mix_planos").select("*"),
     sb.from("vw_assinantes_lista").select("*").order("data_adesao",{ascending:false}),
@@ -357,10 +358,12 @@ async function carregar(){
     sb.from("vw_faturas_abertas").select("*"),
     sb.from("vw_uso_cartao").select("*"),
     sb.from("planos").select("nome,preco_mensal"),
+    sb.from("equipe").select("auth_user_id,nome,comissao_valor").eq("ativo",true).order("nome"),
+    sb.from("vw_comissoes").select("*").order("criado_em",{ascending:false}),
   ]);
   D.kpis=k.data||{};D.mix=mix.data||[];D.assin=assin.data||[];D.cart=cart.data||[];
   D.uso=uso.data||[];D.fat=fat.data||[];D.usoCard=usoCard.data||[];
-  D.planos=planos.data||[];
+  D.planos=planos.data||[];D.vendedores=vend.data||[];D.comissoes=com.data||[];
 }
 
 /* ================= DONUT ================= */
@@ -428,15 +431,15 @@ function secAssin(){
     <td><div class="who"><div class="a" style="background:${a.plano_cor}">${ini(a.assinante)}</div><div>${a.assinante}<small>${a.cpf||""}</small></div></div></td>
     <td><span class="pill ${planClass(a.plano_slug)}">${a.plano_nome}</span></td>
     <td>${a.dependentes}</td><td>${a.numero_conta}</td><td>${a.proxima_cobranca||"—"}</td>
-    <td class="dr-eco">${money(a.economia_total)}</td>
+    <td class="dr-eco">${money(a.economia_total)}</td><td>${a.vendedor_nome||'—'}</td>
     <td><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></td>
     <td><span class="chev">›</span></td></tr>`).join("");
   return `
   <div class="sec-h"><div><h1>Assinantes</h1><p>${D.assin.length} conta(s) · clique para ver o perfil completo</p></div></div>
   <div class="toolbar"><div class="search">🔍 <input id="bAssin" placeholder="Buscar por nome, CPF ou conta..." oninput="fAssin()"></div>
     <div class="filt" id="fltAssin"><button class="on" data-f="todos">Todos</button><button data-f="ativo">Ativos</button><button data-f="pendente">Pendentes</button></div></div>
-  <div class="tbl-wrap"><table><thead><tr><th>Assinante</th><th>Plano</th><th>Dep.</th><th>Conta</th><th>Próx. cobrança</th><th>Economia</th><th>Status</th><th></th></tr></thead>
-  <tbody id="assinBody">${rows||'<tr><td colspan="8" class="empty">Nenhum assinante ainda.</td></tr>'}</tbody></table></div>`;
+  <div class="tbl-wrap"><table><thead><tr><th>Assinante</th><th>Plano</th><th>Dep.</th><th>Conta</th><th>Próx. cobrança</th><th>Economia</th><th>Vendedor</th><th>Status</th><th></th></tr></thead>
+  <tbody id="assinBody">${rows||'<tr><td colspan="9" class="empty">Nenhum assinante ainda.</td></tr>'}</tbody></table></div>`;
 }
 let fltAssinVal="todos";
 function fAssin(){
@@ -446,7 +449,7 @@ function fAssin(){
   document.getElementById("assinBody").innerHTML=f.map(a=>`<tr class="clickable" onclick="abrirPerfil('${a.numero_conta}')">
     <td><div class="who"><div class="a" style="background:${a.plano_cor}">${ini(a.assinante)}</div><div>${a.assinante}<small>${a.cpf||""}</small></div></div></td>
     <td><span class="pill ${planClass(a.plano_slug)}">${a.plano_nome}</span></td><td>${a.dependentes}</td><td>${a.numero_conta}</td><td>${a.proxima_cobranca||"—"}</td>
-    <td class="dr-eco">${money(a.economia_total)}</td><td><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></td><td><span class="chev">›</span></td></tr>`).join("")||'<tr><td colspan="8" class="empty">Nada encontrado.</td></tr>';
+    <td class="dr-eco">${money(a.economia_total)}</td><td>${a.vendedor_nome||'—'}</td><td><span class="stt ${stClass(a.status)}"><span class="d"></span>${cap(a.status)}</span></td><td><span class="chev">›</span></td></tr>`).join("")||'<tr><td colspan="9" class="empty">Nada encontrado.</td></tr>';
 }
 
 /* ---- drawer perfil ---- */
@@ -475,7 +478,7 @@ function abrirPerfil(conta){
         <div class="dr-stat"><div class="v">${1+Number(a.dependentes||0)}</div><div class="l">Cartões</div></div>
         <div class="dr-stat"><div class="v" style="color:var(--ok)">${money(a.economia_total)}</div><div class="l">Economia</div></div>
       </div>
-      <div class="dr-card"><h4>Cartões da família</h4>${cartHtml}</div>
+      <div class="dr-card"><h4>Dados do paciente</h4><div class="dr-li"><div class="g"><small>E-mail</small><b>${a.assinante_email||"—"}</b></div><div class="g"><small>Telefone</small><b>${a.assinante_telefone||"—"}</b></div></div><div class="dr-li"><div class="g"><small>CPF</small><b>${a.cpf||"—"}</b></div><div class="g"><small>Vendedor</small><b>${a.vendedor_nome||"—"}</b></div></div></div>${a.status!=="ativo"?`<div class="dr-card"><h4>Confirmar pagamento (fora da plataforma)</h4><p style="font-size:13px;color:var(--muted);margin-bottom:10px">Use quando o assinante pagou por dinheiro ou PIX direto. Ativa a conta e registra a comissão do vendedor.</p><label style="font-size:12px;color:var(--muted);font-weight:600">Vendedor (quem vendeu)<select id="selVend" style="width:100%;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:14px"><option value="">— sem vendedor —</option>${(D.vendedores||[]).map(v=>`<option value="${v.auth_user_id}" ${v.auth_user_id===a.vendedor_id?"selected":""}>${v.nome}</option>`).join("")}</select></label><button style="width:100%;margin-top:12px;padding:12px;border:none;border-radius:10px;background:#1E8449;color:#fff;font-weight:700;cursor:pointer" onclick="confirmarPgto('${a.adesao_id}')">✓ Confirmar pagamento e ativar</button></div>`:""}<div class="dr-card"><h4>Cartões da família</h4>${cartHtml}</div>
       <div class="dr-card"><h4>Faturas</h4>${fatHtml}</div>
       <div class="dr-card"><h4>Histórico de uso</h4>${usoHtml}</div>
       <div class="dr-card"><h4>Contrato</h4>
@@ -491,6 +494,18 @@ function abrirPerfil(conta){
   document.getElementById("drawer").classList.add("show");
 }
 function fecharDrawer(){document.getElementById("drawerBg").classList.remove("show");document.getElementById("drawer").classList.remove("show");}
+async function confirmarPgto(adesaoId){
+  const sel=document.getElementById("selVend"); const vendId=sel?sel.value:"";
+  if(!confirm("Confirmar pagamento recebido FORA da plataforma? Isso ativa a conta do assinante.")) return;
+  try{
+    if(vendId){ const {error:e0}=await sb.rpc("definir_vendedor",{p_adesao_id:adesaoId,p_vendedor_id:vendId}); if(e0) throw e0; }
+    const quem=(document.getElementById("uNome")?.textContent||"gestão").trim();
+    const {data,error}=await sb.functions.invoke("confirmar-pagamento",{body:{adesao_id:adesaoId,gateway_ref:"manual:"+quem}});
+    if(error) throw error;
+    alert("Pagamento confirmado! Conta ativada"+(vendId?" e comissão registrada.":"."));
+    fecharDrawer(); await carregar(); mostrar("assin");
+  }catch(e){ alert("Erro ao confirmar: "+(e.message||e)); }
+}
 
 /* ---- cartões agrupados ---- */
 function agrupar(lista){const map={},ordem=[],v={};lista.forEach(c=>{const k=c.numero_conta;if(!map[k]){map[k]={conta:k,titular:null,deps:[],plano_slug:c.plano_slug,plano_nome:c.plano_nome};}if(c.is_titular||c.papel==="Titular")map[k].titular=c;else map[k].deps.push(c);if(!v[k]){v[k]=1;ordem.push(k);}});return ordem.map(k=>map[k]);}
@@ -658,7 +673,52 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 /* ================= NAV ================= */
-const SEC={geral:{f:secGeral,t:"Visão geral"},assin:{f:secAssin,t:"Assinantes"},cart:{f:secCart,t:"Cartões"},fin:{f:secFin,t:"Financeiro"},uso:{f:secUso,t:"Uso & Benefícios"},equipe:{f:secEquipe,t:"Equipe"}};
+
+function secComissoes(){
+  const vend=D.vendedores||[]; const coms=D.comissoes||[];
+  const cfgRows=vend.map(v=>`<div class="dr-li"><div class="g"><b>${v.nome}</b><small>comissão fixa por adesão</small></div>
+    <div class="r" style="display:flex;gap:8px;align-items:center">R$ <input type="number" min="0" step="1" id="cv_${v.auth_user_id}" value="${Number(v.comissao_valor||0)}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:8px">
+    <button onclick="salvarComissao('${v.auth_user_id}')" style="padding:8px 12px;border:none;border-radius:8px;background:var(--azul);color:#fff;cursor:pointer;font-weight:600">Salvar</button></div></div>`).join("")||'<div class="empty" style="padding:14px">Nenhum vendedor na equipe.</div>';
+  const porVend={};
+  coms.forEach(c=>{const k=c.vendedor_nome||"— sem vendedor —"; (porVend[k]=porVend[k]||[]).push(c);});
+  const totRec=coms.filter(c=>c.status!=="pago").reduce((a,c)=>a+Number(c.valor||0),0);
+  const totPago=coms.filter(c=>c.status==="pago").reduce((a,c)=>a+Number(c.valor||0),0);
+  const grupos=Object.keys(porVend).map(nome=>{
+    const lista=porVend[nome];
+    const rec=lista.filter(c=>c.status!=="pago").reduce((a,c)=>a+Number(c.valor||0),0);
+    const linhas=lista.map(c=>`<tr>
+      <td>${c.assinante_nome||"—"}<small style="display:block;color:var(--muted)">${c.numero_conta||""} ${c.plano_nome?("· "+c.plano_nome):""}</small></td>
+      <td>${c.criado_em?String(c.criado_em).slice(0,10):"—"}</td>
+      <td>${money(c.valor)}</td>
+      <td>${c.status==="pago"?'<span class="stt ok"><span class="d"></span>Pago</span>':'<span class="stt pend"><span class="d"></span>A receber</span>'}</td>
+      <td style="text-align:right">${c.status!=="pago"?`<button onclick="pagarComissao('${c.id}')" style="padding:7px 12px;border:none;border-radius:8px;background:#1E8449;color:#fff;cursor:pointer">Marcar pago</button>`:"—"}</td></tr>`).join("");
+    return `<div class="card" style="padding:0;overflow:hidden;margin-top:16px">
+      <div style="padding:18px 20px 10px;display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${nome}</h3><span class="tag-soft">A receber: ${money(rec)}</span></div>
+      <div class="tbl-wrap" style="border:none;border-radius:0"><table><thead><tr><th>Assinante</th><th>Data</th><th>Valor</th><th>Status</th><th style="text-align:right">Ação</th></tr></thead>
+      <tbody>${linhas}</tbody></table></div></div>`;
+  }).join("")||'<div class="empty" style="padding:20px">Nenhuma comissão gerada ainda. Elas nascem quando um pagamento é confirmado com um vendedor.</div>';
+  return `<div class="sec-h"><div><h1>Comissões</h1><p>Configure o valor por vendedor e pague as comissões das vendas</p></div></div>
+  <div class="dr-stats" style="margin-bottom:18px">
+    <div class="dr-stat"><div class="v" style="color:var(--ambar-d,#B7791F)">${money(totRec)}</div><div class="l">A receber</div></div>
+    <div class="dr-stat"><div class="v" style="color:var(--ok)">${money(totPago)}</div><div class="l">Já pago</div></div></div>
+  <div class="card" style="margin-bottom:8px"><div class="ch"><h3>Valor da comissão por vendedor</h3></div>
+    <div class="sub">Valor fixo pago por adesão confirmada. Deixe 0 para não gerar comissão.</div>${cfgRows}</div>
+  ${grupos}`;
+}
+async function salvarComissao(authId){
+  const inp=document.getElementById("cv_"+authId); if(!inp)return;
+  const val=parseFloat(inp.value||"0")||0;
+  try{ const {error}=await sb.rpc("definir_comissao",{p_auth_user_id:authId,p_valor:val}); if(error) throw error;
+    inp.style.borderColor="#1E8449"; const v=(D.vendedores||[]).find(x=>x.auth_user_id===authId); if(v) v.comissao_valor=val;
+  }catch(e){ alert("Erro ao salvar: "+(e.message||e)); }
+}
+async function pagarComissao(comId){
+  if(!confirm("Marcar esta comissão como PAGA?")) return;
+  try{ const {error}=await sb.rpc("pagar_comissao",{p_comissao_id:comId,p_pago_por:meuId||null}); if(error) throw error;
+    const {data}=await sb.from("vw_comissoes").select("*").order("criado_em",{ascending:false}); D.comissoes=data||[]; mostrar("comis");
+  }catch(e){ alert("Erro: "+(e.message||e)); }
+}
+const SEC={geral:{f:secGeral,t:"Visão geral"},assin:{f:secAssin,t:"Assinantes"},cart:{f:secCart,t:"Cartões"},fin:{f:secFin,t:"Financeiro"},uso:{f:secUso,t:"Uso & Benefícios"},comis:{f:secComissoes,t:"Comissões"},equipe:{f:secEquipe,t:"Equipe"}};
 function mostrar(s){
   document.getElementById("content").innerHTML=SEC[s].f();
   document.getElementById("crumbSec").textContent=SEC[s].t;

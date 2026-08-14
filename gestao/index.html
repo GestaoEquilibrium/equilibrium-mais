@@ -276,6 +276,7 @@ html.dark ::-webkit-scrollbar-thumb{background:#33465c}
       <button data-sec="uso"><span class="ico">🩺</span> Uso & Benefícios</button>
       <button data-sec="comis"><span class="ico">🤝</span> Comissões</button>
       <div class="grp">Administração</div>
+      <button data-sec="prof"><span class="ico">🩺</span> Profissionais</button>
       <button data-sec="equipe"><span class="ico">⚙️</span> Equipe</button>
     </nav>
     <div class="sb-foot">
@@ -349,7 +350,7 @@ async function sair(){await sb.auth.signOut();location.href="/login/";}
 
 /* ---- carga ---- */
 async function carregar(){
-  const [k,mix,assin,cart,uso,fat,usoCard,planos,vend,com]=await Promise.all([
+  const [k,mix,assin,cart,uso,fat,usoCard,planos,vend,com,prof]=await Promise.all([
     sb.from("vw_kpis_gestao").select("*").maybeSingle(),
     sb.from("vw_mix_planos").select("*"),
     sb.from("vw_assinantes_lista").select("*").order("data_adesao",{ascending:false}),
@@ -360,10 +361,11 @@ async function carregar(){
     sb.from("planos").select("nome,preco_mensal"),
     sb.from("equipe").select("auth_user_id,nome,comissao_valor").eq("ativo",true).order("nome"),
     sb.from("vw_comissoes").select("*").order("criado_em",{ascending:false}),
+    sb.from("profissionais").select("*").order("nome"),
   ]);
   D.kpis=k.data||{};D.mix=mix.data||[];D.assin=assin.data||[];D.cart=cart.data||[];
   D.uso=uso.data||[];D.fat=fat.data||[];D.usoCard=usoCard.data||[];
-  D.planos=planos.data||[];D.vendedores=vend.data||[];D.comissoes=com.data||[];
+  D.planos=planos.data||[];D.vendedores=vend.data||[];D.comissoes=com.data||[];D.profissionais=prof.data||[];
 }
 
 /* ================= DONUT ================= */
@@ -749,7 +751,50 @@ async function pagarComissao(comId){
     const {data}=await sb.from("vw_comissoes").select("*").order("criado_em",{ascending:false}); D.comissoes=data||[]; mostrar("comis");
   }catch(e){ alert("Erro: "+(e.message||e)); }
 }
-const SEC={geral:{f:secGeral,t:"Visão geral"},assin:{f:secAssin,t:"Assinantes"},cart:{f:secCart,t:"Cartões"},fin:{f:secFin,t:"Financeiro"},uso:{f:secUso,t:"Uso & Benefícios"},comis:{f:secComissoes,t:"Comissões"},equipe:{f:secEquipe,t:"Equipe"}};
+
+function secProfissionais(){
+  const list=D.profissionais||[];
+  const rows=list.length?list.map(p=>`<tr>
+    <td>${p.nome||"—"}</td><td>${p.especialidade||"—"}</td><td>${p.registro||"—"}</td>
+    <td>${p.ativo?'<span class="stt ok"><span class="d"></span>Ativo</span>':'<span class="stt pend"><span class="d"></span>Inativo</span>'}</td>
+    <td style="text-align:right"><button onclick="toggleProf('${p.id}',${p.ativo?'false':'true'})" style="padding:6px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer">${p.ativo?"Desativar":"Ativar"}</button></td></tr>`).join("")
+    :'<tr><td colspan="5" class="empty" style="padding:16px">Nenhum profissional cadastrado.</td></tr>';
+  return `<div class="sec-h"><div><h1>Profissionais</h1><p>Cadastre os profissionais que atendem — eles aparecem na recepção ao registrar o atendimento</p></div></div>
+  <div class="eq-grid">
+    <div class="card">
+      <div class="ch"><h3>Novo profissional</h3></div>
+      <div class="sub">Médico, psicólogo, terapeuta… quem presta o atendimento.</div>
+      <div class="field"><label>Nome completo</label><input id="p_nome" placeholder="Nome do profissional"></div>
+      <div class="field"><label>Especialidade</label><input id="p_esp" placeholder="Ex.: Psicologia, Fonoaudiologia, Pediatria"></div>
+      <div class="field"><label>Registro / Conselho (opcional)</label><input id="p_reg" placeholder="Ex.: CRP 04/12345, CRM-MG 00000"></div>
+      <button class="btn-full" onclick="salvarProfissional()">Cadastrar profissional</button>
+      <div class="msg" id="msgProf"></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:22px 22px 14px"><div class="ch"><h3>Profissionais cadastrados</h3><span class="tag-soft">${list.filter(p=>p.ativo).length} ativo(s)</span></div></div>
+      <div class="tbl-wrap" style="border:none;border-radius:0"><table>
+        <thead><tr><th>Nome</th><th>Especialidade</th><th>Registro</th><th>Status</th><th style="text-align:right">Ações</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>
+    </div>
+  </div>`;
+}
+async function salvarProfissional(){
+  const g=id=>(document.getElementById(id)?.value||"").trim();
+  const nome=g("p_nome"), esp=g("p_esp"), reg=g("p_reg");
+  const msg=document.getElementById("msgProf");
+  if(!nome){ if(msg)msg.textContent="Informe o nome do profissional."; return; }
+  try{
+    const {error}=await sb.rpc("salvar_profissional",{p_nome:nome,p_especialidade:esp,p_registro:reg}); if(error) throw error;
+    const {data}=await sb.from("profissionais").select("*").order("nome"); D.profissionais=data||[]; mostrar("prof");
+  }catch(e){ if(msg)msg.textContent="Erro ao cadastrar: "+(e.message||e); }
+}
+async function toggleProf(id,novo){
+  try{
+    const {error}=await sb.rpc("set_profissional_ativo",{p_id:id,p_ativo:novo}); if(error) throw error;
+    const {data}=await sb.from("profissionais").select("*").order("nome"); D.profissionais=data||[]; mostrar("prof");
+  }catch(e){ alert("Erro: "+(e.message||e)); }
+}
+const SEC={geral:{f:secGeral,t:"Visão geral"},assin:{f:secAssin,t:"Assinantes"},cart:{f:secCart,t:"Cartões"},fin:{f:secFin,t:"Financeiro"},uso:{f:secUso,t:"Uso & Benefícios"},comis:{f:secComissoes,t:"Comissões"},prof:{f:secProfissionais,t:"Profissionais"},equipe:{f:secEquipe,t:"Equipe"}};
 function mostrar(s){
   document.getElementById("content").innerHTML=SEC[s].f();
   document.getElementById("crumbSec").textContent=SEC[s].t;

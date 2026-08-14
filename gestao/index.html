@@ -315,6 +315,7 @@ html.dark ::-webkit-scrollbar-thumb{background:#33465c}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../shared/config.js"></script>
+<script src="../shared/ui.js"></script>
 <script src="../shared/foto_crop.js"></script>
 <script src="../shared/trocar_senha.js"></script>
 <script>
@@ -529,7 +530,7 @@ function abrirImpressaoContrato(a,titulo,corpo){
 }
 async function confirmarPgto(adesaoId){
   const sel=document.getElementById("selVend"); const vendId=sel?sel.value:"";
-  if(!confirm("Confirmar pagamento recebido FORA da plataforma? Isso ativa a conta do assinante.")) return;
+  if(!(await uiConfirm("Isso ativa a conta do assinante e registra a comissão do vendedor.",{title:"Confirmar pagamento",okText:"Confirmar"}))) return;
   try{
     if(vendId){ const {error:e0}=await sb.rpc("definir_vendedor",{p_adesao_id:adesaoId,p_vendedor_id:vendId}); if(e0) throw e0; }
     const quem=(document.getElementById("uNome")?.textContent||"gestão").trim();
@@ -746,7 +747,7 @@ async function salvarComissao(authId){
   }catch(e){ alert("Erro ao salvar: "+(e.message||e)); }
 }
 async function pagarComissao(comId){
-  if(!confirm("Marcar esta comissão como PAGA?")) return;
+  if(!(await uiConfirm("Marcar esta comissão como paga?",{title:"Comissão",okText:"Marcar pago"}))) return;
   try{ const {error}=await sb.rpc("pagar_comissao",{p_comissao_id:comId,p_pago_por:meuId||null}); if(error) throw error;
     const {data}=await sb.from("vw_comissoes").select("*").order("criado_em",{ascending:false}); D.comissoes=data||[]; mostrar("comis");
   }catch(e){ alert("Erro: "+(e.message||e)); }

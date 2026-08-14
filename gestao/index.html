@@ -244,6 +244,22 @@ html.dark{
 }
 html.dark .topbar{background:rgba(18,30,42,.85)}
 html.dark ::-webkit-scrollbar-thumb{background:#33465c}
+
+/* ===== Design System v2 — refinamentos de interacao ===== */
+.sb-nav .nic{width:19px;height:19px;flex-shrink:0}
+.kpi{box-shadow:0 2px 10px rgba(19,75,128,.05)}
+.kpi:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(19,75,128,.16);border-color:#cfe0f0}
+.card{box-shadow:0 2px 10px rgba(19,75,128,.05)}
+.sb-nav button{transition:.18s cubic-bezier(.2,.7,.3,1)}
+.sb-nav button:hover{transform:translateX(3px)}
+tbody tr{transition:.15s}
+tbody tr:hover{background:var(--mist)}
+.btn-full,.btn-out,.btn-recep{transition:.18s cubic-bezier(.2,.7,.3,1)}
+.btn-full:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(27,108,179,.30)}
+.btn-full:active,.btn-out:active,.btn-recep:active,.sb-nav button:active,.role-opt:active{transform:scale(.97)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 4px rgba(27,108,179,.10)}
+.ui-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:uiRip .5s linear;pointer-events:none}
+@keyframes uiRip{to{transform:scale(3);opacity:0}}
 </style>
 <script src="../shared/tema.js"></script>
 </head>
@@ -268,17 +284,17 @@ html.dark ::-webkit-scrollbar-thumb{background:#33465c}
     </div>
     <nav class="sb-nav" id="sbNav">
       <div class="grp">Operação</div>
-      <button class="on" data-sec="geral"><span class="ico">📊</span> Visão geral</button>
-      <button data-sec="assin"><span class="ico">👥</span> Assinantes</button>
-      <button data-sec="cart"><span class="ico">💳</span> Cartões</button>
+      <button class="on" data-sec="geral"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Visão geral</button>
+      <button data-sec="assin"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg> Assinantes</button>
+      <button data-sec="cart"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg> Cartões</button>
       <div class="grp">Negócio</div>
-      <button data-sec="fin"><span class="ico">💰</span> Financeiro <span class="badge" id="bgFin" style="display:none"></span></button>
-      <button data-sec="uso"><span class="ico">🩺</span> Uso & Benefícios</button>
-      <button data-sec="atend"><span class="ico">📋</span> Atendimentos</button>
-      <button data-sec="comis"><span class="ico">🤝</span> Comissões</button>
+      <button data-sec="fin"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Financeiro <span class="badge" id="bgFin" style="display:none"></span></button>
+      <button data-sec="uso"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Uso & Benefícios</button>
+      <button data-sec="atend"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg> Atendimentos</button>
+      <button data-sec="comis"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg> Comissões</button>
       <div class="grp">Administração</div>
-      <button data-sec="prof"><span class="ico">🩺</span> Profissionais</button>
-      <button data-sec="equipe"><span class="ico">⚙️</span> Equipe</button>
+      <button data-sec="prof"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1"/><path d="M8 15v1a6 6 0 0 0 12 0v-4"/><circle cx="20" cy="10" r="2"/></svg> Profissionais</button>
+      <button data-sec="equipe"><svg class="nic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Equipe</button>
     </nav>
     <div class="sb-foot">
       <div class="vinfo">Equilibrium Mais Saúde · v2</div>
@@ -529,7 +545,23 @@ function imprimirDocContrato(o){
    +".noprint{text-align:center;margin:0 0 26px}.noprint button{padding:11px 24px;border:none;border-radius:11px;background:#1b6cb3;color:#fff;font-size:14px;font-weight:600;cursor:pointer}"
    +"@media print{.noprint{display:none}body{padding:8px 0}}";
   var w=window.open("","_blank","width=880,height=940");
-  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(o.titulo)+'</title><style>'+css+'</style></head><body>'
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(o.titulo)+'</title><style>'+css+'
+/* ===== Design System v2 — refinamentos de interacao ===== */
+.sb-nav .nic{width:19px;height:19px;flex-shrink:0}
+.kpi{box-shadow:0 2px 10px rgba(19,75,128,.05)}
+.kpi:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(19,75,128,.16);border-color:#cfe0f0}
+.card{box-shadow:0 2px 10px rgba(19,75,128,.05)}
+.sb-nav button{transition:.18s cubic-bezier(.2,.7,.3,1)}
+.sb-nav button:hover{transform:translateX(3px)}
+tbody tr{transition:.15s}
+tbody tr:hover{background:var(--mist)}
+.btn-full,.btn-out,.btn-recep{transition:.18s cubic-bezier(.2,.7,.3,1)}
+.btn-full:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(27,108,179,.30)}
+.btn-full:active,.btn-out:active,.btn-recep:active,.sb-nav button:active,.role-opt:active{transform:scale(.97)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 4px rgba(27,108,179,.10)}
+.ui-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:uiRip .5s linear;pointer-events:none}
+@keyframes uiRip{to{transform:scale(3);opacity:0}}
+</style></head><body>'
    +'<div class="noprint"><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'
    +'<div class="head"><div class="brand">equilibrium <i>mais saúde</i></div><div class="org">Grupo Equilibrium Med Center · Uberlândia/MG</div></div>'
    +'<h1>'+esc(o.titulo)+'</h1>'
@@ -538,7 +570,10 @@ function imprimirDocContrato(o){
    +'<div><b>Adesão</b> '+esc(o.data)+'</div><div><b>Situação</b> '+esc(o.aceite)+'</div></div>'
    +'<div class="corpo">'+fmt(o.corpo)+'</div>'
    +'<div class="sign"><div class="st">'+esc(o.aceite)+'</div><div class="ln">'+esc(o.assinante||"Assinante")+'</div></div>'
-   +'</body></html>');
+   +'<script>
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".btn-full");if(!b)return;var r=b.getBoundingClientRect();var sp=document.createElement("span");sp.className="ui-ripple";var d=Math.max(b.clientWidth,b.clientHeight);sp.style.width=sp.style.height=d+"px";sp.style.left=(e.clientX-r.left-d/2)+"px";sp.style.top=(e.clientY-r.top-d/2)+"px";if(getComputedStyle(b).position==="static")b.style.position="relative";b.style.overflow="hidden";b.appendChild(sp);setTimeout(function(){sp.remove();},500);});
+</script>
+</body></html>');
   w.document.close();
 }
 async function confirmarPgto(adesaoId){
@@ -921,6 +956,9 @@ function abrirCropFoto(){
     }), 500);
   } else if(!eq.foto_path){ setTimeout(abrirCropFoto, 600); }
 })();
+</script>
+<script>
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".btn-full");if(!b)return;var r=b.getBoundingClientRect();var sp=document.createElement("span");sp.className="ui-ripple";var d=Math.max(b.clientWidth,b.clientHeight);sp.style.width=sp.style.height=d+"px";sp.style.left=(e.clientX-r.left-d/2)+"px";sp.style.top=(e.clientY-r.top-d/2)+"px";if(getComputedStyle(b).position==="static")b.style.position="relative";b.style.overflow="hidden";b.appendChild(sp);setTimeout(function(){sp.remove();},500);});
 </script>
 </body>
 </html>
